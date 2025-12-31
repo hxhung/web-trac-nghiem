@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đề Ôn Tập Toán 12 - Học Kỳ I</title>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        :root {
+            --navy: #003366;
+            --white: #ffffff;
+            --gray: #f4f4f9;
+            --red: #cc0000;
+            --green: #28a745;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--gray);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: var(--navy);
+            text-align: center;
+        }
+        .info-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .timer {
+            position: sticky;
+            top: 10px;
+            background: var(--red);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            width: fit-content;
+            margin: 0 auto 20px auto;
+            z-index: 100;
+        }
+        .card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+        .question-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--navy);
+        }
+        .options label {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+        }
+        .true-false-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .true-false-table td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: var(--navy);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-submit:hover {
+            background: #002244;
+        }
+        #results {
+            margin-top: 30px;
+            display: none;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .result-table th, .result-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        .icon-check { color: var(--green); }
+        .icon-cross { color: var(--red); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>KIỂM TRA CUỐI HỌC KỲ I</h1>
+    <h3>Môn: Toán 12 (Chân trời sáng tạo)</h3>
+
+    <div class="info-section">
+        <input type="text" id="userName" placeholder="Họ và tên">
+        <input type="text" id="userClass" placeholder="Lớp">
+    </div>
+
+    <div id="timer" class="timer">Thời gian: 90:00</div>
+
+    <form id="quizForm">
+        <!-- PHẦN I -->
+        <h2>Phần I: Trắc nghiệm nhiều lựa chọn</h2>
+        <div class="card">
+            <p class="question-title">Câu 1: Hàm số $y = x^3 - 3x$ nghịch biến trên khoảng nào dưới đây?</p>
+            <div class="options">
+                <label><input type="radio" name="q1" value="A"> A. $(-\infty; -1)$</label>
+                <label><input type="radio" name="q1" value="B"> B. $(-1; 1)$</label>
+                <label><input type="radio" name="q1" value="C"> C. $(1; +\infty)$</label>
+                <label><input type="radio" name="q1" value="D"> D. $(0; 2)$</label>
+            </div>
+        </div>
+
+        <div class="card">
+            <p class="question-title">Câu 2: Đường tiệm cận đứng của đồ thị hàm số $y = \frac{2x+1}{x-2}$ là:</p>
+            <div class="options">
+                <label><input type="radio" name="q2" value="A"> A. $x = 2$</label>
+                <label><input type="radio" name="q2" value="B"> B. $x = -1$</label>
+                <label><input type="radio" name="q2" value="C"> C. $y = 2$</label>
+                <label><input type="radio" name="q2" value="D"> D. $y = -2$</label>
+            </div>
+        </div>
+
+        <div class="card">
+            <p class="question-title">Câu 3: Trong không gian $Oxyz$, cho $\vec{a} = (1; 2; -1)$ và $\vec{b} = (2; 0; 1)$. Tọa độ của vectơ $\vec{u} = \vec{a} + \vec{b}$ là:</p>
+            <div class="options">
+                <label><input type="radio" name="q3" value="A"> A. $(3; 2; 0)$</label>
+                <label><input type="radio" name="q3" value="B"> B. $(1; -2; 2)$</label>
+                <label><input type="radio" name="q3" value="C"> C. $(-1; 2; -2)$</label>
+                <label><input type="radio" name="q3" value="D"> D. $(3; 2; 2)$</label>
+            </div>
+        </div>
+
+        <div class="card">
+            <p class="question-title">Câu 4: Giá trị lớn nhất của hàm số $y = \sqrt{4-x^2}$ bằng:</p>
+            <div class="options">
+                <label><input type="radio" name="q4" value="A"> A. 4</label>
+                <label><input type="radio" name="q4" value="B"> B. $2$</label>
+                <label><input type="radio" name="q4" value="C"> C. $0$</label>
+                <label><input type="radio" name="q4" value="D"> D. $1$</label>
+            </div>
+        </div>
+
+        <!-- PHẦN II -->
+        <h2>Phần II: Câu trắc nghiệm Đúng/Sai</h2>
+        <div class="card">
+            <p class="question-title">Câu 5: Một lon nước hình trụ có thể tích $V = 1000$ $cm^3$. Gọi $r$ là bán kính đáy và $h$ là chiều cao.</p>
+            <table class="true-false-table">
+                <tr>
+                    <td>a) Chiều cao $h$ tính theo $r$ là $h = \frac{1000}{\pi r^2}$.</td>
+                    <td>
+                        <label><input type="radio" name="q5a" value="Đ"> Đ</label>
+                        <label><input type="radio" name="q5a" value="S"> S</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>b) Diện tích toàn phần của lon nước là $S = 2\pi r^2 + \frac{2000}{r}$.</td>
+                    <td>
+                        <label><input type="radio" name="q5b" value="Đ"> Đ</label>
+                        <label><input type="radio" name="q5b" value="S"> S</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>c) Diện tích bề mặt nhỏ nhất khi chiều cao gấp 3 lần bán kính.</td>
+                    <td>
+                        <label><input type="radio" name="q5c" value="Đ"> Đ</label>
+                        <label><input type="radio" name="q5c" value="S"> S</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>d) Nếu bán kính $r=5$ cm, diện tích toàn phần xấp xỉ 557 $cm^2$.</td>
+                    <td>
+                        <label><input type="radio" name="q5d" value="Đ"> Đ</label>
+                        <label><input type="radio" name="q5d" value="S"> S</label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <p class="question-title">Câu 6: Cho mẫu số liệu ghép nhóm về điểm số: $[0; 2)$ (tần số 2), $[2; 4)$ (5), $[4; 6)$ (8), $[6; 8)$ (7), $[8; 10)$ (3).</p>
+            <table class="true-false-table">
+                <tr>
+                    <td>a) Cỡ mẫu của dữ liệu trên là $n = 25$.</td>
+                    <td>
+                        <label><input type="radio" name="q6a" value="Đ"> Đ</label>
+                        <label><input type="radio" name="q6a" value="S"> S</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>b) Khoảng biến thiên của mẫu số liệu ghép nhóm là $R = 10$.</td>
+                    <td>
+                        <label><input type="radio" name="q6b" value="Đ"> Đ</label>
+                        <label><input type="radio" name="q6b" value="S"> S</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>c) Số trung bình cộng của mẫu số liệu là $\bar{x} = 5,32$.</td>
+                    <td>
+                        <label><input type="radio" name="q6c" value="Đ"> Đ</label>
+                        <label><input type="radio" name="q6c" value="S"> S</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>d) Phương sai của mẫu số liệu là $s^2 = 4,12$.</td>
+                    <td>
+                        <label><input type="radio" name="q6d" value="Đ"> Đ</label>
+                        <label><input type="radio" name="q6d" value="S"> S</label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- PHẦN III -->
+        <h2>Phần III: Câu trắc nghiệm trả lời ngắn</h2>
+        <div class="card">
+            <p class="question-title">Câu 7: Một miếng bìa 0,9m x 1,5m được cắt 4 góc là 4 hình vuông cạnh $x$ (m) để gập thành hộp hở. Tìm $x$ để thể tích hộp lớn nhất.</p>
+            <input type="text" id="ans7" placeholder="Nhập kết quả...">
+        </div>
+
+        <div class="card">
+            <p class="question-title">Câu 8: Trong không gian $Oxyz$, một ra đa đặt tại gốc $O(0;0;0)$. Một tàu thám hiểm đang ở vị trí $M(25; 15; 0)$ (đơn vị: km). Tính khoảng cách từ tàu đến ra đa (làm tròn đến hàng phần mười).</p>
+            <input type="text" id="ans8" placeholder="Nhập kết quả...">
+        </div>
+
+        <button type="button" class="btn-submit" onclick="finishQuiz()">NỘP BÀI</button>
+    </form>
+
+    <div id="results">
+        <h2>KẾT QUẢ: <span id="scoreDisplay">0</span>/10</h2>
+        <table class="result-table" id="resultTable">
+            <thead>
+                <tr>
+                    <th>Câu</th>
+                    <th>Bạn chọn</th>
+                    <th>Đáp án</th>
+                    <th>Kết quả</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // EmailJS Init
+    (function(){
+        emailjs.init("HU6h6TozhBYbVzJ3y");
+    })();
+
+    const answers = {
+        q1: 'B', q2: 'A', q3: 'A', q4: 'B',
+        q5a: 'Đ', q5b: 'Đ', q5c: 'S', q5d: 'Đ',
+        q6a: 'Đ', q6b: 'Đ', q6c: 'Đ', q6d: 'S',
+        ans7: '0.18', ans8: '29.2'
+    };
+
+    let timeLeft = 90 * 60;
+    const timerDisplay = document.getElementById('timer');
+
+    const countdown = setInterval(() => {
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        timerDisplay.innerHTML = `Thời gian: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            finishQuiz();
+        }
+        timeLeft--;
+    }, 1000);
+
+    function finishQuiz() {
+        const name = document.getElementById('userName').value;
+        const uClass = document.getElementById('userClass').value;
+        if(!name || !uClass) {
+            alert("Vui lòng nhập Tên và Lớp!");
+            return;
+        }
+
+        clearInterval(countdown);
+        let score = 0;
+        const tbody = document.querySelector("#resultTable tbody");
+        tbody.innerHTML = "";
+
+        // Phần I: 1đ/câu
+        for(let i=1; i<=4; i++) {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`)?.value || "Chưa chọn";
+            const isCorrect = selected === answers[`q${i}`];
+            if(isCorrect) score += 1;
+            addRow(`Phần I - Câu ${i}`, selected, answers[`q${i}`], isCorrect);
+        }
+
+        // Phần II: 0.5đ/ý
+        const parts = ['a', 'b', 'c', 'd'];
+        for(let i=5; i<=6; i++) {
+            parts.forEach(p => {
+                const key = `q${i}${p}`;
+                const selected = document.querySelector(`input[name="${key}"]:checked`)?.value || "Chưa chọn";
+                const isCorrect = selected === answers[key];
+                if(isCorrect) score += 0.5;
+                addRow(`Phần II - Câu ${i}${p}`, selected, answers[key], isCorrect);
+            });
+        }
+
+        // Phần III: 0.5đ/câu
+        for(let i=7; i<=8; i++) {
+            const val = document.getElementById(`ans${i}`).value.trim();
+            const isCorrect = val === answers[`ans${i}`];
+            if(isCorrect) score += 0.5;
+            addRow(`Phần III - Câu ${i}`, val || "Trống", answers[`ans${i}`], isCorrect);
+        }
+
+        document.getElementById('scoreDisplay').innerText = score;
+        document.getElementById('results').style.display = "block";
+        document.querySelector('.btn-submit').disabled = true;
+
+        // Gửi email
+        emailjs.send("service_vfmcv3p", "template_s3j932i", {
+            user_name: name,
+            user_class: uClass,
+            user_score: score,
+            to_email: "hungcr@gmail.com"
+        });
+    }
+
+    function addRow(q, user, correct, status) {
+        const tbody = document.querySelector("#resultTable tbody");
+        const row = `<tr>
+            <td>${q}</td>
+            <td>${user}</td>
+            <td>${correct}</td>
+            <td>${status ? '<span class="icon-check">✅</span>' : '<span class="icon-cross">❌</span>'}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+    }
+</script>
+</body>
+</html>
