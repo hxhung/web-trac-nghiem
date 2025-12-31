@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đề Thi Toán CT2018</title>
+    <title>Đề Thi Toán CT2018 - Đề 01</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script>MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };</script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
@@ -28,76 +28,82 @@
             </div>
         </div>
     </div>
+
     <form id="examForm">
+        <!-- PHẦN I -->
         <div class="part-header"><h5>PHẦN I. Trắc nghiệm nhiều lựa chọn (0.25đ/câu)</h5></div>
         
         <div class="question-box q-p1" data-correct="A">
             <p><b>Câu 1:</b> Tập xác định của hàm số $y = 3^x$ là:</p>
             <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="A"> <label>A. $\mathbb{R}$</label></div>
             <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="B"> <label>B. $(0; +\infty)$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="C"> <label>C. $[0; +\infty)$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="D"> <label>D. $\mathbb{R} \setminus \{0\}$</label></div>
-        </div>
-
-        <div class="question-box q-p1" data-correct="B">
-            <p><b>Câu 2:</b> Đạo hàm của hàm số $y = e^x$ là:</p>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="A"> <label>A. $y' = x \cdot e^{x-1}$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="B"> <label>B. $y' = e^x$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="C"> <label>C. $y' = \frac{e^x}{\ln e}$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="D"> <label>D. $y' = e^x \cdot \ln x$</label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="C"> <label>C. $\mathbb{R} \setminus \{0\}$</label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="D"> <label>D. $[0; +\infty)$</label></div>
         </div>
 
         <div class="question-box q-p1" data-correct="C">
-            <p><b>Câu 3:</b> Cho hàm số $y = a^x$ với $0 < a < 1$. Khẳng định nào sau đây là <b>đúng</b>?</p>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="A"> <label>A. Hàm số đồng biến trên $\mathbb{R}$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="B"> <label>B. Đồ thị hàm số có tiệm cận đứng là trục $Oy$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="C"> <label>C. Hàm số nghịch biến trên $\mathbb{R}$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="D"> <label>D. Tập giá trị của hàm số là $\mathbb{R}$</label></div>
+            <p><b>Câu 2:</b> Đạo hàm của hàm số $y = e^{2x}$ là:</p>
+            <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="A"> <label>A. $y' = e^{2x}$</label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="B"> <label>B. $y' = \frac{1}{2}e^{2x}$</label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="C"> <label>C. $y' = 2e^{2x}$</label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="D"> <label>D. $y' = 2xe^{2x-1}$</label></div>
+        </div>
+
+        <div class="question-box q-p1" data-correct="B">
+            <p><b>Câu 3:</b> Hàm số $y = a^x$ đồng biến trên $\mathbb{R}$ khi:</p>
+            <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="A"> <label>A. $0 < a < 1$</label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="B"> <label>B. $a > 1$</label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="C"> <label>C. $a > 0$</label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="D"> <label>D. $a \neq 1$</label></div>
         </div>
 
         <div class="question-box q-p1" data-correct="D">
-            <p><b>Câu 4:</b> Đồ thị hàm số $y = a^x$ ($a > 0, a \neq 1$) luôn đi qua điểm nào sau đây?</p>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="A"> <label>A. $(1; 0)$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="B"> <label>B. $(a; 0)$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="C"> <label>C. $(1; a)$</label></div>
+            <p><b>Câu 4:</b> Đồ thị hàm số $y = 2^x$ luôn đi qua điểm nào dưới đây?</p>
+            <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="A"> <label>A. $(0; 0)$</label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="B"> <label>B. $(1; 0)$</label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="C"> <label>C. $(2; 1)$</label></div>
             <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="D"> <label>D. $(0; 1)$</label></div>
         </div>
 
+        <!-- PHẦN II -->
         <div class="part-header"><h5>PHẦN II. Trắc nghiệm Đúng/Sai</h5></div>
         
-        <div class="question-box q-p2" data-correct="T,F,T,T">
-            <p><b>Câu 5:</b> Cho hàm số $y = 3^x$. Xét tính đúng sai của các mệnh đề sau:</p>
-            <div class="tf-row"><span>A) Tập xác định của hàm số là $D = \mathbb{R}$.</span><div class="tf-options">Đ <input type="radio" name="q5a" value="T"> S <input type="radio" name="q5a" value="F"></div></div>
-            <div class="tf-row"><span>B) Hàm số nghịch biến trên khoảng $(-\infty; +\infty)$.</span><div class="tf-options">Đ <input type="radio" name="q5b" value="T"> S <input type="radio" name="q5b" value="F"></div></div>
-            <div class="tf-row"><span>C) Đạo hàm của hàm số là $y' = 3^x \cdot \ln 3$.</span><div class="tf-options">Đ <input type="radio" name="q5c" value="T"> S <input type="radio" name="q5c" value="F"></div></div>
-            <div class="tf-row"><span>D) Đồ thị hàm số nhận trục hoành làm đường tiệm cận ngang.</span><div class="tf-options">Đ <input type="radio" name="q5d" value="T"> S <input type="radio" name="q5d" value="F"></div></div>
+        <div class="question-box q-p2" data-correct="T,T,F,T">
+            <p><b>Câu 1:</b> Cho hàm số $f(x) = x \cdot e^x$. Xét tính đúng sai của các khẳng định sau:</p>
+            <div class="tf-row"><span>a) Tập xác định của hàm số là $D = \mathbb{R}$.</span><div class="tf-options"><label>Đ <input type="radio" name="q5a" value="T"></label><label>S <input type="radio" name="q5a" value="F"></label></div></div>
+            <div class="tf-row"><span>b) Đạo hàm của hàm số là $f'(x) = e^x(x+1)$.</span><div class="tf-options"><label>Đ <input type="radio" name="q5b" value="T"></label><label>S <input type="radio" name="q5b" value="F"></label></div></div>
+            <div class="tf-row"><span>c) Hàm số đạt cực đại tại $x = -1$.</span><div class="tf-options"><label>Đ <input type="radio" name="q5c" value="T"></label><label>S <input type="radio" name="q5c" value="F"></label></div></div>
+            <div class="tf-row"><span>d) Hàm số đồng biến trên khoảng $(-1; +\infty)$.</span><div class="tf-options"><label>Đ <input type="radio" name="q5d" value="T"></label><label>S <input type="radio" name="q5d" value="F"></label></div></div>
         </div>
 
-        <div class="question-box q-p2" data-correct="T,F,T,T">
-            <p><b>Câu 6:</b> Cho hàm số $y = \left(\frac{1}{2}\right)^x$. Xét các phát biểu sau:</p>
-            <div class="tf-row"><span>A) Hàm số luôn nhận giá trị dương với mọi $x \in \mathbb{R}$.</span><div class="tf-options">Đ <input type="radio" name="q6a" value="T"> S <input type="radio" name="q6a" value="F"></div></div>
-            <div class="tf-row"><span>B) Đồ thị hàm số đi qua điểm $M(1; 2)$.</span><div class="tf-options">Đ <input type="radio" name="q6b" value="T"> S <input type="radio" name="q6b" value="F"></div></div>
-            <div class="tf-row"><span>C) Hàm số nghịch biến trên tập xác định.</span><div class="tf-options">Đ <input type="radio" name="q6c" value="T"> S <input type="radio" name="q6c" value="F"></div></div>
-            <div class="tf-row"><span>D) Đạo hàm $y' < 0$ với mọi $x \in \mathbb{R}$.</span><div class="tf-options">Đ <input type="radio" name="q6d" value="T"> S <input type="radio" name="q6d" value="F"></div></div>
+        <div class="question-box q-p2" data-correct="F,T,T,F">
+            <p><b>Câu 2:</b> Cho hàm số $g(x) = 2^{x^2-1}$. Khi đó:</p>
+            <div class="tf-row"><span>a) Đạo hàm $g'(x) = (x^2-1) \cdot 2^{x^2-2}$.</span><div class="tf-options"><label>Đ <input type="radio" name="q6a" value="T"></label><label>S <input type="radio" name="q6a" value="F"></label></div></div>
+            <div class="tf-row"><span>b) $g'(x) = 0$ khi và chỉ khi $x = 0$.</span><div class="tf-options"><label>Đ <input type="radio" name="q6b" value="T"></label><label>S <input type="radio" name="q6b" value="F"></label></div></div>
+            <div class="tf-row"><span>c) Giá trị nhỏ nhất của hàm số trên đoạn $[-2; 1]$ là $0.5$.</span><div class="tf-options"><label>Đ <input type="radio" name="q6c" value="T"></label><label>S <input type="radio" name="q6c" value="F"></label></div></div>
+            <div class="tf-row"><span>d) Hàm số nghịch biến trên khoảng $(0; +\infty)$.</span><div class="tf-options"><label>Đ <input type="radio" name="q6d" value="T"></label><label>S <input type="radio" name="q6d" value="F"></label></div></div>
         </div>
 
-        <div class="part-header"><h5>PHẦN III. Trắc nghiệm trả lời ngắn (0.5đ/câu)</h5></div>
+        <!-- PHẦN III -->
+        <div class="part-header"><h5>PHẦN III. Trả lời ngắn (0.5đ/câu)</h5></div>
         
-        <div class="question-box q-p3" data-correct="3">
-            <p><b>Câu 7:</b> Tìm số nguyên $x$ lớn nhất thỏa mãn bất phương trình $2^x < 15$.</p>
-            <input type="text" class="form-control short-ans" placeholder="Nhập đáp số">
+        <div class="question-box q-p3" data-correct="1">
+            <p><b>Câu 1:</b> Tìm giá trị lớn nhất của hàm số $y = e^{x^2-2x}$ trên đoạn $[0; 2]$.</p>
+            <input type="text" class="form-control short-ans" placeholder="Nhập đáp án...">
         </div>
 
-        <div class="question-box q-p3" data-correct="1">
-            <p><b>Câu 8:</b> Cho hàm số $y = e^x$. Tính giá trị của đạo hàm $y'$ tại điểm $x = 0$.</p>
-            <input type="text" class="form-control short-ans" placeholder="Nhập đáp số">
+        <div class="question-box q-p3" data-correct="2.38">
+            <p><b>Câu 2:</b> Nồng độ một loại hóa chất trong máu sau $t$ giờ tiêm được cho bởi $C(t) = \frac{3t}{27+t^3}$. Sau bao lâu thì nồng độ đạt cao nhất? (Làm tròn đến hàng phần trăm).</p>
+            <input type="text" class="form-control short-ans" placeholder="Nhập đáp án...">
         </div>
     </form>
+
     <div class="text-center my-5">
         <button onclick="submitExam()" id="btnSub" class="btn btn-success btn-lg px-5">NỘP BÀI</button>
     </div>
+
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzpN1f0s5jc7vXVENRowRxpCwroEUM-IXkgKHGGHoZYb-ns-f5PlQ30hFWMzFK48_PS/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxNx_DJbZ35VaXuarmrx3QqRYM8I8d1v9uH65gREiVufe021qO4b2UbuuJP5e56OCfc/exec';
         function submitExam() {
             const name = document.getElementById('sName').value;
             const cls = document.getElementById('sClass').value;
@@ -108,19 +114,18 @@
             let score = 0;
             document.querySelectorAll('.q-p1').forEach(q => {
                 const correct = q.dataset.correct;
-                const selected = q.querySelector('input:checked');
-                q.querySelectorAll('input').forEach(i => i.disabled = true);
-                if(selected && selected.value === correct) { score += 0.25; q.classList.add('correct-color'); }
+                const sel = q.querySelector('input:checked');
+                q.querySelectorAll('input').forEach(i => i.disabled=true);
+                if(sel && sel.value === correct) { score += 0.25; q.classList.add('correct-color'); }
                 else { q.classList.add('wrong-color'); }
             });
             document.querySelectorAll('.q-p2').forEach(q => {
                 const correctArr = q.dataset.correct.split(',');
                 let subScore = 0;
-                const rows = q.querySelectorAll('.tf-row');
-                rows.forEach((row, idx) => {
+                q.querySelectorAll('.tf-row').forEach((row, idx) => {
                     const sel = row.querySelector('input:checked');
                     row.querySelectorAll('input').forEach(i => i.disabled=true);
-                    if(sel && (sel.value === correctArr[idx] || sel.value === correctArr[idx].replace('T','D').replace('F','S'))) {
+                    if(sel && (sel.value === correctArr[idx])) {
                         subScore++; row.style.color="green"; row.style.fontWeight="bold";
                     } else { if(sel) sel.parentElement.style.color="red"; }
                 });
@@ -129,25 +134,23 @@
             document.querySelectorAll('.q-p3').forEach(q => {
                 const correct = q.dataset.correct;
                 const inp = q.querySelector('.short-ans');
-                const ans = inp.value.trim(); inp.disabled = true;
+                const ans = inp.value.trim(); inp.disabled=true;
                 if(ans === correct) { score += 0.5; q.classList.add('correct-color'); }
                 else { q.classList.add('wrong-color'); }
             });
-            const data = { name: name, class: cls, score: score.toFixed(2) };
-            fetch(API_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            }).then(() => {
-                alert(`Nộp thành công!\nĐiểm: ${score.toFixed(2)}`);
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('class', cls);
+            formData.append('score', score.toFixed(2));
+            fetch(API_URL, { method: 'POST', mode: 'no-cors', body: formData })
+            .then(() => {
+                alert(`Nộp thành công!\nHọc sinh: ${name}\nĐiểm: ${score.toFixed(2)}`);
                 btn.innerHTML = 'ĐÃ NỘP XONG';
             }).catch(err => {
-                alert(`Lỗi mạng nhưng đã chấm xong.\nĐiểm: ${score.toFixed(2)}`);
+                alert(`Đã chấm xong. Điểm: ${score.toFixed(2)}`);
                 btn.innerHTML = 'ĐÃ CHẤM';
             });
         }
     </script>
 </body>
 </html>
-
