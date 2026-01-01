@@ -3,288 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đề 01: Khảo sát hàm số - 12/4/6</title>
+    <title>Đề 01: Ứng dụng đạo hàm - Toán 12</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script>
-        MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
-        };
+        MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
     <style>
-        body { background: #f5f7fa; max-width: 900px; margin: 0 auto; padding: 20px; font-family: 'Segoe UI', sans-serif; }
-        .part-header { background: #0d6efd; color: white; padding: 10px 15px; border-radius: 8px; margin-top: 30px; margin-bottom: 15px; }
-        .question-box { background: white; padding: 15px; border: 1px solid #dee2e6; border-radius: 8px; margin-bottom: 15px; }
-        .tf-row { border-bottom: 1px solid #eee; padding: 5px 0; display: flex; justify-content: space-between; align-items: center; }
-        .tf-options input { margin-left: 10px; transform: scale(1.2); }
-        .correct-color { background-color: #d1e7dd; }
-        .wrong-color { background-color: #f8d7da; }
+        :root { --primary-color: #4e73df; --secondary-color: #858796; --success-color: #1cc88a; --danger-color: #e74a3b; }
+        body { background-color: #f8f9fc; font-family: 'Segoe UI', Roboto, sans-serif; }
+        #welcome-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4e73df 0%, #224abe 100%); }
+        .welcome-card { background: white; width: 100%; max-width: 500px; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; }
+        .exam-icon { font-size: 60px; color: var(--primary-color); margin-bottom: 20px; }
+        #exam-screen { display: none; padding-bottom: 80px; }
+        .sticky-header { position: sticky; top: 0; z-index: 1000; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 10px 20px; margin-bottom: 20px; }
+        .timer-box { font-size: 1.5rem; font-weight: bold; color: var(--primary-color); }
+        .timer-warning { color: var(--danger-color); animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+        .question-box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 5px solid var(--primary-color); transition: transform 0.2s; }
+        .part-header { background: #eaecf4; color: #333; padding: 10px 15px; border-radius: 8px; margin: 30px 0 15px 0; font-weight: bold; border-left: 5px solid #333; }
+        #result-screen { display: none; padding: 40px 0; }
+        .score-card { background: white; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .final-score { font-size: 4rem; font-weight: 800; color: var(--primary-color); }
+        .correct-color { background-color: #d1e7dd !important; border-color: #badbcc !important; }
+        .wrong-color { background-color: #f8d7da !important; border-color: #f5c2c7 !important; }
+        .ans-explain { font-weight: bold; color: var(--danger-color); margin-top: 10px; font-style: italic; }
     </style>
 </head>
 <body>
-    <a href="index.html" style="text-decoration: none; display: inline-block; margin-bottom: 15px;">← Quay lại danh sách</a>
-    <div class="card mb-4 shadow-sm">
-        <div class="card-body">
-            <h3 class="text-center text-primary">ĐỀ KIỂM TRA: CHƯƠNG 1 - KHẢO SÁT HÀM SỐ</h3>
-            <div class="row g-3 mt-2">
-                <div class="col-md-8"><input type="text" id="sName" class="form-control" placeholder="Họ và tên học sinh"></div>
-                <div class="col-md-4"><input type="text" id="sClass" class="form-control" placeholder="Lớp"></div>
+
+<div id="welcome-screen">
+    <div class="welcome-card">
+        <div class="exam-icon"><i class="fas fa-graduation-cap"></i></div>
+        <h2 class="mb-3 text-uppercase fw-bold text-primary">Chương 1: Ứng dụng đạo hàm</h2>
+        <p class="text-muted mb-4"><i class="far fa-clock me-2"></i>Thời gian: 90 phút | <i class="far fa-file-alt me-2"></i>Số câu: 12</p>
+        <div class="mb-3 text-start">
+            <label class="form-label fw-bold">Họ và tên:</label>
+            <input type="text" id="sName" class="form-control form-control-lg" placeholder="Nhập họ tên...">
+        </div>
+        <div class="mb-4 text-start">
+            <label class="form-label fw-bold">Lớp:</label>
+            <input type="text" id="sClass" class="form-control form-control-lg" placeholder="Nhập lớp...">
+        </div>
+        <button onclick="startExam()" class="btn btn-primary btn-start w-100 text-white fw-bold">BẮT ĐẦU LÀM BÀI</button>
+    </div>
+</div>
+
+<div id="exam-screen">
+    <div class="sticky-header d-flex justify-content-between align-items-center">
+        <div><span class="fw-bold text-dark"><i class="fas fa-user-circle me-1"></i> <span id="dispName">Thí sinh</span></span></div>
+        <div class="timer-box"><i class="fas fa-stopwatch me-2"></i><span id="timerDisplay">90:00</span></div>
+        <button onclick="submitExam()" id="btnSubTop" class="btn btn-success btn-sm fw-bold px-3">NỘP BÀI</button>
+    </div>
+    <div class="container" style="max-width: 900px;">
+        <form id="examForm">
+            <div class="part-header"><h5>PHẦN I. Trắc nghiệm nhiều lựa chọn (0.25đ/câu)</h5></div>
+            
+            <!-- Câu 1 -->
+            <div class="question-box q-p1" data-correct="B">
+                <p class="fw-bold">Câu 1: Cho hàm số $y = -x^3 + 3x^2 - 4$. Hàm số nghịch biến trên các khoảng nào?</p>
+                <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="A"> <label class="form-check-label">$(0; 2)$</label></div>
+                <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="B"> <label class="form-check-label">$(-\infty; 0)$ và $(2; +\infty)$</label></div>
+                <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="C"> <label class="form-check-label">$\mathbb{R}$</label></div>
+                <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="D"> <label class="form-check-label">$(-\infty; 2)$</label></div>
+            </div>
+
+            <!-- Câu 2 -->
+            <div class="question-box q-p1" data-correct="C">
+                <p class="fw-bold">Câu 2: Điểm cực tiểu của hàm số $y = x^3 - 3x^2 + 2$ là:</p>
+                <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="A"> <label class="form-check-label">$x = 0$</label></div>
+                <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="B"> <label class="form-check-label">$x = 1$</label></div>
+                <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="C"> <label class="form-check-label">$x = 2$</label></div>
+                <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="D"> <label class="form-check-label">$x = -2$</label></div>
+            </div>
+
+            <!-- Câu 3 -->
+            <div class="question-box q-p1" data-correct="A">
+                <p class="fw-bold">Câu 3: Đường tiệm cận đứng của đồ thị hàm số $y = \frac{x+1}{x-2}$ là:</p>
+                <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="A"> <label class="form-check-label">$x = 2$</label></div>
+                <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="B"> <label class="form-check-label">$x = -1$</label></div>
+                <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="C"> <label class="form-check-label">$y = 1$</label></div>
+                <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="D"> <label class="form-check-label">$y = 2$</label></div>
+            </div>
+
+            <div class="part-header"><h5>PHẦN II. Trắc nghiệm Đúng/Sai (1đ/câu)</h5></div>
+            <!-- Câu 4 -->
+            <div class="question-box q-p2" data-correct="D,D,S,D">
+                <p class="fw-bold">Câu 4: Cho hàm số $y = x^3 - 3x + 2$ có đồ thị $(C)$. Xét tính đúng/sai của các mệnh đề sau:</p>
+                <div class="tf-row mb-2">A. Đạo hàm $y' = 3x^2 - 3$. 
+                    <input type="radio" name="q4_a" value="D"> Đ <input type="radio" name="q4_a" value="S"> S</div>
+                <div class="tf-row mb-2">B. Hàm số đạt cực đại tại $x = -1$. 
+                    <input type="radio" name="q4_b" value="D"> Đ <input type="radio" name="q4_b" value="S"> S</div>
+                <div class="tf-row mb-2">C. Giá trị cực tiểu của hàm số là $y = 4$. 
+                    <input type="radio" name="q4_c" value="D"> Đ <input type="radio" name="q4_c" value="S"> S</div>
+                <div class="tf-row mb-2">D. Đồ thị hàm số đi qua điểm $(0; 2)$. 
+                    <input type="radio" name="q4_d" value="D"> Đ <input type="radio" name="q4_d" value="S"> S</div>
+            </div>
+
+            <div class="part-header"><h5>PHẦN III. Trắc nghiệm trả lời ngắn (0.5đ/câu)</h5></div>
+            <!-- Câu 5 -->
+            <div class="question-box q-p3" data-correct="10">
+                <p class="fw-bold">Câu 5: Một tấm bìa hình vuông cạnh $60$ cm. Người ta cắt 4 góc 4 hình vuông cạnh $x$ để gập thành hộp không nắp. Tìm $x$ (cm) để thể tích hộp lớn nhất.</p>
+                <input type="text" class="form-control short-ans" placeholder="Nhập đáp số...">
+            </div>
+        </form>
+        <div class="text-center mt-5"><button onclick="submitExam()" id="btnSubBottom" class="btn btn-success btn-lg px-5 fw-bold shadow">NỘP BÀI THI</button></div>
+    </div>
+</div>
+
+<div id="result-screen">
+    <div class="container" style="max-width: 800px;">
+        <div class="score-card">
+            <h3 class="text-uppercase text-muted">Kết Quả Bài Thi</h3>
+            <div class="final-score" id="scoreValue">0.00</div>
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <button onclick="location.reload()" class="btn btn-outline-primary"><i class="fas fa-redo me-2"></i>Làm lại</button>
+                <button onclick="reviewExam()" class="btn btn-primary"><i class="fas fa-search me-2"></i>Xem chi tiết</button>
             </div>
         </div>
+        <div id="review-area"></div>
     </div>
+</div>
 
-    <form id="examForm">
-        <!-- PHẦN I -->
-        <div class="part-header"><h5>PHẦN I. Trắc nghiệm (12 câu - 0.25đ/câu)</h5></div>
-        
-        <div class="question-box q-p1" data-correct="A">
-            <p><b>Câu 1:</b> Cho hàm số $y=f(x)$ có bảng biến thiên. Khoảng đồng biến của hàm số là:</p>
-            <p>[Mô tả: $x$ từ $-\infty$ đến $-1$ và $0$ đến $1$, $f'(x)$ mang dấu $+$]</p>
-            <input type="radio" name="q1" value="A"> A. $(-\infty; -1)$<br>
-            <input type="radio" name="q1" value="B"> B. $(-1; 0)$<br>
-            <input type="radio" name="q1" value="C"> C. $(1; +\infty)$<br>
-            <input type="radio" name="q1" value="D"> D. $(0; 2)$
-        </div>
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbxNx_DJbZ35VaXuarmrx3QqRYM8I8d1v9uH65gREiVufe021qO4b2UbuuJP5e56OCfc/exec';
+let timeRemaining = 90 * 60;
+let timerInterval;
+let isSubmitted = false;
 
-        <div class="question-box q-p1" data-correct="C">
-            <p><b>Câu 2:</b> Điểm cực tiểu của đồ thị hàm số $y=x^3-3x^2+2$ là:</p>
-            <input type="radio" name="q2" value="A"> A. $(0; 2)$<br>
-            <input type="radio" name="q2" value="B"> B. $x=2$<br>
-            <input type="radio" name="q2" value="C"> C. $(2; -2)$<br>
-            <input type="radio" name="q2" value="D"> D. $x=0$
-        </div>
-
-        <div class="question-box q-p1" data-correct="B">
-            <p><b>Câu 3:</b> Giá trị lớn nhất của hàm số $y=x^3-3x+1$ trên đoạn $[0; 2]$ bằng:</p>
-            <input type="radio" name="q3" value="A"> A. $1$<br>
-            <input type="radio" name="q3" value="B"> B. $3$<br>
-            <input type="radio" name="q3" value="C"> C. $-1$<br>
-            <input type="radio" name="q3" value="D"> D. $0$
-        </div>
-
-        <div class="question-box q-p1" data-correct="D">
-            <p><b>Câu 4:</b> Đường tiệm cận đứng của đồ thị hàm số $y=\frac{2x+1}{x-1}$ là:</p>
-            <input type="radio" name="q4" value="A"> A. $y=2$<br>
-            <input type="radio" name="q4" value="B"> B. $y=1$<br>
-            <input type="radio" name="q4" value="C"> C. $x=-1$<br>
-            <input type="radio" name="q4" value="D"> D. $x=1$
-        </div>
-
-        <div class="question-box q-p1" data-correct="A">
-            <p><b>Câu 5:</b> Hàm số nào sau đây luôn đồng biến trên $\mathbb{R}$?</p>
-            <input type="radio" name="q5" value="A"> A. $y=x^3+3x$<br>
-            <input type="radio" name="q5" value="B"> B. $y=\frac{x-1}{x+2}$<br>
-            <input type="radio" name="q5" value="C"> C. $y=x^4+x^2$<br>
-            <input type="radio" name="q5" value="D"> D. $y=-x^3-x$
-        </div>
-
-        <div class="question-box q-p1" data-correct="C">
-            <p><b>Câu 6:</b> Cho hàm số $y=f(x)$ có $f'(x)=x(x-1)^2$. Số điểm cực trị của hàm số là:</p>
-            <input type="radio" name="q6" value="A"> A. $0$<br>
-            <input type="radio" name="q6" value="B"> B. $2$<br>
-            <input type="radio" name="q6" value="C"> C. $1$<br>
-            <input type="radio" name="q6" value="D"> D. $3$
-        </div>
-
-        <div class="question-box q-p1" data-correct="B">
-            <p><b>Câu 7:</b> Tiệm cận ngang của đồ thị hàm số $y=\frac{5x-2}{x+3}$ là:</p>
-            <input type="radio" name="q7" value="A"> A. $x=-3$<br>
-            <input type="radio" name="q7" value="B"> B. $y=5$<br>
-            <input type="radio" name="q7" value="C"> C. $y=-2$<br>
-            <input type="radio" name="q7" value="D"> D. $y=\frac{2}{5}$
-        </div>
-
-        <div class="question-box q-p1" data-correct="A">
-            <p><b>Câu 8:</b> Đồ thị hàm số bậc ba $y=ax^3+bx^2+cx+d$ có $a>0$ và $y'=0$ vô nghiệm thì:</p>
-            <input type="radio" name="q8" value="A"> A. Hàm số luôn đồng biến trên $\mathbb{R}$<br>
-            <input type="radio" name="q8" value="B"> B. Hàm số luôn nghịch biến trên $\mathbb{R}$<br>
-            <input type="radio" name="q8" value="C"> C. Hàm số có 2 điểm cực trị<br>
-            <input type="radio" name="q8" value="D"> D. Hàm số có 1 điểm cực trị
-        </div>
-
-        <div class="question-box q-p1" data-correct="D">
-            <p><b>Câu 9:</b> Tâm đối xứng của đồ thị hàm số $y=\frac{x+1}{x-1}$ là:</p>
-            <input type="radio" name="q9" value="A"> A. $(0; 0)$<br>
-            <input type="radio" name="q9" value="B"> B. $(1; 0)$<br>
-            <input type="radio" name="q9" value="C"> C. $(-1; 1)$<br>
-            <input type="radio" name="q9" value="D"> D. $(1; 1)$
-        </div>
-
-        <div class="question-box q-p1" data-correct="C">
-            <p><b>Câu 10:</b> Hàm số $y=\frac{x^2+x+2}{x+2}$ đạt cực đại tại $x$ bằng:</p>
-            <input type="radio" name="q10" value="A"> A. $0$<br>
-            <input type="radio" name="q10" value="B"> B. $2$<br>
-            <input type="radio" name="q10" value="C"> C. $-4$<br>
-            <input type="radio" name="q10" value="D"> D. $-2$
-        </div>
-
-        <div class="question-box q-p1" data-correct="B">
-            <p><b>Câu 11:</b> Cho hàm số $y=f(x)$ liên tục trên $\mathbb{R}$ và $f'(x) < 0, \forall x \in (1; 3)$. Khẳng định đúng là:</p>
-            <input type="radio" name="q11" value="A"> A. $f(1) < f(2)$<br>
-            <input type="radio" name="q11" value="B"> B. $f(2) > f(3)$<br>
-            <input type="radio" name="q11" value="C"> C. Hàm số đồng biến trên $(1; 3)$<br>
-            <input type="radio" name="q11" value="D"> D. $f(1) = f(3)$
-        </div>
-
-        <div class="question-box q-p1" data-correct="A">
-            <p><b>Câu 12:</b> Đường tiệm cận xiên của đồ thị $y=x-3+\frac{1}{x^2}$ là:</p>
-            <input type="radio" name="q12" value="A"> A. $y=x-3$<br>
-            <input type="radio" name="q12" value="B"> B. $y=x$<br>
-            <input type="radio" name="q12" value="C"> C. $x=0$<br>
-            <input type="radio" name="q12" value="D"> D. $y=-3$
-        </div>
-
-        <!-- PHẦN II -->
-        <div class="part-header"><h5>PHẦN II. Đúng/Sai (4 câu - 1đ/câu)</h5></div>
-        
-        <div class="question-box q-p2" data-correct="T,T,F,F">
-            <p><b>Câu 13:</b> Cho hàm số $y=x^3-3x+2$. Xét các tính chất sau:</p>
-            <div class="tf-row"><span>a) Đạo hàm $y'=3x^2-3$.</span><div class="tf-options"><input type="radio" name="q13a" value="T"> Đ <input type="radio" name="q13a" value="F"> S</div></div>
-            <div class="tf-row"><span>b) Hàm số đạt cực đại tại $x=-1$.</span><div class="tf-options"><input type="radio" name="q13b" value="T"> Đ <input type="radio" name="q13b" value="F"> S</div></div>
-            <div class="tf-row"><span>c) Giá trị cực tiểu của hàm số là $y=4$.</span><div class="tf-options"><input type="radio" name="q13c" value="T"> Đ <input type="radio" name="q13c" value="F"> S</div></div>
-            <div class="tf-row"><span>d) Hàm số nghịch biến trên khoảng $(1; +\infty)$.</span><div class="tf-options"><input type="radio" name="q13d" value="T"> Đ <input type="radio" name="q13d" value="F"> S</div></div>
-        </div>
-
-        <div class="question-box q-p2" data-correct="T,F,T,F">
-            <p><b>Câu 14:</b> Cho hàm số $y=\frac{x^2-3}{-x-1}$.</p>
-            <div class="tf-row"><span>a) Tiệm cận đứng là $x=-1$.</span><div class="tf-options"><input type="radio" name="q14a" value="T"> Đ <input type="radio" name="q14a" value="F"> S</div></div>
-            <div class="tf-row"><span>b) Tiệm cận ngang là $y=-1$.</span><div class="tf-options"><input type="radio" name="q14b" value="T"> Đ <input type="radio" name="q14b" value="F"> S</div></div>
-            <div class="tf-row"><span>c) Tiệm cận xiên là $y=-x+1$.</span><div class="tf-options"><input type="radio" name="q14c" value="T"> Đ <input type="radio" name="q14c" value="F"> S</div></div>
-            <div class="tf-row"><span>d) Giao điểm hai tiệm cận là $I(-1; 1)$.</span><div class="tf-options"><input type="radio" name="q14d" value="T"> Đ <input type="radio" name="q14d" value="F"> S</div></div>
-        </div>
-
-        <div class="question-box q-p2" data-correct="T,T,T,F">
-            <p><b>Câu 15:</b> Một chiếc thùng tôn hình hộp chữ nhật không nắp có đáy bình phương cạnh $x$ và thể tích $32$ lít.</p>
-            <div class="tf-row"><span>a) Chiều cao thùng tính theo $x$ là $h=\frac{32}{x^2}$.</span><div class="tf-options"><input type="radio" name="q15a" value="T"> Đ <input type="radio" name="q15a" value="F"> S</div></div>
-            <div class="tf-row"><span>b) Diện tích tôn cần dùng là $S=x^2+\frac{128}{x}$.</span><div class="tf-options"><input type="radio" name="q15b" value="T"> Đ <input type="radio" name="q15b" value="F"> S</div></div>
-            <div class="tf-row"><span>c) Diện tích tôn nhỏ nhất khi cạnh đáy $x=4$ dm.</span><div class="tf-options"><input type="radio" name="q15c" value="T"> Đ <input type="radio" name="q15c" value="F"> S</div></div>
-            <div class="tf-row"><span>d) Chiều cao thùng khi đó là $h=8$ dm.</span><div class="tf-options"><input type="radio" name="q15d" value="T"> Đ <input type="radio" name="q15d" value="F"> S</div></div>
-        </div>
-
-        <div class="question-box q-p2" data-correct="F,T,T,T">
-            <p><b>Câu 16:</b> Cho hàm số bậc ba $y=f(x)$ có đồ thị $(C)$.</p>
-            <div class="tf-row"><span>a) Đồ thị luôn có trục đối xứng.</span><div class="tf-options"><input type="radio" name="q16a" value="T"> Đ <input type="radio" name="q16a" value="F"> S</div></div>
-            <div class="tf-row"><span>b) Đồ thị luôn có tâm đối xứng.</span><div class="tf-options"><input type="radio" name="q16b" value="T"> Đ <input type="radio" name="q16b" value="F"> S</div></div>
-            <div class="tf-row"><span>c) Tâm đối xứng là trung điểm đoạn nối hai cực trị.</span><div class="tf-options"><input type="radio" name="q16c" value="T"> Đ <input type="radio" name="q16c" value="F"> S</div></div>
-            <div class="tf-row"><span>d) Hoành độ tâm đối xứng là nghiệm của $y''=0$.</span><div class="tf-options"><input type="radio" name="q16d" value="T"> Đ <input type="radio" name="q16d" value="F"> S</div></div>
-        </div>
-
-        <!-- PHẦN III -->
-        <div class="part-header"><h5>PHẦN III. Trả lời ngắn (6 câu - 0.5đ/câu)</h5></div>
-        
-        <div class="question-box q-p3" data-correct="2.5">
-            <p><b>Câu 17:</b> Một vật phóng thẳng đứng lên từ mặt đất với $v_0 = 24.5$ m/s. Độ cao $h(t) = 24.5t - 4.9t^2$. Sau bao nhiêu giây vật đạt độ cao lớn nhất?</p>
-            <input type="text" class="form-control short-ans" placeholder="Đáp số...">
-        </div>
-
-        <div class="question-box q-p3" data-correct="5">
-            <p><b>Câu 18:</b> Cho hàm số $f(x)=x^3-6x^2+9x+1$. Tính giá trị cực đại của hàm số.</p>
-            <input type="text" class="form-control short-ans" placeholder="Đáp số...">
-        </div>
-
-        <div class="question-box q-p3" data-correct="100">
-            <p><b>Câu 19:</b> Một công ty sản xuất máy xay. Lợi nhuận $P(x)=-0.3x^3+36x^2+1800x-48000$. Cần sản xuất bao nhiêu chiếc để lợi nhuận tối đa?</p>
-            <input type="text" class="form-control short-ans" placeholder="Đáp số...">
-        </div>
-
-        <div class="question-box q-p3" data-correct="33.33">
-            <p><b>Câu 20:</b> Vận tốc tức thời của con tàu đổ bộ $v(t)=-0.03t^2+2.2t-30$. Tại thời điểm $t$ nào (giây) thì vận tốc đạt cực đại? (Làm tròn đến 2 chữ số thập phân).</p>
-            <input type="text" class="form-control short-ans" placeholder="Đáp số...">
-        </div>
-
-        <div class="question-box q-p3" data-correct="1">
-            <p><b>Câu 21:</b> Đồ thị hàm số $y=\frac{x+2}{x-1}$ có bao nhiêu đường tiệm cận ngang?</p>
-            <input type="text" class="form-control short-ans" placeholder="Đáp số...">
-        </div>
-
-        <div class="question-box q-p3" data-correct="12.5">
-            <p><b>Câu 22:</b> Nồng độ thuốc trong máu $C(x)=\frac{30x}{x^2+2}$. Tìm nồng độ cực đại (mg/l) trong 6 phút đầu (Làm tròn đến hàng phần mười).</p>
-            <input type="text" class="form-control short-ans" placeholder="Đáp số...">
-        </div>
-    </form>
-
-    <div class="text-center my-5">
-        <button onclick="submitExam()" id="btnSub" class="btn btn-success btn-lg px-5">NỘP BÀI</button>
-    </div>
-
-    <script>
-        window.onload = function() {
-            function shuffle(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-            }
-            const parts = document.querySelectorAll('.part-header');
-            parts.forEach(header => {
-                let sibling = header.nextElementSibling;
-                let questions = [];
-                let parent = header.parentNode;
-                while (sibling && sibling.classList.contains('question-box')) {
-                    questions.push(sibling);
-                    sibling = sibling.nextElementSibling;
-                }
-                if (questions.length > 0) {
-                    shuffle(questions);
-                    questions.forEach(q => parent.insertBefore(q, sibling));
-                }
-            });
-        };
-
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxNx_DJbZ35VaXuarmrx3QqRYM8I8d1v9uH65gREiVufe021qO4b2UbuuJP5e56OCfc/exec';
-
-        function submitExam() {
-            const name = document.getElementById('sName').value;
-            const cls = document.getElementById('sClass').value;
-            if(!name || !cls) { alert('Vui lòng nhập tên và lớp!'); return; }
-            if(!confirm('Nộp bài ngay?')) return;
-
-            const btn = document.getElementById('btnSub');
-            btn.innerHTML = 'Đang chấm...'; btn.disabled = true;
-            let score = 0;
-
-            document.querySelectorAll('.q-p1').forEach(q => {
-                const correct = q.dataset.correct;
-                const sel = q.querySelector('input:checked');
-                q.querySelectorAll('input').forEach(i => i.disabled=true);
-                if(sel && sel.value === correct) { score += 0.25; q.classList.add('correct-color'); }
-                else { q.classList.add('wrong-color'); }
-            });
-
-            document.querySelectorAll('.q-p2').forEach(q => {
-                const correctArr = q.dataset.correct.split(',');
-                let subScore = 0;
-                q.querySelectorAll('.tf-row').forEach((row, idx) => {
-                    const sel = row.querySelector('input:checked');
-                    row.querySelectorAll('input').forEach(i => i.disabled=true);
-                    if(sel && sel.value === correctArr[idx]) { subScore++; row.style.color="green"; }
-                    else if(sel) { row.style.color="red"; }
-                });
-                if(subScore===1) score+=0.1; else if(subScore===2) score+=0.25; else if(subScore===3) score+=0.5; else if(subScore===4) score+=1.0;
-            });
-
-            document.querySelectorAll('.q-p3').forEach(q => {
-                const correct = q.dataset.correct;
-                const inp = q.querySelector('.short-ans');
-                const ans = inp.value.trim(); inp.disabled=true;
-                if(ans === correct) { score += 0.5; q.classList.add('correct-color'); }
-                else { q.classList.add('wrong-color'); }
-            });
-
-            const data = new URLSearchParams();
-            data.append('name', name);
-            data.append('class', cls);
-            data.append('score', score.toFixed(2));
-
-            fetch(API_URL, { method: 'POST', mode: 'no-cors', body: data })
-            .then(() => {
-                alert(`Nộp thành công!\nHọc sinh: ${name}\nĐiểm: ${score.toFixed(2)}`);
-                btn.innerHTML = 'ĐÃ NỘP XONG';
-            }).catch(() => {
-                alert(`Đã chấm xong. Điểm: ${score.toFixed(2)}`);
-                btn.innerHTML = 'ĐÃ CHẤM';
+window.addEventListener('load', function() {
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+    let globalQuestionNumber = 1;
+    document.querySelectorAll('.part-header').forEach(header => {
+        let questions = [];
+        let sibling = header.nextElementSibling;
+        while (sibling && sibling.classList.contains('question-box')) {
+            questions.push(sibling);
+            sibling = sibling.nextElementSibling;
+        }
+        if (questions.length > 0) {
+            shuffle(questions);
+            questions.forEach(q => {
+                header.parentNode.insertBefore(q, sibling);
+                q.innerHTML = q.innerHTML.replace(/Câu \d+/, "Câu " + globalQuestionNumber++);
             });
         }
-    </script>
+    });
+});
+
+function startExam() {
+    const name = document.getElementById('sName').value.trim();
+    const cls = document.getElementById('sClass').value.trim();
+    if (!name || !cls) { alert("Vui lòng nhập đầy đủ thông tin!"); return; }
+    document.getElementById('dispName').innerText = name + " - " + cls;
+    document.getElementById('welcome-screen').style.display = 'none';
+    document.getElementById('exam-screen').style.display = 'block';
+    startTimer();
+}
+
+function startTimer() {
+    const display = document.getElementById('timerDisplay');
+    timerInterval = setInterval(() => {
+        let mins = Math.floor(timeRemaining / 60);
+        let secs = timeRemaining % 60;
+        display.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        if (timeRemaining <= 30) display.classList.add('timer-warning');
+        if (timeRemaining-- <= 0) { clearInterval(timerInterval); submitExam(true); }
+    }, 1000);
+}
+
+function submitExam(isAuto = false) {
+    if (isSubmitted) return;
+    if (!isAuto && !confirm('Xác nhận nộp bài?')) return;
+    clearInterval(timerInterval);
+    isSubmitted = true;
+    let score = 0;
+
+    document.querySelectorAll('.q-p1').forEach(q => {
+        const sel = q.querySelector('input:checked');
+        if (sel && sel.value === q.dataset.correct) { score += 0.25; q.classList.add('correct-color'); }
+        else { q.classList.add('wrong-color'); q.innerHTML += `<div class="ans-explain">Đáp án: ${q.dataset.correct}</div>`; }
+    });
+
+    document.querySelectorAll('.q-p2').forEach(q => {
+        const correctArr = q.dataset.correct.split(',');
+        let sub = 0;
+        q.querySelectorAll('.tf-row').forEach((row, i) => {
+            const sel = row.querySelector('input:checked');
+            if (sel && sel.value === correctArr[i]) sub++;
+            else row.innerHTML += `<span class="badge bg-danger ms-2">${correctArr[i]}</span>`;
+        });
+        if (sub === 1) score += 0.1; else if (sub === 2) score += 0.25; else if (sub === 3) score += 0.5; else if (sub === 4) score += 1.0;
+    });
+
+    document.querySelectorAll('.q-p3').forEach(q => {
+        const ans = q.querySelector('.short-ans').value.trim();
+        if (ans === q.dataset.correct) { score += 0.5; q.classList.add('correct-color'); }
+        else { q.classList.add('wrong-color'); q.innerHTML += `<div class="ans-explain">Đáp án: ${q.dataset.correct}</div>`; }
+    });
+
+    const finalScore = score.toFixed(2);
+    document.getElementById('scoreValue').innerText = finalScore;
+    
+    const data = new URLSearchParams();
+    data.append('name', document.getElementById('sName').value);
+    data.append('class', document.getElementById('sClass').value);
+    data.append('score', finalScore);
+    fetch(API_URL, { method: 'POST', mode: 'no-cors', body: data });
+
+    setTimeout(() => {
+        document.getElementById('exam-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        window.scrollTo(0, 0);
+    }, 1000);
+}
+
+function reviewExam() {
+    document.getElementById('review-area').appendChild(document.getElementById('examForm'));
+}
+</script>
 </body>
 </html>
