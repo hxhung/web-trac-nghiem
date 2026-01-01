@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đề Số 02 - Tọa Độ Vectơ Trong Không Gian</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+:root{--primary:#0d6efd;--sec:#6c757d;--success:#198754;--danger:#dc3545}body{background:#f8f9fa;font-family:sans-serif}
+#welcome-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d6efd,#0a58ca)}
+.welcome-card{background:#fff;width:100%;max-width:500px;padding:30px;border-radius:15px;text-align:center}
+#exam-screen{display:none;padding-bottom:60px}.sticky-header{position:sticky;top:0;z-index:999;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);padding:10px 15px;margin-bottom:20px}
+.question-box{background:#fff;padding:15px;border-radius:8px;margin-bottom:15px;border-left:4px solid var(--primary)}
+.part-header{background:#e9ecef;padding:8px 15px;border-radius:5px;margin:20px 0 10px;font-weight:bold}
+.q-item{display:block;margin:5px 0;cursor:pointer}.q-item input{margin-right:8px;transform:scale(1.2)}
+.tf-row{border-bottom:1px solid #eee;padding:8px 0;display:flex;justify-content:space-between;align-items:center}
+.tf-content{flex:1;padding-right:10px}.tf-opts{flex-shrink:0;white-space:nowrap}.tf-opts input{margin:0 5px;transform:scale(1.2)}
+#result-screen{display:none;padding:40px 0}.score-card{background:#fff;border-radius:15px;padding:30px;text-align:center;margin-bottom:20px}
+.final-score{font-size:3.5rem;font-weight:800;color:var(--primary)}.correct-color{background:#d1e7dd!important}.wrong-color{background:#f8d7da!important}
+.ans-explain{font-weight:bold;color:var(--danger);font-style:italic;margin-top:5px}
+</style>
+</head>
+<body>
+<div id="welcome-screen"><div class="welcome-card">
+<h2 class="text-white mb-3">ĐỀ SỐ 02: TỌA ĐỘ VECTƠ TRONG KHÔNG GIAN</h2><p class="text-white-50">90 phút | 22 Câu</p>
+<input type="text" id="sName" class="form-control mb-2" placeholder="Họ tên"><input type="text" id="sClass" class="form-control mb-3" placeholder="Lớp">
+<button onclick="start()" class="btn btn-light w-100 fw-bold text-primary">VÀO THI</button><div class="mt-3"><a href="index.html" class="text-white small">Về trang chủ</a></div>
+</div></div>
+<div id="exam-screen">
+<div class="sticky-header d-flex justify-content-between align-items-center">
+<div><span id="dName" class="fw-bold">TS</span></div><div class="fw-bold text-primary fs-4" id="time">90:00</div>
+<button onclick="sub()" id="bTop" class="btn btn-success btn-sm">NỘP</button>
+</div>
+<div class="container" style="max-width:900px"><form id="exForm">
+<div class="part-header">PHẦN I. TRẮC NGHIỆM (12 câu - 0.25đ/câu)</div>
+
+<div class="question-box q-p1" data-correct="A">
+<div><b>Câu 1:</b> Trong không gian, khái niệm vectơ được định nghĩa như thế nào? [4]</div>
+<label class="q-item"><input type="radio" name="q1" value="A"> Vectơ là một đoạn thẳng có hướng.</label>
+<label class="q-item"><input type="radio" name="q1" value="B"> Vectơ là một đường thẳng có hướng.</label>
+<label class="q-item"><input type="radio" name="q1" value="C"> Vectơ là một đoạn thẳng không có hướng.</label>
+<label class="q-item"><input type="radio" name="q1" value="D"> Vectơ là độ dài của đoạn thẳng.</label>
+</div>
+
+<div class="question-box q-p1" data-correct="B">
+<div><b>Câu 2:</b> Cho hình hộp $ABCD.A'B'C'D'$. Quy tắc hình hộp phát biểu rằng $\vec{AB} + \vec{AD} + \vec{AA'}$ bằng: [5, 6]</div>
+<label class="q-item"><input type="radio" name="q2" value="A"> $\vec{AC}$</label>
+<label class="q-item"><input type="radio" name="q2" value="B"> $\vec{AC'}$</label>
+<label class="q-item"><input type="radio" name="q2" value="C"> $\vec{BD'}$</label>
+<label class="q-item"><input type="radio" name="q2" value="D"> $\vec{A'C}$</label>
+</div>
+
+<div class="question-box q-p1" data-correct="C">
+<div><b>Câu 3:</b> Trong hệ tọa độ $Oxyz$, vectơ đơn vị $\vec{k}$ trên trục cao $Oz$ có tọa độ là: [7, 8]</div>
+<label class="q-item"><input type="radio" name="q3" value="A"> $(1; 0; 0)$</label>
+<label class="q-item"><input type="radio" name="q3" value="B"> $(0; 1; 0)$</label>
+<label class="q-item"><input type="radio" name="q3" value="C"> $(0; 0; 1)$</label>
+<label class="q-item"><input type="radio" name="q3" value="D"> $(1; 1; 1)$</label>
+</div>
+
+<div class="question-box q-p1" data-correct="D">
+<div><b>Câu 4:</b> Cho hai điểm $A(x_A; y_A; z_A)$ và $B(x_B; y_B; z_B)$. Tọa độ trung điểm $M$ của đoạn thẳng $AB$ là: [9, 10]</div>
+<label class="q-item"><input type="radio" name="q4" value="A"> $(\frac{x_A-x_B}{2}; \frac{y_A-y_B}{2}; \frac{z_A-z_B}{2})$</label>
+<label class="q-item"><input type="radio" name="q4" value="B"> $(x_A+x_B; y_A+y_B; z_A+z_B)$</label>
+<label class="q-item"><input type="radio" name="q4" value="C"> $(x_B-x_A; y_B-y_A; z_B-z_A)$</label>
+<label class="q-item"><input type="radio" name="q4" value="D"> $(\frac{x_A+x_B}{2}; \frac{y_A+y_B}{2}; \frac{z_A+z_B}{2})$</label>
+</div>
+
+<div class="question-box q-p1" data-correct="A">
+<div><b>Câu 5:</b> Độ dài của vectơ $\vec{u} = (x; y; z)$ được tính theo công thức: [11, 12]</div>
+<label class="q-item"><input type="radio" name="q5" value="A"> $|\vec{u}| = \sqrt{x^2 + y^2 + z^2}$</label>
+<label class="q-item"><input type="radio" name="q5" value="B"> $|\vec{u}| = x^2 + y^2 + z^2$</label>
+<label class="q-item"><input type="radio" name="q5" value="C"> $|\vec{u}| = x + y + z$</label>
+<label class="q-item"><input type="radio" name="q5" value="D"> $|\vec{u}| = \sqrt{x+y+z}$</label>
+</div>
+
+<div class="question-box q-p1" data-correct="B">
+<div><b>Câu 6:</b> Tích vô hướng của hai vectơ $\vec{u} = (x_1; y_1; z_1)$ và $\vec{v} = (x_2; y_2; z_2)$ là: [11, 13]</div>
+<label class="q-item"><input type="radio" name="q6" value="A"> $x_1x_2 - y_1y_2 - z_1z_2$</label>
+<label class="q-item"><input type="radio" name="q6" value="B"> $x_1x_2 + y_1y_2 + z_1z_2$</label>
+<label class="q-item"><input type="radio" name="q6" value="C"> $(x_1+x_2; y_1+y_2; z_1+z_2)$</label>
+<label class="q-item"><input type="radio" name="q6" value="D"> $\sqrt{x_1x_2 + y_1y_2 + z_1z_2}$</label>
+</div>
+
+<div class="question-box q-p1" data-correct="C">
+<div><b>Câu 7:</b> Hai vectơ $\vec{a}, \vec{b}$ (khác $\vec{0}$) cùng phương khi và chỉ khi: [14, 15]</div>
+<label class="q-item"><input type="radio" name="q7" value="A"> $\vec{a} \cdot \vec{b} = 0$</label>
+<label class="q-item"><input type="radio" name="q7" value="B"> $\vec{a} + \vec{b} = \vec{0}$</label>
+<label class="q-item"><input type="radio" name="q7" value="C"> Có số thực $k \neq 0$ sao cho $\vec{a} = k\vec{b}$</label>
+<label class="q-item"><input type="radio" name="q7" value="D"> $|\vec{a}| = |\vec{b}|$</label>
+</div>
+
+<div class="question-box q-p1" data-correct="D">
+<div><b>Câu 8:</b> Trong không gian $Oxyz$, cho tam giác $ABC$. Tọa độ trọng tâm $G$ là: [9, 10]</div>
+<label class="q-item"><input type="radio" name="q8" value="A"> $(\frac{x_A+x_B}{2}; \frac{y_A+y_B}{2}; \frac{z_A+z_B}{2})$</label>
+<label class="q-item"><input type="radio" name="q8" value="B"> $(x_A+x_B+x_C; y_A+y_B+y_C; z_A+z_B+z_C)$</label>
+<label class="q-item"><input type="radio" name="q8" value="C"> $(\frac{x_A+x_B+x_C}{2}; \frac{y_A+y_B+y_C}{2}; \frac{z_A+z_B+z_C}{2})$</label>
+<label class="q-item"><input type="radio" name="q8" value="D"> $(\frac{x_A+x_B+x_C}{3}; \frac{y_A+y_B+y_C}{3}; \frac{z_A+z_B+z_C}{3})$</label>
+</div>
+
+<div class="question-box q-p1" data-correct="A">
+<div><b>Câu 9:</b> Nếu hai vectơ $\vec{a}$ và $\vec{b}$ ngược hướng thì góc $(\vec{a}, \vec{b})$ bằng: [16, 17]</div>
+<label class="q-item"><input type="radio" name="q9" value="A"> $180^{\circ}$</label>
+<label class="q-item"><input type="radio" name="q9" value="B"> $0^{\circ}$</label>
+<label class="q-item"><input type="radio" name="q9" value="C"> $90^{\circ}$</label>
+<label class="q-item"><input type="radio" name="q9" value="D"> $45^{\circ}$</label>
+</div>
+
+<div class="question-box q-p1" data-correct="B">
+<div><b>Câu 10:</b> Cho $A(1; 2; 3)$ và $B(4; 5; 6)$. Tọa độ của vectơ $\vec{AB}$ là: [12, 18]</div>
+<label class="q-item"><input type="radio" name="q10" value="A"> $(5; 7; 9)$</label>
+<label class="q-item"><input type="radio" name="q10" value="B"> $(3; 3; 3)$</label>
+<label class="q-item"><input type="radio" name="q10" value="C"> $(-3; -3; -3)$</label>
+<label class="q-item"><input type="radio" name="q10" value="D"> $(2.5; 3.5; 4.5)$</label>
+</div>
+
+<div class="question-box q-p1" data-correct="C">
+<div><b>Câu 11:</b> Hình chiếu của điểm $A(3; -2; -1)$ lên mặt phẳng $(Oxy)$ có tọa độ là: [19, 20]</div>
+<label class="q-item"><input type="radio" name="q11" value="A"> $(3; 0; 0)$</label>
+<label class="q-item"><input type="radio" name="q11" value="B"> $(0; -2; 0)$</label>
+<label class="q-item"><input type="radio" name="q11" value="C"> $(3; -2; 0)$</label>
+<label class="q-item"><input type="radio" name="q11" value="D"> $(0; 0; -1)$</label>
+</div>
+
+<div class="question-box q-p1" data-correct="D">
+<div><b>Câu 12:</b> Hai vectơ $\vec{u}, \vec{v}$ (khác $\vec{0}$) vuông góc với nhau khi và chỉ khi: [11, 21]</div>
+<label class="q-item"><input type="radio" name="q12" value="A"> $|\vec{u}| \cdot |\vec{v}| = 0$</label>
+<label class="q-item"><input type="radio" name="q12" value="B"> $\vec{u} + \vec{v} = \vec{0}$</label>
+<label class="q-item"><input type="radio" name="q12" value="C"> $\vec{u} - \vec{v} = \vec{0}$</label>
+<label class="q-item"><input type="radio" name="q12" value="D"> $x_1x_2 + y_1y_2 + z_1z_2 = 0$</label>
+</div>
+
+<div class="part-header">PHẦN II. ĐÚNG/SAI (4 câu - 1.0đ/câu)</div>
+
+<div class="question-box q-p2" data-correct="T,T,F,F">
+<div><b>Câu 13:</b> Cho hình hộp $ABCD.A'B'C'D'$ có các cạnh bằng $a$. [22, 23]</div>
+<div class="tf-row"><div class="tf-content">A) $\vec{AC'} = \vec{AB} + \vec{AD} + \vec{AA'}$ là quy tắc hình hộp.</div><div class="tf-opts"><input type="radio" name="q13a" value="T">Đ <input type="radio" name="q13a" value="F">S</div></div>
+<div class="tf-row"><div class="tf-content">B) Nếu $G$ là trọng tâm tam giác $AB'D'$ thì $\vec{A'C} = 3\vec{A'G}$.</div><div class="tf-opts"><input type="radio" name="q13b" value="T">Đ <input type="radio" name="q13b" value="F">S</div></div>
+<div class="tf-row"><div class="tf-content">C) Góc giữa hai vectơ $\vec{A'D}$ và $\vec{B'C'}$ luôn bằng $90^{\circ}$.</div><div class="tf-opts"><input type="radio" name="q13c" value="T">Đ <input type="radio" name="q13c" value="F">S</div></div>
+<div class="tf-row"><div class="tf-content">D) Tích vô hướng $\vec{A'B} \cdot \vec{D'C'}$ có giá trị bằng $a^2 \cdot \sqrt{3}$.</div><div class="tf-opts"><input type="radio" name="q13d" value="T">Đ <input type="radio" name="q13d" value="F">S</div></div>
+</div>
+
+<div class="question-box q-p2" data-correct="T,F,T,F">
+<div><b>Câu 14:</b> Trong không gian $Oxyz$, cho $A(1; -1; 1)$, $B(0; 1; 2)$ và $C(1; 0; 1)$. [9, 24]</div>
+<div class="tf-row"><div class="tf-content">A) Tọa độ vectơ $\vec{AB} = (-1; 2; 1)$.</div><div class="tf-opts"><input type="radio" name="q14a" value="T">Đ <input type="radio" name="q14a" value="F">S</div></div>
+<div class="tf-row"><div class="tf-content">B) Để $ABCD$ là hình bình hành thì $D$ có tọa độ là $(2; -2; 2)$.</div><div class="tf-opts"><input type="radio" name="q14b" value="T">Đ <input type="radio" name="q14b" value="F">S</div></div>
+<div class="tf-row"><div class="tf-content">C) Trọng tâm $G$ của tam giác $ABC$ là $(\frac{2}{3}; 0; \frac{4}{3})$.</div><div class="tf-opts"><input type="radio" name="q14c" value="T">Đ <input type="radio" name="q14c" value="F">S</div></div>
+<div class="tf-row"><div class="tf-content">D) Độ dài đoạn thẳng $AB$ bằng $\sqrt{5}$.</div><div class="tf-opts"><input type="radio" name="q14d" value="T">Đ <input type="radio" name="q14d" value="F">S</div></div>
+</div>
+
+<div class="question-box q-p2" data-correct="T,T,T,S">
+<div><b>Câu 15:</b> Một chất điểm chịu tác động của 3 lực $\vec{F_1}, \vec{F_2}, \vec{F_3}$ đôi một vuông góc. [25, 26]</div>
+<div class="tf-row"><div class="tf-content">A) Hợp lực được xác định bởi $\vec{F} = \vec{F_1} + \vec{F_2} + \vec{F_3}$.</div><div class="tf-opts"><input type="radio" name="q15a" value="T">Đ <input type="radio" name="q15a" value="F">S</div></div>
+<div class="tf-row"><div class="tf-content">B) Điều kiện cân bằng là $\vec{F_1} + \vec{F_2} + \vec{F_3} = \vec{0}$.</div><div class="tf-opts"><input type="radio" name="q15b" value="T">Đ <input type="radio" name="q15b" value="F">S</div></div>
+<div class="tf-row"><div class="tf-content">C) Công cơ học sinh bởi lực $\vec{F}$ trên quãng đường $\vec{d}$ là $A = \vec{F} \cdot \vec{d}$.</div><div class="tf-opts"><input type="radio" name="q15c" value="T">Đ <input type="radio" name="q15c" value="F">S</div></div>
+<div class="tf-row"><div class="tf-content">D) Nếu cường độ lần lượt là 10, 8, 5 thì độ lớn hợp lực bằng 23.</div><div class="tf-opts"><input type="radio" name="q15d" value="T">Đ <input type="radio" name="q15d" value="F">S</div></div>
+</div>
+
+<div class="question-box q-p2" data-correct="T,F,T,T">
+<div><b>Câu 16:</b> Cho các đỉnh cột nhà $M(90;0;30), N(90;120;30), P(0;120;30), Q(0;0;30)$. [27-29]</div>
+<div class="tf-row"><div class="tf-content">A) Tâm $I$ của hình chữ nhật $MNPQ$ có tọa độ $(45; 60; 30)$.</div><div class="tf-opts"><input type="radio" name="q16a" value="T">Đ <input type="radio" name="q16a" value="F">S</div></div>
+<div class="tf-row"><div class="tf-content">B) Một camera hạ từ cao độ 25 xuống cao độ 19 thì vectơ dịch chuyển là $(0;0;6)$.</div><div class="tf-opts"><input type="radio" name="q16b" value="T">Đ <input type="radio" name="q16b" value="F">S</div></div>
+<div class="tf-row"><div class="tf-content">C) Độ dài vectơ dịch chuyển trong câu B là 6 mét.</div><div class="tf-opts"><input type="radio" name="q16c" value="T">Đ <input type="radio" name="q16c" value="F">S</div></div>
+<div class="tf-row"><div class="tf-content">D) Mặt phẳng chứa bốn đỉnh cột song song với mặt phẳng $(Oxy)$.</div><div class="tf-opts"><input type="radio" name="q16d" value="T">Đ <input type="radio" name="q16d" value="F">S</div></div>
+</div>
+
+<div class="part-header">PHẦN III. TRẢ LỜI NGẮN (6 câu - 0.5đ/câu)</div>
+
+<div class="question-box q-p3" data-correct="14">
+<div><b>Câu 17:</b> Một chất điểm chịu tác động bởi 3 lực vuông góc đôi một có cường độ lần lượt là 10 N, 8 N và 5 N. Tính cường độ hợp lực (làm tròn đến hàng đơn vị). [30, 31]</div>
+<input type="text" class="form-control short-ans" placeholder="Đáp số...">
+</div>
+
+<div class="question-box q-p3" data-correct="325">
+<div><b>Câu 18:</b> Một Flycam bay từ $A(100; 150; 30)$ đến $B(-80; 120; 50)$ theo đường thẳng. Tính quãng đường Flycam bay được (đơn vị mét, làm tròn đến hàng đơn vị). [32, 33]</div>
+<input type="text" class="form-control short-ans" placeholder="Đáp số...">
+</div>
+
+<div class="question-box q-p3" data-correct="107">
+<div><b>Câu 19:</b> Trong hóa học, phân tử $NH_3$ có dạng hình chóp tam giác đều. Góc liên kết $H-N-H$ xấp xỉ bao nhiêu độ? [34, 35]</div>
+<input type="text" class="form-control short-ans" placeholder="Đáp số...">
+</div>
+
+<div class="question-box q-p3" data-correct="6.67">
+<div><b>Câu 20:</b> Tìm cao độ $z$ của điểm $M$ sao cho $M$ là hình chiếu của $A(3; 5; 6.67)$ lên trục cao $Oz$. [36, 37]</div>
+<input type="text" class="form-control short-ans" placeholder="Đáp số...">
+</div>
+
+<div class="question-box q-p3" data-correct="3">
+<div><b>Câu 21:</b> Trong không gian $Oxyz$, cho $A(2; -1; 4)$ và $\vec{AB} = (1; 6; -5)$. Hãy tìm hoành độ $x$ của điểm $B$. [18, 38, 39]</div>
+<input type="text" class="form-control short-ans" placeholder="Đáp số...">
+</div>
+
+<div class="question-box q-p3" data-correct="30">
+<div><b>Câu 22:</b> Một chiếc đèn treo bởi 3 sợi dây $OA, OB, OC$ có độ dài $L$. Lực căng tối đa mỗi dây là 10 N, trọng lượng đèn 24 N, bán kính đèn 18 inch. Tìm chiều dài tối thiểu $L$ (inch). [40, 41]</div>
+<input type="text" class="form-control short-ans" placeholder="Đáp số...">
+</div>
+
+</form><div class="text-center mt-4"><button onclick="sub()" id="bBot" class="btn btn-success btn-lg">NỘP BÀI</button></div></div>
+</div>
+<div id="result-screen"><div class="container" style="max-width:800px">
+<div class="score-card"><h3 class="text-muted">KẾT QUẢ</h3><div class="final-score" id="scVal">0.00</div>
+<div class="mt-4 d-flex justify-content-center gap-2">
+<a href="index.html" class="btn btn-outline-secondary"><i class="fas fa-home"></i> Trang chủ</a>
+<button onclick="location.reload()" class="btn btn-outline-primary"><i class="fas fa-redo"></i> Làm lại</button>
+<button onclick="rev()" class="btn btn-primary"><i class="fas fa-search"></i> Xem bài</button>
+</div>
+</div><div id="revArea"></div></div></div>
+<script>
+const API='https://script.google.com/macros/s/AKfycbxNx_DJbZ35VaXuarmrx3QqRYM8I8d1v9uH65gREiVufe021qO4b2UbuuJP5e56OCfc/exec';
+let tRem=5400,tInt,subbed=false;
+window.addEventListener('load',()=>{
+function shuf(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+let gNum=1; const pts=document.querySelectorAll('.part-header');
+pts.forEach(h=>{
+let s=h.nextElementSibling,qs=[],p=h.parentNode;
+while(s&&(s.classList.contains('question-box'))){qs.push(s);s=s.nextElementSibling}
+if(!qs.length)h.style.display='none';
+else{shuf(qs);qs.forEach(q=>{p.insertBefore(q,s);q.innerHTML=q.innerHTML.replace(/(Câu\s+)\d+/ui,"Câu "+gNum);gNum++})}
+})
+});
+function start(){
+const n=document.getElementById('sName').value.trim(),c=document.getElementById('sClass').value.trim();
+if(!n||!c){alert('Nhập tên/lớp!');return}
+document.getElementById('dName').innerText=n+" - "+c;
+document.getElementById('welcome-screen').style.display='none';document.getElementById('exam-screen').style.display='block';
+tInt=setInterval(()=>{
+let m=parseInt(tRem/60,10),s=parseInt(tRem%60,10);
+document.getElementById('time').textContent=(m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
+if(tRem===30)alert('Còn 30s!');
+if(--tRem<0){clearInterval(tInt);alert('Hết giờ!');sub(true)}
+},1000)}
+function sub(auto=false){
+if(subbed)return;if(!auto&&!confirm('Nộp bài?'))return;
+clearInterval(tInt);subbed=true;
+document.getElementById('bTop').disabled=true;document.getElementById('bBot').disabled=true;document.getElementById('bBot').innerText='...';
+let sc=0;
+document.querySelectorAll('.q-p1').forEach(q=>{
+let c=q.dataset.correct,sl=q.querySelector('input:checked');q.querySelectorAll('input').forEach(i=>i.disabled=true);
+if(sl&&sl.value===c){sc+=0.25;q.classList.add('correct-color')}
+else{q.classList.add('wrong-color');q.innerHTML+=`<div class='ans-explain'>Đúng: ${c}</div>` }});
+document.querySelectorAll('.q-p2').forEach(q=>{
+let cAr=q.dataset.correct.split(','),sub=0;
+q.querySelectorAll('.tf-row').forEach((r,i)=>{
+let sl=r.querySelector('input:checked');r.querySelectorAll('input').forEach(k=>k.disabled=true);
+let ok=false;if(sl){let v=sl.value,cV=cAr[i];if(v===cV||v===cV.replace('T','Đ').replace('F','S'))ok=true}
+if(ok){sub++;r.style.color='green';r.style.fontWeight='bold'}
+else{r.style.color='red';r.innerHTML+=`<span class='badge bg-danger ms-2'>${cAr[i]}</span>` }});
+if(sub===1)sc+=0.1;else if(sub===2)sc+=0.25;else if(sub===3)sc+=0.5;else if(sub===4)sc+=1.0;});
+document.querySelectorAll('.q-p3').forEach(q=>{
+let c=q.dataset.correct.trim().toUpperCase(),i=q.querySelector('.short-ans'),v=i.value.trim().toUpperCase();i.disabled=true;
+if(v===c){sc+=0.5;q.classList.add('correct-color')}
+else{q.classList.add('wrong-color');q.innerHTML+=`<div class='ans-explain'>Đúng: ${c}</div>` }});
+let fSc=sc.toFixed(2);document.getElementById('scVal').innerText=fSc;
+let fd=new URLSearchParams();fd.append('name',document.getElementById('sName').value);fd.append('class',document.getElementById('sClass').value);fd.append('score',fSc);
+fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:fd}).catch(e=>console.log(e));
+setTimeout(()=>{document.getElementById('exam-screen').style.display='none';document.getElementById('result-screen').style.display='block';window.scrollTo(0,0)},1000)}
+function rev(){let f=document.getElementById('exForm'),a=document.getElementById('revArea');a.innerHTML='';a.appendChild(f);event.target.style.display='none'}
+</script>
+</body>
+</html>
