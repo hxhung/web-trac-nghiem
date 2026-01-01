@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đề Thi Toán 12 - Đề 01</title>
+    <title>Đề 01: Khảo sát hàm số - 12/4/6</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script>MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };</script>
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+        };
+    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
     <style>
         body { background: #f5f7fa; max-width: 900px; margin: 0 auto; padding: 20px; font-family: 'Segoe UI', sans-serif; }
@@ -21,7 +25,7 @@
     <a href="index.html" style="text-decoration: none; display: inline-block; margin-bottom: 15px;">← Quay lại danh sách</a>
     <div class="card mb-4 shadow-sm">
         <div class="card-body">
-            <h3 class="text-center text-primary">ĐỀ KIỂM TRA: HÀM SỐ MŨ</h3>
+            <h3 class="text-center text-primary">ĐỀ KIỂM TRA: CHƯƠNG 1 - KHẢO SÁT HÀM SỐ</h3>
             <div class="row g-3 mt-2">
                 <div class="col-md-8"><input type="text" id="sName" class="form-control" placeholder="Họ và tên học sinh"></div>
                 <div class="col-md-4"><input type="text" id="sClass" class="form-control" placeholder="Lớp"></div>
@@ -31,70 +35,171 @@
 
     <form id="examForm">
         <!-- PHẦN I -->
-        <div class="part-header"><h5>PHẦN I. Trắc nghiệm nhiều lựa chọn (0.25đ/câu)</h5></div>
+        <div class="part-header"><h5>PHẦN I. Trắc nghiệm (12 câu - 0.25đ/câu)</h5></div>
         
         <div class="question-box q-p1" data-correct="A">
-            <p><strong>Câu 1:</strong> Tập xác định của hàm số $y = a^x$ (với $a > 0, a \neq 1$) là:</p>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="A"> <label>A. $\mathbb{R}$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="B"> <label>B. $(0; +\infty)$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="C"> <label>C. $\mathbb{R} \setminus \{0\}$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="D"> <label>D. $[0; +\infty)$</label></div>
+            <p><b>Câu 1:</b> Cho hàm số $y=f(x)$ có bảng biến thiên. Khoảng đồng biến của hàm số là:</p>
+            <p>[Mô tả: $x$ từ $-\infty$ đến $-1$ và $0$ đến $1$, $f'(x)$ mang dấu $+$]</p>
+            <input type="radio" name="q1" value="A"> A. $(-\infty; -1)$<br>
+            <input type="radio" name="q1" value="B"> B. $(-1; 0)$<br>
+            <input type="radio" name="q1" value="C"> C. $(1; +\infty)$<br>
+            <input type="radio" name="q1" value="D"> D. $(0; 2)$
         </div>
 
         <div class="question-box q-p1" data-correct="C">
-            <p><strong>Câu 2:</strong> Hàm số nào sau đây nghịch biến trên $\mathbb{R}$?</p>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="A"> <label>A. $y = e^x$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="B"> <label>B. $y = (\sqrt{2})^x$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="C"> <label>C. $y = (0,5)^x$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="D"> <label>D. $y = 2^x$</label></div>
+            <p><b>Câu 2:</b> Điểm cực tiểu của đồ thị hàm số $y=x^3-3x^2+2$ là:</p>
+            <input type="radio" name="q2" value="A"> A. $(0; 2)$<br>
+            <input type="radio" name="q2" value="B"> B. $x=2$<br>
+            <input type="radio" name="q2" value="C"> C. $(2; -2)$<br>
+            <input type="radio" name="q2" value="D"> D. $x=0$
         </div>
 
         <div class="question-box q-p1" data-correct="B">
-            <p><strong>Câu 3:</strong> Đạo hàm của hàm số $y = 7^x$ là:</p>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="A"> <label>A. $y' = 7^x$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="B"> <label>B. $y' = 7^x \ln 7$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="C"> <label>C. $y' = \frac{7^x}{\ln 7}$</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="D"> <label>D. $y' = x \cdot 7^{x-1}$</label></div>
+            <p><b>Câu 3:</b> Giá trị lớn nhất của hàm số $y=x^3-3x+1$ trên đoạn $[0; 2]$ bằng:</p>
+            <input type="radio" name="q3" value="A"> A. $1$<br>
+            <input type="radio" name="q3" value="B"> B. $3$<br>
+            <input type="radio" name="q3" value="C"> C. $-1$<br>
+            <input type="radio" name="q3" value="D"> D. $0$
         </div>
 
         <div class="question-box q-p1" data-correct="D">
-            <p><strong>Câu 4:</strong> Giá trị nhỏ nhất của hàm số $y = 3^x$ trên đoạn $[0; 2]$ bằng:</p>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="A"> <label>A. 9</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="B"> <label>B. 3</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="C"> <label>C. 0</label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="D"> <label>D. 1</label></div>
+            <p><b>Câu 4:</b> Đường tiệm cận đứng của đồ thị hàm số $y=\frac{2x+1}{x-1}$ là:</p>
+            <input type="radio" name="q4" value="A"> A. $y=2$<br>
+            <input type="radio" name="q4" value="B"> B. $y=1$<br>
+            <input type="radio" name="q4" value="C"> C. $x=-1$<br>
+            <input type="radio" name="q4" value="D"> D. $x=1$
+        </div>
+
+        <div class="question-box q-p1" data-correct="A">
+            <p><b>Câu 5:</b> Hàm số nào sau đây luôn đồng biến trên $\mathbb{R}$?</p>
+            <input type="radio" name="q5" value="A"> A. $y=x^3+3x$<br>
+            <input type="radio" name="q5" value="B"> B. $y=\frac{x-1}{x+2}$<br>
+            <input type="radio" name="q5" value="C"> C. $y=x^4+x^2$<br>
+            <input type="radio" name="q5" value="D"> D. $y=-x^3-x$
+        </div>
+
+        <div class="question-box q-p1" data-correct="C">
+            <p><b>Câu 6:</b> Cho hàm số $y=f(x)$ có $f'(x)=x(x-1)^2$. Số điểm cực trị của hàm số là:</p>
+            <input type="radio" name="q6" value="A"> A. $0$<br>
+            <input type="radio" name="q6" value="B"> B. $2$<br>
+            <input type="radio" name="q6" value="C"> C. $1$<br>
+            <input type="radio" name="q6" value="D"> D. $3$
+        </div>
+
+        <div class="question-box q-p1" data-correct="B">
+            <p><b>Câu 7:</b> Tiệm cận ngang của đồ thị hàm số $y=\frac{5x-2}{x+3}$ là:</p>
+            <input type="radio" name="q7" value="A"> A. $x=-3$<br>
+            <input type="radio" name="q7" value="B"> B. $y=5$<br>
+            <input type="radio" name="q7" value="C"> C. $y=-2$<br>
+            <input type="radio" name="q7" value="D"> D. $y=\frac{2}{5}$
+        </div>
+
+        <div class="question-box q-p1" data-correct="A">
+            <p><b>Câu 8:</b> Đồ thị hàm số bậc ba $y=ax^3+bx^2+cx+d$ có $a>0$ và $y'=0$ vô nghiệm thì:</p>
+            <input type="radio" name="q8" value="A"> A. Hàm số luôn đồng biến trên $\mathbb{R}$<br>
+            <input type="radio" name="q8" value="B"> B. Hàm số luôn nghịch biến trên $\mathbb{R}$<br>
+            <input type="radio" name="q8" value="C"> C. Hàm số có 2 điểm cực trị<br>
+            <input type="radio" name="q8" value="D"> D. Hàm số có 1 điểm cực trị
+        </div>
+
+        <div class="question-box q-p1" data-correct="D">
+            <p><b>Câu 9:</b> Tâm đối xứng của đồ thị hàm số $y=\frac{x+1}{x-1}$ là:</p>
+            <input type="radio" name="q9" value="A"> A. $(0; 0)$<br>
+            <input type="radio" name="q9" value="B"> B. $(1; 0)$<br>
+            <input type="radio" name="q9" value="C"> C. $(-1; 1)$<br>
+            <input type="radio" name="q9" value="D"> D. $(1; 1)$
+        </div>
+
+        <div class="question-box q-p1" data-correct="C">
+            <p><b>Câu 10:</b> Hàm số $y=\frac{x^2+x+2}{x+2}$ đạt cực đại tại $x$ bằng:</p>
+            <input type="radio" name="q10" value="A"> A. $0$<br>
+            <input type="radio" name="q10" value="B"> B. $2$<br>
+            <input type="radio" name="q10" value="C"> C. $-4$<br>
+            <input type="radio" name="q10" value="D"> D. $-2$
+        </div>
+
+        <div class="question-box q-p1" data-correct="B">
+            <p><b>Câu 11:</b> Cho hàm số $y=f(x)$ liên tục trên $\mathbb{R}$ và $f'(x) < 0, \forall x \in (1; 3)$. Khẳng định đúng là:</p>
+            <input type="radio" name="q11" value="A"> A. $f(1) < f(2)$<br>
+            <input type="radio" name="q11" value="B"> B. $f(2) > f(3)$<br>
+            <input type="radio" name="q11" value="C"> C. Hàm số đồng biến trên $(1; 3)$<br>
+            <input type="radio" name="q11" value="D"> D. $f(1) = f(3)$
+        </div>
+
+        <div class="question-box q-p1" data-correct="A">
+            <p><b>Câu 12:</b> Đường tiệm cận xiên của đồ thị $y=x-3+\frac{1}{x^2}$ là:</p>
+            <input type="radio" name="q12" value="A"> A. $y=x-3$<br>
+            <input type="radio" name="q12" value="B"> B. $y=x$<br>
+            <input type="radio" name="q12" value="C"> C. $x=0$<br>
+            <input type="radio" name="q12" value="D"> D. $y=-3$
         </div>
 
         <!-- PHẦN II -->
-        <div class="part-header"><h5>PHẦN II. Câu hỏi Đúng/Sai (1đ/câu)</h5></div>
+        <div class="part-header"><h5>PHẦN II. Đúng/Sai (4 câu - 1đ/câu)</h5></div>
         
-        <div class="question-box q-p2" data-correct="T,T,T,F">
-            <p><strong>Câu 1:</strong> Cho hàm số $y = 2^{x^2-1}$. Xét tính đúng sai của các mệnh đề sau:</p>
-            <div class="tf-row"><span>a) Đạo hàm của hàm số là $y' = 2x \cdot 2^{x^2-1} \cdot \ln 2$</span><div class="tf-options"><label><input type="radio" name="q5_a" value="T"> Đ</label><label><input type="radio" name="q5_a" value="F"> S</label></div></div>
-            <div class="tf-row"><span>b) Hàm số đạt giá trị nhỏ nhất tại $x = 0$ trên $\mathbb{R}$</span><div class="tf-options"><label><input type="radio" name="q5_b" value="T"> Đ</label><label><input type="radio" name="q5_b" value="F"> S</label></div></div>
-            <div class="tf-row"><span>c) Giá trị của hàm số tại $x = -2$ là $8$</span><div class="tf-options"><label><input type="radio" name="q5_c" value="T"> Đ</label><label><input type="radio" name="q5_c" value="F"> S</label></div></div>
-            <div class="tf-row"><span>d) Hàm số đồng biến trên khoảng $(-\infty; 0)$</span><div class="tf-options"><label><input type="radio" name="q5_d" value="T"> Đ</label><label><input type="radio" name="q5_d" value="F"> S</label></div></div>
+        <div class="question-box q-p2" data-correct="T,T,F,F">
+            <p><b>Câu 13:</b> Cho hàm số $y=x^3-3x+2$. Xét các tính chất sau:</p>
+            <div class="tf-row"><span>a) Đạo hàm $y'=3x^2-3$.</span><div class="tf-options"><input type="radio" name="q13a" value="T"> Đ <input type="radio" name="q13a" value="F"> S</div></div>
+            <div class="tf-row"><span>b) Hàm số đạt cực đại tại $x=-1$.</span><div class="tf-options"><input type="radio" name="q13b" value="T"> Đ <input type="radio" name="q13b" value="F"> S</div></div>
+            <div class="tf-row"><span>c) Giá trị cực tiểu của hàm số là $y=4$.</span><div class="tf-options"><input type="radio" name="q13c" value="T"> Đ <input type="radio" name="q13c" value="F"> S</div></div>
+            <div class="tf-row"><span>d) Hàm số nghịch biến trên khoảng $(1; +\infty)$.</span><div class="tf-options"><input type="radio" name="q13d" value="T"> Đ <input type="radio" name="q13d" value="F"> S</div></div>
         </div>
 
-        <div class="question-box q-p2" data-correct="T,F,T,S">
-            <p><strong>Câu 2:</strong> Cho hàm số $y = x \cdot e^x$. Các khẳng định sau đúng hay sai?</p>
-            <div class="tf-row"><span>a) Đạo hàm $y' = e^x(1+x)$</span><div class="tf-options"><label><input type="radio" name="q6_a" value="T"> Đ</label><label><input type="radio" name="q6_a" value="F"> S</label></div></div>
-            <div class="tf-row"><span>b) Hàm số đạt cực đại tại $x = -1$</span><div class="tf-options"><label><input type="radio" name="q6_b" value="T"> Đ</label><label><input type="radio" name="q6_b" value="F"> S</label></div></div>
-            <div class="tf-row"><span>c) Hàm số nghịch biến trên khoảng $(-\infty; -1)$</span><div class="tf-options"><label><input type="radio" name="q6_c" value="T"> Đ</label><label><input type="radio" name="q6_c" value="F"> S</label></div></div>
-            <div class="tf-row"><span>d) Giá trị cực tiểu của hàm số là $e$</span><div class="tf-options"><label><input type="radio" name="q6_d" value="T"> Đ</label><label><input type="radio" name="q6_d" value="F"> S</label></div></div>
+        <div class="question-box q-p2" data-correct="T,F,T,F">
+            <p><b>Câu 14:</b> Cho hàm số $y=\frac{x^2-3}{-x-1}$.</p>
+            <div class="tf-row"><span>a) Tiệm cận đứng là $x=-1$.</span><div class="tf-options"><input type="radio" name="q14a" value="T"> Đ <input type="radio" name="q14a" value="F"> S</div></div>
+            <div class="tf-row"><span>b) Tiệm cận ngang là $y=-1$.</span><div class="tf-options"><input type="radio" name="q14b" value="T"> Đ <input type="radio" name="q14b" value="F"> S</div></div>
+            <div class="tf-row"><span>c) Tiệm cận xiên là $y=-x+1$.</span><div class="tf-options"><input type="radio" name="q14c" value="T"> Đ <input type="radio" name="q14c" value="F"> S</div></div>
+            <div class="tf-row"><span>d) Giao điểm hai tiệm cận là $I(-1; 1)$.</span><div class="tf-options"><input type="radio" name="q14d" value="T"> Đ <input type="radio" name="q14d" value="F"> S</div></div>
+        </div>
+
+        <div class="question-box q-p2" data-correct="T,T,T,F">
+            <p><b>Câu 15:</b> Một chiếc thùng tôn hình hộp chữ nhật không nắp có đáy bình phương cạnh $x$ và thể tích $32$ lít.</p>
+            <div class="tf-row"><span>a) Chiều cao thùng tính theo $x$ là $h=\frac{32}{x^2}$.</span><div class="tf-options"><input type="radio" name="q15a" value="T"> Đ <input type="radio" name="q15a" value="F"> S</div></div>
+            <div class="tf-row"><span>b) Diện tích tôn cần dùng là $S=x^2+\frac{128}{x}$.</span><div class="tf-options"><input type="radio" name="q15b" value="T"> Đ <input type="radio" name="q15b" value="F"> S</div></div>
+            <div class="tf-row"><span>c) Diện tích tôn nhỏ nhất khi cạnh đáy $x=4$ dm.</span><div class="tf-options"><input type="radio" name="q15c" value="T"> Đ <input type="radio" name="q15c" value="F"> S</div></div>
+            <div class="tf-row"><span>d) Chiều cao thùng khi đó là $h=8$ dm.</span><div class="tf-options"><input type="radio" name="q15d" value="T"> Đ <input type="radio" name="q15d" value="F"> S</div></div>
+        </div>
+
+        <div class="question-box q-p2" data-correct="F,T,T,T">
+            <p><b>Câu 16:</b> Cho hàm số bậc ba $y=f(x)$ có đồ thị $(C)$.</p>
+            <div class="tf-row"><span>a) Đồ thị luôn có trục đối xứng.</span><div class="tf-options"><input type="radio" name="q16a" value="T"> Đ <input type="radio" name="q16a" value="F"> S</div></div>
+            <div class="tf-row"><span>b) Đồ thị luôn có tâm đối xứng.</span><div class="tf-options"><input type="radio" name="q16b" value="T"> Đ <input type="radio" name="q16b" value="F"> S</div></div>
+            <div class="tf-row"><span>c) Tâm đối xứng là trung điểm đoạn nối hai cực trị.</span><div class="tf-options"><input type="radio" name="q16c" value="T"> Đ <input type="radio" name="q16c" value="F"> S</div></div>
+            <div class="tf-row"><span>d) Hoành độ tâm đối xứng là nghiệm của $y''=0$.</span><div class="tf-options"><input type="radio" name="q16d" value="T"> Đ <input type="radio" name="q16d" value="F"> S</div></div>
         </div>
 
         <!-- PHẦN III -->
-        <div class="part-header"><h5>PHẦN III. Trắc nghiệm trả lời ngắn (0.5đ/câu)</h5></div>
+        <div class="part-header"><h5>PHẦN III. Trả lời ngắn (6 câu - 0.5đ/câu)</h5></div>
         
-        <div class="question-box q-p3" data-correct="20">
-            <p><strong>Câu 1:</strong> Một quần thể nấm men được mô hình hóa bởi hàm số $P(t) = \frac{25}{0,25 + e^{-0,75t}}$ (với $t$ tính bằng giờ). Tại thời điểm ban đầu $t=0$, quần thể có bao nhiêu tế bào?</p>
-            <input type="text" class="form-control short-ans" placeholder="Nhập đáp án">
+        <div class="question-box q-p3" data-correct="2.5">
+            <p><b>Câu 17:</b> Một vật phóng thẳng đứng lên từ mặt đất với $v_0 = 24.5$ m/s. Độ cao $h(t) = 24.5t - 4.9t^2$. Sau bao nhiêu giây vật đạt độ cao lớn nhất?</p>
+            <input type="text" class="form-control short-ans" placeholder="Đáp số...">
         </div>
 
-        <div class="question-box q-p3" data-correct="0.5">
-            <p><strong>Câu 2:</strong> Tìm giá trị nhỏ nhất của hàm số $y = 2^{x^2 - 2x}$ trên tập xác định $\mathbb{R}$.</p>
-            <input type="text" class="form-control short-ans" placeholder="Nhập đáp án">
+        <div class="question-box q-p3" data-correct="5">
+            <p><b>Câu 18:</b> Cho hàm số $f(x)=x^3-6x^2+9x+1$. Tính giá trị cực đại của hàm số.</p>
+            <input type="text" class="form-control short-ans" placeholder="Đáp số...">
+        </div>
+
+        <div class="question-box q-p3" data-correct="100">
+            <p><b>Câu 19:</b> Một công ty sản xuất máy xay. Lợi nhuận $P(x)=-0.3x^3+36x^2+1800x-48000$. Cần sản xuất bao nhiêu chiếc để lợi nhuận tối đa?</p>
+            <input type="text" class="form-control short-ans" placeholder="Đáp số...">
+        </div>
+
+        <div class="question-box q-p3" data-correct="33.33">
+            <p><b>Câu 20:</b> Vận tốc tức thời của con tàu đổ bộ $v(t)=-0.03t^2+2.2t-30$. Tại thời điểm $t$ nào (giây) thì vận tốc đạt cực đại? (Làm tròn đến 2 chữ số thập phân).</p>
+            <input type="text" class="form-control short-ans" placeholder="Đáp số...">
+        </div>
+
+        <div class="question-box q-p3" data-correct="1">
+            <p><b>Câu 21:</b> Đồ thị hàm số $y=\frac{x+2}{x-1}$ có bao nhiêu đường tiệm cận ngang?</p>
+            <input type="text" class="form-control short-ans" placeholder="Đáp số...">
+        </div>
+
+        <div class="question-box q-p3" data-correct="12.5">
+            <p><b>Câu 22:</b> Nồng độ thuốc trong máu $C(x)=\frac{30x}{x^2+2}$. Tìm nồng độ cực đại (mg/l) trong 6 phút đầu (Làm tròn đến hàng phần mười).</p>
+            <input type="text" class="form-control short-ans" placeholder="Đáp số...">
         </div>
     </form>
 
@@ -103,52 +208,82 @@
     </div>
 
     <script>
+        window.onload = function() {
+            function shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+            const parts = document.querySelectorAll('.part-header');
+            parts.forEach(header => {
+                let sibling = header.nextElementSibling;
+                let questions = [];
+                let parent = header.parentNode;
+                while (sibling && sibling.classList.contains('question-box')) {
+                    questions.push(sibling);
+                    sibling = sibling.nextElementSibling;
+                }
+                if (questions.length > 0) {
+                    shuffle(questions);
+                    questions.forEach(q => parent.insertBefore(q, sibling));
+                }
+            });
+        };
+
         const API_URL = 'https://script.google.com/macros/s/AKfycbxNx_DJbZ35VaXuarmrx3QqRYM8I8d1v9uH65gREiVufe021qO4b2UbuuJP5e56OCfc/exec';
+
         function submitExam() {
             const name = document.getElementById('sName').value;
             const cls = document.getElementById('sClass').value;
             if(!name || !cls) { alert('Vui lòng nhập tên và lớp!'); return; }
             if(!confirm('Nộp bài ngay?')) return;
+
             const btn = document.getElementById('btnSub');
             btn.innerHTML = 'Đang chấm...'; btn.disabled = true;
             let score = 0;
-            const p1 = document.querySelectorAll('.q-p1');
-            if(p1.length > 0) {
-                p1.forEach(q => {
-                    const correct = q.dataset.correct;
-                    const sel = q.querySelector('input:checked');
-                    if(sel && sel.value === correct) { score += 0.25; q.classList.add('correct-color'); }
-                    else { q.classList.add('wrong-color'); }
+
+            document.querySelectorAll('.q-p1').forEach(q => {
+                const correct = q.dataset.correct;
+                const sel = q.querySelector('input:checked');
+                q.querySelectorAll('input').forEach(i => i.disabled=true);
+                if(sel && sel.value === correct) { score += 0.25; q.classList.add('correct-color'); }
+                else { q.classList.add('wrong-color'); }
+            });
+
+            document.querySelectorAll('.q-p2').forEach(q => {
+                const correctArr = q.dataset.correct.split(',');
+                let subScore = 0;
+                q.querySelectorAll('.tf-row').forEach((row, idx) => {
+                    const sel = row.querySelector('input:checked');
+                    row.querySelectorAll('input').forEach(i => i.disabled=true);
+                    if(sel && sel.value === correctArr[idx]) { subScore++; row.style.color="green"; }
+                    else if(sel) { row.style.color="red"; }
                 });
-            }
-            const p2 = document.querySelectorAll('.q-p2');
-            if(p2.length > 0) {
-                p2.forEach(q => {
-                    const correctArr = q.dataset.correct.split(',');
-                    let subScore = 0;
-                    q.querySelectorAll('.tf-row').forEach((row, idx) => {
-                        const sel = row.querySelector('input:checked');
-                        if(sel && sel.value === correctArr[idx]) { subScore++; row.style.color="green"; }
-                        else if(sel) { row.style.color="red"; }
-                    });
-                    if(subScore===1) score+=0.1; else if(subScore===2) score+=0.25; else if(subScore===3) score+=0.5; else if(subScore===4) score+=1.0;
-                });
-            }
-            const p3 = document.querySelectorAll('.q-p3');
-            if(p3.length > 0) {
-                p3.forEach(q => {
-                    const correct = q.dataset.correct;
-                    const inp = q.querySelector('.short-ans');
-                    if(inp.value.trim() === correct) { score += 0.5; q.classList.add('correct-color'); }
-                    else { q.classList.add('wrong-color'); }
-                });
-            }
+                if(subScore===1) score+=0.1; else if(subScore===2) score+=0.25; else if(subScore===3) score+=0.5; else if(subScore===4) score+=1.0;
+            });
+
+            document.querySelectorAll('.q-p3').forEach(q => {
+                const correct = q.dataset.correct;
+                const inp = q.querySelector('.short-ans');
+                const ans = inp.value.trim(); inp.disabled=true;
+                if(ans === correct) { score += 0.5; q.classList.add('correct-color'); }
+                else { q.classList.add('wrong-color'); }
+            });
+
             const data = new URLSearchParams();
-            data.append('name', name); data.append('class', cls); data.append('score', score.toFixed(2));
-            fetch(API_URL, { method: 'POST', mode: 'no-cors', body: data }).then(() => {
-                alert(`Nộp thành công!\nĐiểm: ${score.toFixed(2)}`);
+            data.append('name', name);
+            data.append('class', cls);
+            data.append('score', score.toFixed(2));
+
+            fetch(API_URL, { method: 'POST', mode: 'no-cors', body: data })
+            .then(() => {
+                alert(`Nộp thành công!\nHọc sinh: ${name}\nĐiểm: ${score.toFixed(2)}`);
                 btn.innerHTML = 'ĐÃ NỘP XONG';
-            }).catch(() => { alert(`Lỗi gửi dữ liệu. Điểm: ${score.toFixed(2)}`); });
+            }).catch(() => {
+                alert(`Đã chấm xong. Điểm: ${score.toFixed(2)}`);
+                btn.innerHTML = 'ĐÃ CHẤM';
+            });
         }
     </script>
 </body>
