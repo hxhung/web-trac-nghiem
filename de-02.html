@@ -237,7 +237,8 @@ for(let i=1;i<=12;i++){
 let userAns=form['q'+i].value;
 let isCorrect=(userAns===answers['q'+i]);
 if(isCorrect){score+=0.25;correct++;}
-let qBox=form['q'+i].closest('.question-box').cloneNode(true);
+// ĐÃ SỬA: Thêm [0] để lấy phần tử DOM đầu tiên, giúp closest() hoạt động đúng
+let qBox=form['q'+i][0].closest('.question-box').cloneNode(true);
 if(isCorrect)qBox.classList.add('correct-color');else qBox.classList.add('wrong-color');
 qBox.querySelector('.ans-explain').classList.remove('d-none');
 review.appendChild(qBox);}
@@ -247,7 +248,8 @@ tfKeys.forEach(k=>{
 let qCorrect=0;
 ["a","b","c","d"].forEach(subK=>{if(form[k+subK].value===tfAnswers[k+subK])qCorrect++;});
 if(qCorrect===1)score+=0.1;else if(qCorrect===2)score+=0.25;else if(qCorrect===3)score+=0.5;else if(qCorrect===4){score+=1.0;correct++;}
-let qBox=form[k+"a"].closest('.question-box').cloneNode(true);
+// ĐÃ SỬA: Thêm [0] vào selector
+let qBox=form[k+"a"][0].closest('.question-box').cloneNode(true);
 qBox.querySelector('.ans-explain').classList.remove('d-none');
 review.appendChild(qBox);});
 const shortAns={q17:"100",q18:"7",q19:"8.5",q20:"18",q21:"5",q22:"4.4"};
