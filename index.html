@@ -126,16 +126,17 @@
             const namespace = 'hxhung-web-trac-nghiem'; 
             const key = 'visits';
 
-            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-                .then(res => res.json())
-                .then(res => {
-                    // Hiển thị số với định dạng tiếng Việt (dấu chấm phân cách)
-                    document.getElementById('visit-count').innerText = res.value.toLocaleString('vi-VN');
-                })
-                .catch(err => {
-                    console.error('Lỗi bộ đếm:', err);
-                    document.getElementById('visit-count').innerText = '0';
-                });
+            // Dùng dịch vụ mới: counterapi.dev
+        fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
+            .then(res => res.json())
+            .then(res => {
+                // Dịch vụ mới trả về 'count' thay vì 'value'
+                document.getElementById('visit-count').innerText = res.count.toLocaleString('vi-VN');
+            })
+            .catch(err => {
+                console.error('Lỗi bộ đếm:', err);
+                document.getElementById('visit-count').innerText = '0';
+            });
         }
         
         // Kích hoạt bộ đếm khi trang tải xong
