@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Font chữ hiện đại cho toàn bộ trang */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
         body { 
@@ -20,7 +19,6 @@
             color: #1e293b;
         }
 
-        /* Hero Section tinh chỉnh */
         .hero-section { 
             background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); 
             color: white; 
@@ -30,7 +28,6 @@
             box-shadow: 0 15px 35px rgba(30, 64, 175, 0.2); 
         }
 
-        /* Hiệu ứng chữ Gradient */
         .text-gradient {
             background: linear-gradient(90deg, #ffffff, #cbd5e1);
             -webkit-background-clip: text;
@@ -38,7 +35,6 @@
             text-shadow: 2px 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* Thanh trang trí dưới tiêu đề */
         .title-separator {
             height: 4px;
             width: 60px;
@@ -47,7 +43,6 @@
             margin: 15px auto;
         }
 
-        /* Animation Keyframes */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -57,7 +52,45 @@
             animation: fadeInUp 0.8s ease-out forwards;
         }
 
-        /* Thẻ Card hiện đại */
+        /* --- CẬP NHẬT Ô TÌM KIẾM --- */
+        .search-container {
+            max-width: 450px; /* Thu gọn chiều dài ô tìm kiếm */
+            margin: 25px auto 0;
+            position: relative;
+        }
+
+        .search-box-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box-wrapper input { 
+            border-radius: 16px; 
+            padding: 12px 20px; 
+            padding-right: 50px; /* Chừa chỗ cho kính lúp */
+            border: none; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
+            font-size: 1rem; 
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .search-box-wrapper i {
+            position: absolute;
+            right: 20px;
+            color: #3b82f6;
+            font-size: 1.1rem;
+            pointer-events: none; /* Không cản trở việc click vào ô input */
+        }
+
+        .search-box-wrapper input:focus {
+            box-shadow: 0 10px 30px rgba(13, 110, 253, 0.3);
+            transform: scale(1.02);
+            outline: none;
+        }
+        /* --------------------------- */
+
         .test-card { 
             border: 1px solid rgba(0,0,0,0.05); 
             border-radius: 24px; 
@@ -73,31 +106,23 @@
             box-shadow: 0 25px 50px rgba(0,0,0,0.1); 
         }
 
-        .search-box input { 
-            border-radius: 16px; 
-            padding: 15px 25px; 
-            border: none; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-            font-size: 1rem; 
-            transition: all 0.3s ease;
-        }
-
-        .search-box input:focus {
-            box-shadow: 0 10px 30px rgba(13, 110, 253, 0.25);
-            transform: scale(1.02);
-        }
-
         .btn-modern {
             border-radius: 14px;
             padding: 12px 24px;
             font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .btn-modern:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .meta-info {
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 12px;
         }
     </style>
 </head>
@@ -119,9 +144,11 @@
                 Chấm và ghi điểm tự động
             </p>
 
-            <div class="search-box animate-up" style="animation-delay: 0.5s;">
-                <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm bài thi..." onkeyup="filterTests()">
-                <i class="fas fa-search"></i>
+            <div class="search-container animate-up" style="animation-delay: 0.5s;">
+                <div class="search-box-wrapper">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm bài thi..." onkeyup="filterTests()">
+                    <i class="fas fa-search"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -132,7 +159,7 @@
             <div class="col-lg-4 col-md-6 col-12 test-item animate-up" style="animation-delay: 0.6s;">
                 <div class="card test-card p-4 shadow-sm border-0">
                     <div class="card-body text-center">
-                        <div class="mx-auto card-icon mb-3" style="width:70px;height:70px;background:#eff6ff;border-radius:20px;display:flex;align-items:center;justify-content:center;color:#2563eb;font-size:28px;">
+                        <div class="mx-auto mb-3" style="width:70px;height:70px;background:#eff6ff;border-radius:20px;display:flex;align-items:center;justify-content:center;color:#2563eb;font-size:28px;">
                             <i class="fas fa-chart-line"></i>
                         </div>
                         <h5 class="card-title fw-bold text-uppercase text-primary mb-2">ĐỀ SỐ 01</h5>
@@ -149,7 +176,7 @@
             <div class="col-lg-4 col-md-6 col-12 test-item animate-up" style="animation-delay: 0.7s;">
                 <div class="card test-card p-4 shadow-sm border-0">
                     <div class="card-body text-center">
-                        <div class="mx-auto card-icon mb-3" style="width:70px;height:70px;background:#f0fdf4;border-radius:20px;display:flex;align-items:center;justify-content:center;color:#16a34a;font-size:28px;">
+                        <div class="mx-auto mb-3" style="width:70px;height:70px;background:#f0fdf4;border-radius:20px;display:flex;align-items:center;justify-content:center;color:#16a34a;font-size:28px;">
                             <i class="fas fa-cube"></i>
                         </div>
                         <h5 class="card-title fw-bold text-uppercase text-primary mb-2">ĐỀ SỐ 02</h5>
@@ -166,7 +193,7 @@
             <div class="col-lg-4 col-md-6 col-12 test-item animate-up" style="animation-delay: 0.8s;">
                 <div class="card test-card p-4 shadow-sm border-0">
                     <div class="card-body text-center">
-                        <div class="mx-auto card-icon mb-3" style="width:70px;height:70px;background:#fef2f2;border-radius:20px;display:flex;align-items:center;justify-content:center;color:#dc2626;font-size:28px;">
+                        <div class="mx-auto mb-3" style="width:70px;height:70px;background:#fef2f2;border-radius:20px;display:flex;align-items:center;justify-content:center;color:#dc2626;font-size:28px;">
                             <i class="fas fa-chart-bar"></i>
                         </div>
                         <h5 class="card-title fw-bold text-uppercase text-primary mb-2">ĐỀ SỐ 03</h5>
@@ -176,6 +203,23 @@
                             <span><i class="far fa-clock me-1"></i> 90 Phút</span>
                         </div>
                         <a href="404.html" class="btn btn-primary btn-modern w-100">Vào thi ngay <i class="fas fa-arrow-right ms-2"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-12 test-item animate-up" style="animation-delay: 0.9s;">
+                <div class="card test-card p-4 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <div class="mx-auto mb-3" style="width:70px;height:70px;background:#fffbeb;border-radius:20px;display:flex;align-items:center;justify-content:center;color:#d97706;font-size:28px;">
+                            <i class="fas fa-file-signature"></i>
+                        </div>
+                        <h5 class="card-title fw-bold text-uppercase text-warning mb-2">ĐỀ SỐ 04</h5>
+                        <p class="card-text fw-bold mb-3 text-secondary">ÔN TẬP TỔNG HỢP HỌC KÌ 1</p>
+                        <div class="d-flex justify-content-between meta-info small mb-4">
+                            <span><i class="fas fa-question-circle me-1"></i> 22 Câu</span>
+                            <span><i class="far fa-clock me-1"></i> 90 Phút</span>
+                        </div>
+                        <a href="404.html" class="btn btn-warning btn-modern w-100 text-white">Vào thi ngay <i class="fas fa-arrow-right ms-2"></i></a>
                     </div>
                 </div>
             </div>
@@ -206,7 +250,6 @@
                     document.getElementById('visit-count').innerText = '0';
                 });
         }
-        
         document.addEventListener('DOMContentLoaded', loadVisitCount);
 
         function filterTests() {
@@ -219,7 +262,7 @@
                 var text = items[i].querySelector(".card-text").innerText;
                 if (title.toUpperCase().indexOf(filter) > -1 || text.toUpperCase().indexOf(filter) > -1) {
                     items[i].style.display = "";
-                    items[i].style.animation = "none"; // Tắt animation khi lọc
+                    items[i].style.animation = "none";
                 } else {
                     items[i].style.display = "none";
                 }
