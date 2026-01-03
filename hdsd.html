@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng Dẫn Sử Dụng - Hệ Thống Trắc Nghiệm Toán</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "∑ ∫ π";
+            position: absolute;
+            font-size: 120px;
+            opacity: 0.1;
+            top: -20px;
+            right: 30px;
+            font-weight: bold;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(102,126,234,0.3);
+        }
+
+        .section-title h2 {
+            color: #333;
+            font-size: 1.8em;
+        }
+
+        .step-card {
+            background: linear-gradient(to right, #f8f9ff, #ffffff);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(102,126,234,0.2);
+        }
+
+        .step-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-icon {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+        }
+
+        .step-card p, .step-card ul {
+            color: #555;
+            margin-left: 40px;
+        }
+
+        .step-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .step-card li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .step-card li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .tips-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(253,203,110,0.3);
+        }
+
+        .tips-box h3 {
+            color: #d63031;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips-box h3::before {
+            content: "💡";
+            font-size: 1.2em;
+        }
+
+        .tips-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tips-box li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #2d3436;
+        }
+
+        .tips-box li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #00b894;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(108,92,231,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .info-card h4 {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+        }
+
+        .info-card p {
+            font-size: 0.95em;
+            opacity: 0.95;
+        }
+
+        .question-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .question-type-card {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .question-type-card:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .question-type-card .icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+
+        .question-type-card h4 {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .btn-home {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102,126,234,0.4);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .highlight-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .highlight-box strong {
+            color: #2e7d32;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .section-title h2 {
+                font-size: 1.4em;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .question-types {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 HƯỚNG DẪN SỬ DỤNG</h1>
+            <p>Hệ thống Trắc nghiệm Toán Online - Chương trình 2018</p>
+        </div>
+
+        <div class="content">
+            <section class="section">
+                <div class="section-title">
+                    <div class="section-number">1</div>
+                    <h2>Giới Thiệu Hệ Thống</h2>
+                </div>
+                <p style="color: #555; font-size: 1.1em; margin-bottom: 20px;">
+                    Hệ thống trắc nghiệm Toán online được thiết kế để hỗ trợ học sinh ôn tập và kiểm tra kiến thức môn Toán theo chương trình 2018. Với tính năng <strong>chấm điểm tự động</strong>, học sinh có thể tự đánh giá năng lực và theo dõi quá trình học tập của mình.
+                </p>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-card-icon">📝</div>
+                        <h4>Trắc Nghiệm</h4>
+                        <p>Đề thi đa dạng theo từng chương và tổng hợp</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-icon">⚡</div>
+                        <h4>Chấm Tự Động</h4>
+                        <p>Kết quả hiển thị ngay sau khi nộp bài</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-icon">🎯</div>
+                        <h4>Theo Chương Trình</h4>
+                        <p>Bám sát chương trình Toán 2018</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-title">
+                    <div class="section-number">2</div>
+                    <h2>Cách Thực Hiện Bài Thi</h2>
+                </div>
+
+                <div class="step-card">
+                    <h3><span class="step-icon">①</span>Chọn Đề Thi</h3>
+                    <p>Tại trang chủ, chọn đề thi phù hợp với nội dung bạn muốn ôn tập. Hệ thống có nhiều đề thi theo từng chương và đề tổng hợp:</p>
+                    <ul>
+                        <li>Các đề theo chương: Chương 1, 2, 3,...</li>
+                        <li>Đề ôn tập tổng hợp học kì</li>
+                        <li>Đề ôn tập thi THPT</li>
+                        <li>Và nhiều đề khác đang được cập nhật thêm</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3><span class="step-icon">②</span>Nhập Thông Tin Cá Nhân</h3>
+                    <p>Trước khi bắt đầu làm bài, hệ thống yêu cầu bạn nhập thông tin:</p>
+                    <ul>
+                        <li>Họ và tên</li>
+                        <li>Lớp (ví dụ: 12A1)</li>
+                        <li>Trường (tùy chọn)</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <strong>Lưu ý:</strong> Thông tin này được sử dụng để ghi nhận và lưu kết quả bài thi của bạn trong hệ thống.
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <h3><span class="step-icon">③</span>Đọc Thông Tin Đề Thi</h3>
+                    <p>Trước khi bắt đầu, hãy chú ý các thông tin quan trọng:</p>
+                    <ul>
+                        <li>Số lượng câu hỏi (thường 22-40 câu tùy đề)</li>
+                        <li>Thời gian làm bài (90 phút)</li>
+                        <li>Dạng câu hỏi: Trắc nghiệm 4 lựa chọn, Đúng/Sai, Điền đáp số</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3><span class="step-icon">④</span>Làm Bài Thi</h3>
+                    <p>Trong quá trình làm bài:</p>
+                    <ul>
+                        <li>Đọc kỹ đề và các phương án trả lời</li>
+                        <li>Với câu trắc nghiệm 4 lựa chọn: Click chọn đáp án A, B, C hoặc D</li>
+                        <li>Với câu Đúng/Sai: Đánh dấu từng ý là Đúng hoặc Sai</li>
+                        <li>Với câu điền đáp số: Nhập kết quả tính toán vào ô trống</li>
+                        <li>Có thể thay đổi đáp án bất kỳ lúc nào trước khi nộp bài</li>
+                        <li>Theo dõi thời gian còn lại ở góc màn hình</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3><span class="step-icon">⑤</span>Nộp Bài và Xem Kết Quả</h3>
+                    <p>Sau khi hoàn thành:</p>
+                    <ul>
+                        <li>Nhấn nút "Nộp bài" để kết thúc bài thi</li>
+                        <li>Hệ thống sẽ tự động chấm điểm và hiển thị kết quả</li>
+                        <li>Xem chi tiết từng câu đúng/sai và đáp án chính xác</li>
+                        <li>Kết quả được ghi nhận theo thông tin đã nhập</li>
+                        <li>Bạn có thể xem lại lịch sử các lần làm bài</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-title">
+                    <div class="section-number">3</div>
+                    <h2>Dạng Câu Hỏi Trong Đề Thi</h2>
+                </div>
+                
+                <div class="question-types">
+                    <div class="question-type-card">
+                        <div class="icon">🔤</div>
+                        <h4>Trắc Nghiệm 4 Lựa Chọn</h4>
+                        <p>Chọn 1 đáp án đúng trong 4 đáp án A, B, C, D</p>
+                    </div>
+                    <div class="question-type-card">
+                        <div class="icon">✓✗</div>
+                        <h4>Đúng/Sai</h4>
+                        <p>Đánh giá từng ý trong câu hỏi là Đúng hay Sai</p>
+                    </div>
+                    <div class="question-type-card">
+                        <div class="icon">🔢</div>
+                        <h4>Điền Đáp Số</h4>
+                        <p>Tính toán và điền kết quả số vào ô trống</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-title">
+                    <div class="section-number">4</div>
+                    <h2>Cấu Trúc Đề Thi</h2>
+                </div>
+                
+                <div class="step-card">
+                    <h3><span class="step-icon">📊</span>Phân Bổ Câu Hỏi Theo Mức Độ</h3>
+                    <p>Mỗi đề thi được thiết kế theo chuẩn thi THPT với phân bổ:</p>
+                    <ul>
+                        <li>Mức độ Nhận biết: 30% số câu (câu dễ)</li>
+                        <li>Mức độ Thông hiểu: 40% số câu (câu trung bình)</li>
+                        <li>Mức độ Vận dụng: 30% số câu (câu khó)</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3><span class="step-icon">📋</span>Thang Điểm Theo Chuẩn THPT</h3>
+                    <p>Hệ thống áp dụng cách tính điểm theo chuẩn thi tốt nghiệp THPT Quốc gia môn Toán:</p>
+                    
+                    <div style="margin: 15px 0; padding: 15px; background: #f0f4ff; border-radius: 8px;">
+                        <h4 style="color: #667eea; margin-bottom: 10px;">📌 Cấu trúc đề thi: 22 câu - 10 điểm</h4>
+                        
+                        <div style="margin: 10px 0;">
+                            <strong style="color: #333;">PHẦN 1: Trắc nghiệm 4 lựa chọn (12 câu - 6 điểm)</strong>
+                            <ul style="margin-left: 20px;">
+                                <li>Mỗi câu đúng: <strong style="color: #00b894;">0.5 điểm</strong></li>
+                                <li>Chọn 1 đáp án đúng trong 4 đáp án A, B, C, D</li>
+                            </ul>
+                        </div>
+						<div style="margin: 10px 0;">
+                            <strong style="color: #333;">PHẦN 2: Trắc nghiệm Đúng/Sai (4 câu - 4 điểm)</strong>
+                            <ul style="margin-left: 20px;">
+                                <li>Trong mỗi câu, điểm lũy tiến theo số lượng ý chính xác <strong style="color: #00b894;">0.1 - 0.25 - 0.5 - 1 điểm</strong></li>
+                                <li>Chọn Đúng/Sai đối với từng mệnh đề</li>
+                            </ul>
+                        </div>
+						<div style="margin: 10px 0;">
+                            <strong style="color: #333;">PHẦN 3: Điền đáp số (6 câu - 3 điểm)</strong>
+                            <ul style="margin-left: 20px;">
+                                <li>Mỗi câu <strong style="color: #00b894;">0.5 điểm</strong></li>
+                                <li>Điền đáp số câu hỏi</li>
+                            </ul>
+                        </div>
+                        <div style="margin:
+            </section>
+
+            <section class="section">
+                <div class="section-title">
+                    <div class="section-number">5</div>
+                    <h2>Hệ Thống Ghi Nhận Kết Quả</h2>
+                </div>
+                
+                <div class="step-card">
+                    <h3><span class="step-icon">💾</span>Lưu Trữ Thông Tin</h3>
+                    <p>Hệ thống tự động lưu lại:</p>
+                    <ul>
+                        <li>Thông tin cá nhân (Họ tên, Lớp, Trường)</li>
+                        <li>Đề thi đã làm và thời gian làm bài</li>
+                        <li>Điểm số đạt được</li>
+                        <li>Chi tiết đáp án từng câu (đúng/sai)</li>
+                        <li>Lịch sử các lần làm bài để theo dõi tiến bộ</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3><span class="step-icon">📈</span>Theo Dõi Tiến Độ</h3>
+                    <ul>
+                        <li>Xem lại kết quả các lần làm bài trước</li>
+                        <li>So sánh điểm số qua các lần thi</li>
+                        <li>Phân tích điểm mạnh/yếu theo từng chương</li>
+                        <li>Thống kê tỷ lệ đúng/sai theo dạng câu hỏi</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-title">
+                    <div class="section-number">6</div>
+                    <h2>Yêu Cầu Kỹ Thuật</h2>
+                </div>
+                <div class="step-card">
+                    <h3><span class="step-icon">💻</span>Thiết Bị và Trình Duyệt</h3>
+                    <ul>
+                        <li>Máy tính, laptop, tablet hoặc smartphone</li>
+                        <li>Trình duyệt: Chrome, Firefox, Safari, Edge (phiên bản mới nhất)</li>
+                        <li>Kết nối Internet ổn định</li>
+                        <li>JavaScript phải được bật</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3><span class="step-icon">📱</span>Giao Diện Responsive</h3>
+                    <ul>
+                        <li>Tối ưu cho mọi kích thước màn hình</li>
+                        <li>Có thể làm bài trên điện thoại di động</li>
+                        <li>Giao diện tự động điều chỉnh theo thiết bị</li>
+                    </ul>
+                </div>
+            </section>
+
+            <div class="tips-box">
+                <h3>Mẹo Làm Bài Hiệu Quả</h3>
+                <ul>
+                    <li>Đọc kỹ đề và hiểu rõ yêu cầu trước khi trả lời</li>
+                    <li>Với câu Đúng/Sai: Đánh giá kỹ từng ý, không vội vàng</li>
+                    <li>Với câu điền số: Kiểm tra đơn vị và độ chính xác yêu cầu</li>
+                    <li>Ưu tiên làm các câu dễ trước để tích lũy điểm</li>
+                    <li>Quản lý thời gian hợp lý: khoảng 2-3 phút cho mỗi câu</li>
+                    <li>Kiểm tra lại toàn bộ bài làm trước khi nộp</li>
+                    <li>Thực hành thường xuyên để nâng cao kỹ năng</li>
+                    <li>Xem lại đáp án và giải thích sau mỗi bài thi</li>
+                    <li>Ghi chép lại các dạng bài còn yếu để ôn tập</li>
+                    <li>Làm bài nhiều lần để làm quen với áp lực thời gian</li>
+                </ul>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="index.html" class="btn-home">← Quay Về Trang Chủ</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 Hệ thống Trắc nghiệm Toán - hxhung</p>
+            <p style="margin-top: 5px; font-size: 0.9em;">Chúc các em học tập tốt và đạt kết quả cao! 🎓</p>
+        </div>
+    </div>
+</body>
+</html>
