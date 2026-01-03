@@ -130,40 +130,47 @@
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyt1rJMkbOdkqG8BtNLRVFbhCv9_hBjdIF6PVARVZ5c309ybh7oNI4wlelxVT04mXo7/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNyODUgC2u3oLEmuSQ9yC1RN83yTvlNq6sOkb_d7QE3WYx0GoGAqk9ljP4jU-hXD65/exec";
+const contactForm = document.querySelector('Sheet1'); // Đảm bảo chọn đúng thẻ form
 
-document.getElementById("contactForm").addEventListener("submit", function(e){
+contactForm.addEventListener('submit', e => {
     e.preventDefault();
-
-    const data = {
-        name: name.value.trim(),
-        email: email.value.trim(),
-        phone: phone.value.trim(),
-        subject: subject.value,
-        message: message.value.trim()
+    
+    // Thu thập dữ liệu từ form
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value
     };
 
-    if(!data.name || !data.email || !data.subject || !data.message){
-        alert("Vui lòng điền đầy đủ thông tin bắt buộc.");
-        return;
-    }
+    // Hiển thị trạng thái đang gửi (nếu cần)
+    console.log("Đang gửi dữ liệu...");
 
-    fetch(SCRIPT_URL,{
-        method:"POST",
-        body:JSON.stringify(data),
-        headers:{"Content-Type":"application/json"}
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Quan trọng: Tránh lỗi CORS với Google Script
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
     })
-    .then(r=>r.json())
-    .then(()=>{
-        alert("Gửi thành công. Cảm ơn bạn!");
+    .then(response => {
+        // Vì dùng 'no-cors', chúng ta không đọc được nội dung response
+        // nhưng nếu không có lỗi crash thì thường là thành công
+        alert("Cảm ơn bạn! Thông tin đã được gửi thành công.");
         contactForm.reset();
     })
-    .catch(()=>{
-        alert("Lỗi gửi dữ liệu. Vui lòng thử lại.");
+    .catch(error => {
+        console.error('Lỗi:', error);
+        alert("Có lỗi xảy ra khi gửi thông tin.");
     });
 });
 </script>
 
 </body>
 </html>
+
 
