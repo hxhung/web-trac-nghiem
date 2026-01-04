@@ -1,14 +1,21 @@
+Chào bạn, tôi thực hiện **BƯỚC 2: Xuất mã HTML hoàn chỉnh** cho **Đề 03 - Chương 3. Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm**.
+
+Mã nguồn này được thiết kế theo quy chuẩn giáo dục 2018, tích hợp đầy đủ công thức Toán học bằng **MathJax**, hệ thống **xáo trộn câu hỏi** tự động, và logic **3 màn hình** chuyên nghiệp. Trang kết quả được trang bị nút **"TRANG CHỦ"** điều hướng trực tiếp về `index.html` và tích hợp **API** gửi điểm về hệ thống lưu trữ.
+
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiểm tra Chương 3: Số đặc trưng mẫu số liệu ghép nhóm</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đề 03 - Chương 3: Thống kê ghép nhóm</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
     <style>
-        :root{--primary:#0d6efd;--sec:#6c757d;--success:#198754;--danger:#dc3545}body{background:#f8f9fa;font-family:sans-serif}
+        :root{--primary:#0d6efd;--sec:#6c757d;--success:#198754;--danger:#dc3545}
+        body{background:#f8f9fa;font-family:sans-serif}
         #welcome-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d6efd,#0a58ca)}
         .welcome-card{background:#fff;width:100%;max-width:500px;padding:40px;border-radius:15px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
         #exam-screen{display:none;padding-bottom:60px}
@@ -24,282 +31,320 @@
     </style>
 </head>
 <body>
+
 <div id="welcome-screen">
     <div class="welcome-card">
-        <div class="mb-4"><i class="fas fa-chart-line text-primary" style="font-size:50px"></i></div>
-        <h2 class="text-primary fw-bold mb-3">SỐ ĐẶC TRƯNG MẪU SỐ LIỆU GHÉP NHÓM</h2>
+        <div class="mb-4"><i class="fas fa-chart-bar text-primary" style="font-size:50px"></i></div>
+        <h2 class="text-primary fw-bold mb-3">CHƯƠNG 3. THỐNG KÊ GHÉP NHÓM</h2>
         <p class="text-muted mb-4"><i class="far fa-clock"></i> 90 phút | <i class="far fa-file-alt"></i> 22 Câu</p>
         <input type="text" id="sName" class="form-control form-control-lg mb-3" placeholder="Nhập họ và tên...">
         <input type="text" id="sClass" class="form-control form-control-lg mb-4" placeholder="Nhập lớp...">
         <button onclick="start()" class="btn btn-primary btn-lg w-100 fw-bold shadow">BẮT ĐẦU LÀM BÀI</button>
+        <div class="mt-3"><a href="index.html" class="text-secondary text-decoration-none small"><i class="fas fa-arrow-left"></i> Về trang chủ</a></div>
     </div>
 </div>
 
 <div id="exam-screen">
     <div class="sticky-header d-flex justify-content-between align-items-center">
-        <div><span id="dName" class="fw-bold">Thí sinh</span></div>
+        <div class="d-flex align-items-center">
+            <button type="button" onclick="goHome()" class="btn btn-outline-secondary btn-sm me-2"><i class="fas fa-home"></i></button>
+            <span id="dName" class="fw-bold">TS</span>
+        </div>
         <div class="fw-bold text-primary fs-4" id="time">90:00</div>
-        <button type="button" onclick="submitExam()" id="bTop" class="btn btn-success btn-sm fw-bold">NỘP</button>
+        <button type="button" onclick="submitExam()" id="bTop" class="btn btn-success btn-sm fw-bold px-3">NỘP BÀI</button>
     </div>
+
     <div class="container" style="max-width:900px">
         <form id="exForm">
-            <div class="part-header">PHẦN I. TRẮC NGHIỆM NHIỀU LỰA CHỌN (0.25đ/câu)</div>
+            <!-- PHẦN I -->
+            <div class="part-header">PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (12 câu - 0.25đ/câu)</div>
             
-            <div class="question-box q-p1" data-correct="B">
-                <p class="fw-bold">Câu 1: Khoảng biến thiên của mẫu số liệu ghép nhóm được tính bằng:</p>
-                <label class="q-item"><input type="radio" name="q1" value="A"> A. Hiệu giữa đầu mút trái của nhóm cuối cùng và đầu mút phải của nhóm đầu tiên.</label>
-                <label class="q-item"><input type="radio" name="q1" value="B"> B. Hiệu giữa đầu mút phải của nhóm cuối cùng và đầu mút trái của nhóm đầu tiên.</label>
-                <label class="q-item"><input type="radio" name="q1" value="C"> C. Tổng giữa đầu mút phải của nhóm cuối cùng và đầu mút trái của nhóm đầu tiên.</label>
-                <label class="q-item"><input type="radio" name="q1" value="D"> D. Hiệu giữa giá trị đại diện của nhóm cuối cùng và nhóm đầu tiên.</label>
-            </div>
-
-            <div class="question-box q-p1" data-correct="B">
-                <p class="fw-bold">Câu 2: Cho mẫu số liệu ghép nhóm có 5 nhóm. Biết đầu mút trái của nhóm 1 là $10$ và đầu mút phải của nhóm 5 là $50$. Khoảng biến thiên là:</p>
-                <label class="q-item"><input type="radio" name="q2" value="A"> A. $60$.</label>
-                <label class="q-item"><input type="radio" name="q2" value="B"> B. $40$.</label>
-                <label class="q-item"><input type="radio" name="q2" value="C"> C. $25$.</label>
-                <label class="q-item"><input type="radio" name="q2" value="D"> D. $10$.</label>
+            <div class="question-box q-p1" data-correct="A">
+                <p class="fw-bold">Câu 1: Khoảng biến thiên $R$ của mẫu số liệu ghép nhóm là:</p>
+                <label class="q-item"><input type="radio" name="q1" value="A"> Hiệu giữa đầu mút phải của nhóm cuối và đầu mút trái của nhóm đầu.</label>
+                <label class="q-item"><input type="radio" name="q1" value="B"> Hiệu giữa giá trị đại diện của nhóm cuối và nhóm đầu.</label>
+                <label class="q-item"><input type="radio" name="q1" value="C"> Tỉ số giữa tần số cao nhất và thấp nhất.</label>
+                <label class="q-item"><input type="radio" name="q1" value="D"> Tổng của đầu mút trái nhóm đầu và đầu mút phải nhóm cuối.</label>
             </div>
 
             <div class="question-box q-p1" data-correct="A">
-                <p class="fw-bold">Câu 3: Khoảng tứ phân vị $\Delta_Q$ của mẫu số liệu ghép nhóm được xác định bởi công thức:</p>
-                <label class="q-item"><input type="radio" name="q3" value="A"> A. $\Delta_Q = Q_3 - Q_1$.</label>
-                <label class="q-item"><input type="radio" name="q3" value="B"> B. $\Delta_Q = Q_3 + Q_1$.</label>
-                <label class="q-item"><input type="radio" name="q3" value="C"> C. $\Delta_Q = Q_2 - Q_1$.</label>
-                <label class="q-item"><input type="radio" name="q3" value="D"> D. $\Delta_Q = Q_3 - Q_2$.</label>
-            </div>
-
-            <div class="question-box q-p1" data-correct="C">
-                <p class="fw-bold">Câu 4: Tứ phân vị thứ hai $Q_2$ chính là số đặc trưng nào sau đây?</p>
-                <label class="q-item"><input type="radio" name="q4" value="A"> A. Số trung bình.</label>
-                <label class="q-item"><input type="radio" name="q4" value="B"> B. Mốt.</label>
-                <label class="q-item"><input type="radio" name="q4" value="C"> C. Trung vị.</label>
-                <label class="q-item"><input type="radio" name="q4" value="D"> D. Độ lệch chuẩn.</label>
-            </div>
-
-            <div class="question-box q-p1" data-correct="B">
-                <p class="fw-bold">Câu 5: Phương sai của mẫu số liệu ghép nhóm dùng để đo mức độ:</p>
-                <label class="q-item"><input type="radio" name="q5" value="A"> A. Tập trung của số liệu.</label>
-                <label class="q-item"><input type="radio" name="q5" value="B"> B. Phân tán của số liệu so với số trung bình.</label>
-                <label class="q-item"><input type="radio" name="q5" value="C"> C. Lớn hay nhỏ của các giá trị.</label>
-                <label class="q-item"><input type="radio" name="q5" value="D"> D. Xu thế trung tâm.</label>
-            </div>
-
-            <div class="question-box q-p1" data-correct="B">
-                <p class="fw-bold">Câu 6: Độ lệch chuẩn $s$ được tính từ phương sai $s^2$ theo công thức:</p>
-                <label class="q-item"><input type="radio" name="q6" value="A"> A. $s = s^2$.</label>
-                <label class="q-item"><input type="radio" name="q6" value="B"> B. $s = \sqrt{s^2}$.</label>
-                <label class="q-item"><input type="radio" name="q6" value="C"> C. $s = |s^2|$.</label>
-                <label class="q-item"><input type="radio" name="q6" value="D"> D. $s = (s^2)^2$.</label>
-            </div>
-
-            <div class="question-box q-p1" data-correct="C">
-                <p class="fw-bold">Câu 7: Một mẫu số liệu có phương sai $s^2 = 0,49$. Độ lệch chuẩn của mẫu số liệu đó là:</p>
-                <label class="q-item"><input type="radio" name="q7" value="A"> A. $0,49$.</label>
-                <label class="q-item"><input type="radio" name="q7" value="B"> B. $0,07$.</label>
-                <label class="q-item"><input type="radio" name="q7" value="C"> C. $0,7$.</label>
-                <label class="q-item"><input type="radio" name="q7" value="D"> D. $7$.</label>
+                <p class="fw-bold">Câu 2: Mẫu số liệu có đầu mút trái nhóm đầu là 700 và đầu mút phải nhóm cuối là 1500 gam. Khoảng biến thiên là:</p>
+                <label class="q-item"><input type="radio" name="q2" value="A"> 800 gam</label>
+                <label class="q-item"><input type="radio" name="q2" value="B"> 700 gam</label>
+                <label class="q-item"><input type="radio" name="q2" value="C"> 1500 gam</label>
+                <label class="q-item"><input type="radio" name="q2" value="D"> 2200 gam</label>
             </div>
 
             <div class="question-box q-p1" data-correct="A">
-                <p class="fw-bold">Câu 8: Nhóm chứa tứ phân vị thứ nhất $Q_1$ là nhóm có tần số tích lũy lớn hơn hoặc bằng giá trị nào?</p>
-                <label class="q-item"><input type="radio" name="q8" value="A"> A. $n/4$.</label>
-                <label class="q-item"><input type="radio" name="q8" value="B"> B. $n/2$.</label>
-                <label class="q-item"><input type="radio" name="q8" value="C"> C. $3n/4$.</label>
-                <label class="q-item"><input type="radio" name="q8" value="D"> D. $n$.</label>
-            </div>
-
-            <div class="question-box q-p1" data-correct="C">
-                <p class="fw-bold">Câu 9: Giá trị đại diện của nhóm $[20; 30)$ là:</p>
-                <label class="q-item"><input type="radio" name="q9" value="A"> A. $20$.</label>
-                <label class="q-item"><input type="radio" name="q9" value="B"> B. $30$.</label>
-                <label class="q-item"><input type="radio" name="q9" value="C"> C. $25$.</label>
-                <label class="q-item"><input type="radio" name="q9" value="D"> D. $50$.</label>
-            </div>
-
-            <div class="question-box q-p1" data-correct="B">
-                <p class="fw-bold">Câu 10: Khi tất cả các giá trị trong mẫu số liệu ghép nhóm bằng nhau thì phương sai của mẫu bằng:</p>
-                <label class="q-item"><input type="radio" name="q10" value="A"> A. $1$.</label>
-                <label class="q-item"><input type="radio" name="q10" value="B"> B. $0$.</label>
-                <label class="q-item"><input type="radio" name="q10" value="C"> C. Không xác định.</label>
-                <label class="q-item"><input type="radio" name="q10" value="D"> D. Một số dương lớn.</label>
+                <p class="fw-bold">Câu 3: Nhóm chứa tứ phân vị thứ nhất $Q_1$ là nhóm:</p>
+                <label class="q-item"><input type="radio" name="q3" value="A"> Nhóm đầu tiên có tần số tích lũy lớn hơn hoặc bằng $n/4$.</label>
+                <label class="q-item"><input type="radio" name="q3" value="B"> Nhóm có tần số lớn nhất trong bảng.</label>
+                <label class="q-item"><input type="radio" name="q3" value="C"> Nhóm nằm ở vị trí chính giữa bảng tần số.</label>
+                <label class="q-item"><input type="radio" name="q3" value="D"> Nhóm cuối cùng có tần số tích lũy nhỏ hơn $3n/4$.</label>
             </div>
 
             <div class="question-box q-p1" data-correct="A">
-                <p class="fw-bold">Câu 11: Khoảng biến thiên thay đổi thế nào nếu thêm một nhóm mới vào cuối bảng có đầu mút phải lớn hơn?</p>
-                <label class="q-item"><input type="radio" name="q11" value="A"> A. Tăng lên.</label>
-                <label class="q-item"><input type="radio" name="q11" value="B"> B. Giảm đi.</label>
-                <label class="q-item"><input type="radio" name="q11" value="C"> C. Không đổi.</label>
-                <label class="q-item"><input type="radio" name="q11" value="D"> D. Tùy tần số của nhóm.</label>
+                <p class="fw-bold">Câu 4: Công thức tính phương sai $s^2$ của mẫu số liệu ghép nhóm là:</p>
+                <label class="q-item"><input type="radio" name="q4" value="A"> $s^2 = \frac{1}{n} \sum m_i(x_i - \bar{x})^2$</label>
+                <label class="q-item"><input type="radio" name="q4" value="B"> $s^2 = \sqrt{\frac{1}{n} \sum m_i(x_i - \bar{x})^2}$</label>
+                <label class="q-item"><input type="radio" name="q4" value="C"> $s^2 = \frac{1}{n} \sum m_i x_i^2 - \bar{x}$</label>
+                <label class="q-item"><input type="radio" name="q4" value="D"> $s^2 = \sum m_i(x_i - \bar{x})$</label>
             </div>
 
-            <div class="question-box q-p1" data-correct="C">
-                <p class="fw-bold">Câu 12: Khoảng tứ phân vị của mẫu số liệu ghép nhóm không bị ảnh hưởng bởi:</p>
-                <label class="q-item"><input type="radio" name="q12" value="A"> A. Số lượng các nhóm.</label>
-                <label class="q-item"><input type="radio" name="q12" value="B"> B. Độ dài các nhóm.</label>
-                <label class="q-item"><input type="radio" name="q12" value="C"> C. Các giá trị ngoại lệ.</label>
-                <label class="q-item"><input type="radio" name="q12" value="D"> D. Tần số tích lũy.</label>
+            <div class="question-box q-p1" data-correct="A">
+                <p class="fw-bold">Câu 5: Độ lệch chuẩn của mẫu số liệu ghép nhóm được tính bằng:</p>
+                <label class="q-item"><input type="radio" name="q5" value="A"> Căn bậc hai của phương sai.</label>
+                <label class="q-item"><input type="radio" name="q5" value="B"> Bình phương của phương sai.</label>
+                <label class="q-item"><input type="radio" name="q5" value="C"> Khoảng cách giữa $Q_3$ và $Q_1$.</label>
+                <label class="q-item"><input type="radio" name="q5" value="D"> Hiệu giữa giá trị lớn nhất và nhỏ nhất.</label>
             </div>
 
-            <div class="part-header">PHẦN II. CÂU TRẮC NGHIỆM ĐÚNG/SAI (1.0đ/câu)</div>
+            <div class="question-box q-p1" data-correct="A">
+                <p class="fw-bold">Câu 6: Một mẫu số liệu có phương sai $s^2 = 26,21$. Độ lệch chuẩn $s$ (làm tròn hàng phần trăm) là:</p>
+                <label class="q-item"><input type="radio" name="q6" value="A"> 5,12</label>
+                <label class="q-item"><input type="radio" name="q6" value="B"> 5,11</label>
+                <label class="q-item"><input type="radio" name="q6" value="C"> 26,2</label>
+                <label class="q-item"><input type="radio" name="q6" value="D"> 6,83</label>
+            </div>
+
+            <div class="question-box q-p1" data-correct="A">
+                <p class="fw-bold">Câu 7: Ý nghĩa của khoảng tứ phân vị $\Delta_Q$ là:</p>
+                <label class="q-item"><input type="radio" name="q7" value="A"> Đo mức độ phân tán của 50% số liệu nằm chính giữa mẫu.</label>
+                <label class="q-item"><input type="radio" name="q7" value="B"> Đo khoảng cách giữa giá trị lớn nhất và nhỏ nhất.</label>
+                <label class="q-item"><input type="radio" name="q7" value="C"> Xác định giá trị trung bình cộng của toàn mẫu.</label>
+                <label class="q-item"><input type="radio" name="q7" value="D"> Tìm nhóm có tần số cao nhất (Mốt).</label>
+            </div>
+
+            <div class="question-box q-p1" data-correct="A">
+                <p class="fw-bold">Câu 8: Nếu độ lệch chuẩn của một mẫu số liệu bằng 0, điều này có nghĩa là:</p>
+                <label class="q-item"><input type="radio" name="q8" value="A"> Tất cả giá trị trong mẫu bằng nhau.</label>
+                <label class="q-item"><input type="radio" name="q8" value="B"> Mẫu số liệu rất phân tán.</label>
+                <label class="q-item"><input type="radio" name="q8" value="C"> Không có giá trị trung bình cộng.</label>
+                <label class="q-item"><input type="radio" name="q8" value="D"> Mẫu số liệu chỉ bao gồm duy nhất một nhóm.</label>
+            </div>
+
+            <div class="question-box q-p1" data-correct="A">
+                <p class="fw-bold">Câu 9: Cho bảng tuổi thọ: [130; 160), [160; 190), [190; 220), [220; 250). Khoảng biến thiên là:</p>
+                <label class="q-item"><input type="radio" name="q9" value="A"> 120</label>
+                <label class="q-item"><input type="radio" name="q9" value="B"> 30</label>
+                <label class="q-item"><input type="radio" name="q9" value="C"> 160</label>
+                <label class="q-item"><input type="radio" name="q9" value="D"> 250</label>
+            </div>
+
+            <div class="question-box q-p1" data-correct="A">
+                <p class="fw-bold">Câu 10: Khi so sánh hai mẫu cùng đơn vị đo, mẫu có độ lệch chuẩn nhỏ hơn thì:</p>
+                <label class="q-item"><input type="radio" name="q10" value="A"> Số liệu đồng đều hơn (ít phân tán hơn).</label>
+                <label class="q-item"><input type="radio" name="q10" value="B"> Số liệu phân tán mạnh hơn.</label>
+                <label class="q-item"><input type="radio" name="q10" value="C"> Giá trị lớn nhất cao hơn mẫu kia.</label>
+                <label class="q-item"><input type="radio" name="q10" value="D"> Khoảng tứ phân vị luôn lớn hơn.</label>
+            </div>
+
+            <div class="question-box q-p1" data-correct="A">
+                <p class="fw-bold">Câu 11: Nhóm chứa mốt của mẫu số liệu ghép nhóm là:</p>
+                <label class="q-item"><input type="radio" name="q11" value="A"> Nhóm có tần số lớn nhất.</label>
+                <label class="q-item"><input type="radio" name="q11" value="B"> Nhóm đầu tiên trong bảng số liệu.</label>
+                <label class="q-item"><input type="radio" name="q11" value="C"> Nhóm có giá trị đại diện lớn nhất.</label>
+                <label class="q-item"><input type="radio" name="q11" value="D"> Nhóm nằm ở vị trí chính giữa bảng.</label>
+            </div>
+
+            <div class="question-box q-p1" data-correct="A">
+                <p class="fw-bold">Câu 12: Khoảng tứ phân vị $\Delta_Q$ được tính theo công thức:</p>
+                <label class="q-item"><input type="radio" name="q12" value="A"> $\Delta_Q = Q_3 - Q_1$</label>
+                <label class="q-item"><input type="radio" name="q12" value="B"> $\Delta_Q = Q_3 + Q_1$</label>
+                <label class="q-item"><input type="radio" name="q12" value="C"> $\Delta_Q = Q_2 - Q_1$</label>
+                <label class="q-item"><input type="radio" name="q12" value="D"> $\Delta_Q = R/4$</label>
+            </div>
+
+            <!-- PHẦN II -->
+            <div class="part-header">PHẦN II. Câu trắc nghiệm đúng sai (4 câu - 1.0đ/câu)</div>
             
-            <div class="question-box q-p2" data-correct="Đ,Đ,Đ,S">
-                <p class="fw-bold">Câu 13: Khảo sát thời gian dùng điện thoại của 20 học sinh: [0;2):3; [2;4):7; [4;6):8; [6;8):2.</p>
-                <div class="tf-row"><span>A. Cỡ mẫu của cuộc khảo sát là $n = 20$.</span><div class="tf-opts"><input type="radio" name="q13a" value="Đ"> Đ <input type="radio" name="q13a" value="S"> S</div></div>
-                <div class="tf-row"><span>B. Khoảng biến thiên của mẫu số liệu là $R = 8$.</span><div class="tf-opts"><input type="radio" name="q13b" value="Đ"> Đ <input type="radio" name="q13b" value="S"> S</div></div>
-                <div class="tf-row"><span>C. Giá trị đại diện của nhóm thứ ba là $5$.</span><div class="tf-opts"><input type="radio" name="q13c" value="Đ"> Đ <input type="radio" name="q13c" value="S"> S</div></div>
-                <div class="tf-row"><span>D. Nhóm chứa trung vị là nhóm $[4; 6)$.</span><div class="tf-opts"><input type="radio" name="q13d" value="Đ"> Đ <input type="radio" name="q13d" value="S"> S</div></div>
+            <div class="question-box q-p2" data-correct="T,F,T,T">
+                <p class="fw-bold">Câu 13: Thống kê mức lương khởi điểm (triệu đồng) của hai khu vực A và B:</p>
+                <div class="tf-row"><div class="tf-content">A. Giá trị đại diện của nhóm [5; 6) là 5,5 triệu đồng.</div><div class="tf-opts"><input type="radio" name="q13a" value="T"> Đ <input type="radio" name="q13a" value="F"> S</div></div>
+                <div class="tf-row"><div class="tf-content">B. Nếu trung bình bằng nhau, khu vực có độ lệch chuẩn lớn hơn thì mức lương đồng đều hơn.</div><div class="tf-opts"><input type="radio" name="q13b" value="T"> Đ <input type="radio" name="q13b" value="F"> S</div></div>
+                <div class="tf-row"><div class="tf-content">C. Khoảng tứ phân vị không bị ảnh hưởng bởi các giá trị ngoại lệ.</div><div class="tf-opts"><input type="radio" name="q13c" value="T"> Đ <input type="radio" name="q13c" value="F"> S</div></div>
+                <div class="tf-row"><div class="tf-content">D. Phương sai là bình phương của độ lệch chuẩn.</div><div class="tf-opts"><input type="radio" name="q13d" value="T"> Đ <input type="radio" name="q13d" value="F"> S</div></div>
             </div>
 
-            <div class="question-box q-p2" data-correct="Đ,S,Đ,Đ">
-                <p class="fw-bold">Câu 14: Công ty A ($\bar{x}=15; s=2,5$); Công ty B ($\bar{x}=15; s=1,2$).</p>
-                <div class="tf-row"><span>A. Mức lương trung bình của hai công ty là như nhau.</span><div class="tf-opts"><input type="radio" name="q14a" value="Đ"> Đ <input type="radio" name="q14a" value="S"> S</div></div>
-                <div class="tf-row"><span>B. Mức lương nhân viên công ty A đồng đều hơn công ty B.</span><div class="tf-opts"><input type="radio" name="q14b" value="Đ"> Đ <input type="radio" name="q14b" value="S"> S</div></div>
-                <div class="tf-row"><span>C. Phương sai mức lương của công ty B là $1,44$.</span><div class="tf-opts"><input type="radio" name="q14c" value="Đ"> Đ <input type="radio" name="q14c" value="S"> S</div></div>
-                <div class="tf-row"><span>D. Độ lệch chuẩn A lớn hơn B cho thấy mức lương ở đây phân tán hơn.</span><div class="tf-opts"><input type="radio" name="q14d" value="Đ"> Đ <input type="radio" name="q14d" value="S"> S</div></div>
+            <div class="question-box q-p2" data-correct="T,T,T,F">
+                <p class="fw-bold">Câu 14: Xét mẫu về thời gian dùng Internet: [30; 60), [60; 90), [90; 120), [120; 150), [150; 180).</p>
+                <div class="tf-row"><div class="tf-content">A. Khoảng biến thiên của mẫu số liệu là 150 phút.</div><div class="tf-opts"><input type="radio" name="q14a" value="T"> Đ <input type="radio" name="q14a" value="F"> S</div></div>
+                <div class="tf-row"><div class="tf-content">B. Nhóm [30; 60) có giá trị đại diện là 45.</div><div class="tf-opts"><input type="radio" name="q14b" value="T"> Đ <input type="radio" name="q14b" value="F"> S</div></div>
+                <div class="tf-row"><div class="tf-content">C. Một người dùng 185 phút nằm ngoài khoảng biến thiên của mẫu ghép nhóm này.</div><div class="tf-opts"><input type="radio" name="q14c" value="T"> Đ <input type="radio" name="q14c" value="F"> S</div></div>
+                <div class="tf-row"><div class="tf-content">D. Độ lệch chuẩn có đơn vị tính là phút bình phương.</div><div class="tf-opts"><input type="radio" name="q14d" value="T"> Đ <input type="radio" name="q14d" value="F"> S</div></div>
             </div>
 
-            <div class="question-box q-p2" data-correct="Đ,Đ,S,S">
-                <p class="fw-bold">Câu 15: Xét mẫu số liệu ghép nhóm về chiều cao học sinh lớp 12:</p>
-                <div class="tf-row"><span>A. $\Delta_Q$ cho biết mức độ phân tán của $50\%$ số liệu ở giữa mẫu.</span><div class="tf-opts"><input type="radio" name="q15a" value="Đ"> Đ <input type="radio" name="q15a" value="S"> S</div></div>
-                <div class="tf-row"><span>B. Nếu cỡ mẫu $n = 40$, nhóm chứa $Q_1$ có tần số tích lũy $\ge 10$.</span><div class="tf-opts"><input type="radio" name="q15b" value="Đ"> Đ <input type="radio" name="q15b" value="S"> S</div></div>
-                <div class="tf-row"><span>C. Khoảng biến thiên luôn nhỏ hơn khoảng tứ phân vị.</span><div class="tf-opts"><input type="radio" name="q15c" value="Đ"> Đ <input type="radio" name="q15c" value="S"> S</div></div>
-                <div class="tf-row"><span>D. Nhóm chứa tứ phân vị thứ ba $Q_3$ luôn là nhóm cuối cùng của bảng.</span><div class="tf-opts"><input type="radio" name="q15d" value="Đ"> Đ <input type="radio" name="q15d" value="S"> S</div></div>
+            <div class="question-box q-p2" data-correct="T,T,T,F">
+                <p class="fw-bold">Câu 15: Về các số đặc trưng đo mức độ phân tán:</p>
+                <div class="tf-row"><div class="tf-content">A. Khoảng biến thiên $R$ chỉ sử dụng thông tin của nhóm đầu và nhóm cuối.</div><div class="tf-opts"><input type="radio" name="q15a" value="T"> Đ <input type="radio" name="q15a" value="F"> S</div></div>
+                <div class="tf-row"><div class="tf-content">B. Khoảng tứ phân vị $\Delta_Q$ phản ánh sự biến thiên của 50% số liệu ở giữa.</div><div class="tf-opts"><input type="radio" name="q15b" value="T"> Đ <input type="radio" name="q15b" value="F"> S</div></div>
+                <div class="tf-row"><div class="tf-content">C. Độ lệch chuẩn $s$ phản ánh mức độ phân tán xung quanh số trung bình.</div><div class="tf-opts"><input type="radio" name="q15c" value="T"> Đ <input type="radio" name="q15c" value="F"> S</div></div>
+                <div class="tf-row"><div class="tf-content">D. Trong tài chính, độ lệch chuẩn càng lớn thì phương án đầu tư càng ít rủi ro.</div><div class="tf-opts"><input type="radio" name="q15d" value="T"> Đ <input type="radio" name="q15d" value="F"> S</div></div>
             </div>
 
-            <div class="question-box q-p2" data-correct="S,Đ,Đ,Đ">
-                <p class="fw-bold">Câu 16: Vận động viên ném tạ (50 lần): [18;19):5; [19;20):15; [20;21):20; [21;22):10.</p>
-                <div class="tf-row"><span>A. Khoảng biến thiên của cự ly ném là $40$ m.</span><div class="tf-opts"><input type="radio" name="q16a" value="Đ"> Đ <input type="radio" name="q16a" value="S"> S</div></div>
-                <div class="tf-row"><span>B. Tứ phân vị thứ nhất $Q_1$ thuộc nhóm $[19; 20)$.</span><div class="tf-opts"><input type="radio" name="q16b" value="Đ"> Đ <input type="radio" name="q16b" value="S"> S</div></div>
-                <div class="tf-row"><span>C. Tứ phân vị thứ ba $Q_3$ thuộc nhóm $[20; 21)$.</span><div class="tf-opts"><input type="radio" name="q16c" value="Đ"> Đ <input type="radio" name="q16c" value="S"> S</div></div>
-                <div class="tf-row"><span>D. Độ lệch chuẩn càng nhỏ thì vận động viên ném càng ổn định.</span><div class="tf-opts"><input type="radio" name="q16d" value="Đ"> Đ <input type="radio" name="q16d" value="S"> S</div></div>
+            <div class="question-box q-p2" data-correct="T,T,T,F">
+                <p class="fw-bold">Câu 16: Cho mẫu số liệu ghép nhóm có $Q_1 = 61$ và $Q_3 = 80$.</p>
+                <div class="tf-row"><div class="tf-content">A. Khoảng tứ phân vị của mẫu là $\Delta_Q = 19$.</div><div class="tf-opts"><input type="radio" name="q16a" value="T"> Đ <input type="radio" name="q16a" value="F"> S</div></div>
+                <div class="tf-row"><div class="tf-content">B. Một giá trị $x$ được gọi là ngoại lệ nếu $x > 108,5$.</div><div class="tf-opts"><input type="radio" name="q16b" value="T"> Đ <input type="radio" name="q16b" value="F"> S</div></div>
+                <div class="tf-row"><div class="tf-content">C. Giá trị $x = 30$ là giá trị ngoại lệ vì $x < Q_1 - 1,5\Delta_Q$.</div><div class="tf-opts"><input type="radio" name="q16c" value="T"> Đ <input type="radio" name="q16c" value="F"> S</div></div>
+                <div class="tf-row"><div class="tf-content">D. Nếu thay đổi một giá trị cực lớn trong mẫu, khoảng tứ phân vị sẽ bị ảnh hưởng mạnh.</div><div class="tf-opts"><input type="radio" name="q16d" value="T"> Đ <input type="radio" name="q16d" value="F"> S</div></div>
             </div>
 
-            <div class="part-header">PHẦN III. TRẢ LỜI NGẮN (0.5đ/câu)</div>
+            <!-- PHẦN III -->
+            <div class="part-header">PHẦN III. Câu trắc nghiệm trả lời ngắn (6 câu - 0.5đ/câu)</div>
             
-            <div class="question-box q-p3" data-correct="2.3">
-                <p class="fw-bold">Câu 17: Tính $\Delta_Q$ biết $Q_1 = 2,5$ và $Q_3 = 4,8$.</p>
-                <input type="text" class="form-control short-ans" placeholder="Nhập đáp án...">
+            <div class="question-box q-p3" data-correct="1.2">
+                <p class="fw-bold">Câu 17: Thống kê điểm thi môn Toán cho thấy phương sai $s^2 = 1,44$. Tính độ lệch chuẩn $s$ của mẫu số liệu.</p>
+                <input type="text" class="form-control short-ans" placeholder="Nhập đáp số...">
             </div>
 
-            <div class="question-box q-p3" data-correct="34.8">
-                <p class="fw-bold">Câu 18: Tìm ngưỡng ngoại lai phía trên biết $Q_3 = 25,5$ và $\Delta_Q = 6,2$.</p>
-                <input type="text" class="form-control short-ans" placeholder="Nhập đáp án...">
+            <div class="question-box q-p3" data-correct="208">
+                <p class="fw-bold">Câu 18: Một mẫu số liệu có tứ phân vị $Q_1 = 67$ mm và $Q_3 = 275$ mm. Tính khoảng tứ phân vị (mm).</p>
+                <input type="text" class="form-control short-ans" placeholder="Nhập đáp số...">
             </div>
 
-            <div class="question-box q-p3" data-correct="8">
-                <p class="fw-bold">Câu 19: Tìm tần số $m_2$ của nhóm $[10; 20)$ biết $n=30, cf_1=4, Q_1=13,5$.</p>
-                <input type="text" class="form-control short-ans" placeholder="Nhập đáp án...">
+            <div class="question-box q-p3" data-correct="30">
+                <p class="fw-bold">Câu 19: Đo thời gian IQ, nhóm đầu là [0; 6) và nhóm cuối là [24; 30). Tính khoảng biến thiên $R$.</p>
+                <input type="text" class="form-control short-ans" placeholder="Nhập đáp số...">
             </div>
 
-            <div class="question-box q-p3" data-correct="0.24">
-                <p class="fw-bold">Câu 20: Tính phương sai $s^2$ biết $\bar{x^2} = 404,25$ và $\bar{x} = 20,1$.</p>
-                <input type="text" class="form-control short-ans" placeholder="Nhập đáp án...">
+            <div class="question-box q-p3" data-correct="10">
+                <p class="fw-bold">Câu 20: Doanh thu 20 ngày có tổng giá trị đại diện là 200 triệu đồng. Tính số trung bình cộng (triệu đồng).</p>
+                <input type="text" class="form-control short-ans" placeholder="Nhập đáp số...">
             </div>
 
-            <div class="question-box q-p3" data-correct="9.0">
-                <p class="fw-bold">Câu 21: Tính độ lệch chuẩn $s_y$ của mẫu mới biết $s_x = 4,5$ và $y = 2x + 5$.</p>
-                <input type="text" class="form-control short-ans" placeholder="Nhập đáp án...">
+            <div class="question-box q-p3" data-correct="4">
+                <p class="fw-bold">Câu 21: Với 20 học sinh, có tổng bình phương độ lệch $\sum n_i(x_i - \bar{x})^2 = 80$. Tính phương sai $s^2$.</p>
+                <input type="text" class="form-control short-ans" placeholder="Nhập đáp số...">
             </div>
 
-            <div class="question-box q-p3" data-correct="3">
-                <p class="fw-bold">Câu 22: Tính $s$ biết $n = 50, \bar{x} = 10, \sum n_i c_i^2 = 5400$. (Làm tròn đến hàng đơn vị).</p>
-                <input type="text" class="form-control short-ans" placeholder="Nhập đáp án...">
+            <div class="question-box q-p3" data-correct="6.75">
+                <p class="fw-bold">Câu 22: Mẫu có $\Delta_Q = 2,5$ và $Q_1 = 10,5$. Tìm ngưỡng ngoại lai dưới $L = Q_1 - 1,5\Delta_Q$.</p>
+                <input type="text" class="form-control short-ans" placeholder="Nhập đáp số...">
             </div>
 
         </form>
-        <div class="text-center mt-4">
-            <button onclick="submitExam()" id="bBot" class="btn btn-success btn-lg fw-bold shadow">NỘP BÀI</button>
-        </div>
+        <div class="text-center mt-4"><button onclick="submitExam()" id="bBot" class="btn btn-success btn-lg fw-bold">NỘP BÀI LÀM</button></div>
     </div>
 </div>
 
 <div id="result-screen">
-    <div class="container" style="max-width:800px">
+    <div class="container" style="max-width:700px">
         <div class="score-card shadow">
-            <h3 class="text-muted">KẾT QUẢ</h3>
-            <div class="final-score" id="scVal">0.00</div>
-            <div class="mt-4 d-flex justify-content-center gap-2">
-                <button onclick="location.reload()" class="btn btn-outline-primary"><i class="fas fa-redo"></i> Làm lại</button>
-                <button onclick="rev()" class="btn btn-primary"><i class="fas fa-search"></i> Xem bài</button>
+            <h1 class="fw-bold mb-4">KẾT QUẢ BÀI THI</h1>
+            <div class="row align-items-center mb-4">
+                <div class="col-md-5">
+                    <div class="final-score" id="scVal">0.00</div>
+                    <div class="text-muted fw-bold">TỔNG ĐIỂM</div>
+                </div>
+                <div class="col-md-7 text-start border-start ps-4">
+                    <p><i class="fas fa-user me-2"></i>Học sinh: <span id="resName" class="fw-bold"></span></p>
+                    <p><i class="fas fa-users me-2"></i>Lớp: <span id="resClass" class="fw-bold"></span></p>
+                    <p><i class="fas fa-check-circle me-2 text-success"></i>Đúng: <span id="resCorr" class="fw-bold"></span>/22 câu</p>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="index.html" class="btn btn-outline-secondary btn-lg px-4">TRANG CHỦ</a>
+                <button onclick="location.reload()" class="btn btn-outline-primary btn-lg px-4">LÀM LẠI</button>
+                <button onclick="rev()" class="btn btn-primary btn-lg px-4 shadow">XEM LẠI</button>
             </div>
         </div>
-        <div id="revArea"></div>
+        <div id="revArea" class="mt-4"></div>
     </div>
 </div>
 
 <script>
-    const API='https://script.google.com/macros/s/AKfycbxNx_DJbZ35VaXuarmrx3QqRYM8I8d1v9uH65gREiVufe021qO4b2UbuuJP5e56OCfc/exec';
-    let tRem=5400,tInt,subbed=false;
+const API='https://script.google.com/macros/s/AKfycbwQTV9HhyJ1Dm6vhO46hEXl5oDsEt9LBYNIQOOiIfXq7JAF1kedIs4zdCGQJYUiU7SZ/exec';
+let tRem=5400,tInt,subbed=false;
 
-    window.addEventListener('load',()=>{
-        function shuf(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
-        let gNum=1; const pts=document.querySelectorAll('.part-header');
-        pts.forEach(h=>{
-            let s=h.nextElementSibling,qs=[],p=h.parentNode;
-            while(s&&(s.classList.contains('question-box'))){qs.push(s);s=s.nextElementSibling}
-            if(qs.length){
-                shuf(qs);
-                qs.forEach(q=>{
-                    p.insertBefore(q,s);
-                    q.innerHTML=q.innerHTML.replace(/(Câu\s+)\d+/ui,"Câu "+gNum);
-                    gNum++;
-                })
-            }
-        })
+function goHome(){if(confirm('Quay về trang chủ? Toàn bộ bài làm hiện tại sẽ bị hủy.')) window.location.href='index.html';}
+
+window.addEventListener('load',()=>{
+    function shuf(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+    let gNum=1; const pts=document.querySelectorAll('.part-header');
+    pts.forEach(h=>{
+        let s=h.nextElementSibling,qs=[],p=h.parentNode;
+        while(s&&(s.classList.contains('question-box'))){qs.push(s);s=s.nextElementSibling}
+        if(!qs.length)h.style.display='none';
+        else{shuf(qs);qs.forEach(q=>{p.insertBefore(q,s);q.innerHTML=q.innerHTML.replace(/(Câu\s+)\d+/ui,"Câu "+gNum);gNum++})}
+    })
+});
+
+function start(){
+    const n=document.getElementById('sName').value.trim(),c=document.getElementById('sClass').value.trim();
+    if(!n||!c){alert('Nhập tên/lớp!');return}
+    document.getElementById('dName').innerText=n+" - "+c;
+    document.getElementById('resName').innerText=n;
+    document.getElementById('resClass').innerText=c;
+    document.getElementById('welcome-screen').style.display='none';
+    document.getElementById('exam-screen').style.display='block';
+    tInt=setInterval(()=>{
+        let m=parseInt(tRem/60,10),s=parseInt(tRem%60,10);
+        document.getElementById('time').textContent=(m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
+        if(tRem===30)alert('Còn 30s!');
+        if(--tRem<0){clearInterval(tInt);alert('Hết giờ!');submitExam(true)}
+    },1000);
+}
+
+function submitExam(auto=false){
+    if(subbed)return;if(!auto&&!confirm('Nộp bài?'))return;
+    clearInterval(tInt);subbed=true;
+    document.getElementById('bTop').disabled=true;
+    document.getElementById('bBot').disabled=true;
+    let sc=0, corr=0;
+
+    document.querySelectorAll('.q-p1').forEach(q=>{
+        let c=q.dataset.correct,sl=q.querySelector('input:checked');
+        q.querySelectorAll('input').forEach(i=>i.disabled=true);
+        if(sl&&sl.value===c){sc+=0.25;corr++;q.classList.add('correct-color')}
+        else{q.classList.add('wrong-color');q.innerHTML+=`<div class='ans-explain'>Đúng: ${c}</div>`}
     });
 
-    function start(){
-        const n=document.getElementById('sName').value.trim(),c=document.getElementById('sClass').value.trim();
-        if(!n||!c){alert('Nhập tên/lớp!');return}
-        document.getElementById('dName').innerText=n+" - "+c;
-        document.getElementById('welcome-screen').style.display='none';
-        document.getElementById('exam-screen').style.display='block';
-        tInt=setInterval(()=>{
-            let m=parseInt(tRem/60,10),s=parseInt(tRem%60,10);
-            document.getElementById('time').textContent=(m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
-            if(tRem===30)alert('Còn 30s!');
-            if(--tRem<0){clearInterval(tInt);alert('Hết giờ!');submitExam(true)}
-        },1000)
-    }
+    document.querySelectorAll('.q-p2').forEach(q=>{
+        let cAr=q.dataset.correct.split(','),sub=0;
+        q.querySelectorAll('.tf-row').forEach((r,i)=>{
+            let sl=r.querySelector('input:checked');
+            r.querySelectorAll('input').forEach(k=>k.disabled=true);
+            let ok=false;if(sl){let v=sl.value,cV=cAr[i];if(v===cV)ok=true}
+            if(ok){sub++;r.style.color='green';r.style.fontWeight='bold'}
+            else{r.style.color='red';r.innerHTML+=`<span class='badge bg-danger ms-2'>${cAr[i]}</span>`}
+        });
+        if(sub===1)sc+=0.1;else if(sub===2)sc+=0.25;else if(sub===3)sc+=0.5;else if(sub===4){sc+=1.0;corr++}
+    });
 
-    function submitExam(auto=false){
-        if(subbed)return;if(!auto&&!confirm('Xác nhận nộp bài?'))return;
-        clearInterval(tInt);subbed=true;
-        document.getElementById('bTop').disabled=true;document.getElementById('bBot').disabled=true;
-        let sc=0;
-        document.querySelectorAll('.q-p1').forEach(q=>{
-            let c=q.dataset.correct,sl=q.querySelector('input:checked');
-            if(sl&&sl.value===c){sc+=0.25;q.classList.add('correct-color')}
-            else{q.classList.add('wrong-color');q.innerHTML+=`<div class='ans-explain'>Đáp án đúng: ${c}</div>`}
-            q.querySelectorAll('input').forEach(i=>i.disabled=true);
-        });
-        document.querySelectorAll('.q-p2').forEach(q=>{
-            let cAr=q.dataset.correct.split(','),sub=0;
-            ['a','b','c','d'].forEach((char,i)=>{
-                let sl=q.querySelector(`input[name$='${char}']:checked`);
-                if(sl&&sl.value===cAr[i]){sub++}
-            });
-            if(sub===1)sc+=0.1;else if(sub===2)sc+=0.25;else if(sub===3)sc+=0.5;else if(sub===4)sc+=1.0;
-            if(sub<4)q.classList.add('wrong-color');else q.classList.add('correct-color');
-            q.querySelectorAll('input').forEach(i=>i.disabled=true);
-        });
-        document.querySelectorAll('.q-p3').forEach(q=>{
-            let c=q.dataset.correct.trim().toUpperCase(),i=q.querySelector('.short-ans'),v=i.value.trim().toUpperCase();
-            if(v===c){sc+=0.5;q.classList.add('correct-color')}
-            else{q.classList.add('wrong-color');q.innerHTML+=`<div class='ans-explain'>Đúng: ${c}</div>`}
-            i.disabled=true;
-        });
-        let fSc=sc.toFixed(2);document.getElementById('scVal').innerText=fSc;
-        let fd=new URLSearchParams();
-        fd.append('name',document.getElementById('sName').value);
-        fd.append('class',document.getElementById('sClass').value);
-        fd.append('score',fSc);
-        fetch(API,{method:'POST',mode:'no-cors',body:fd});
-        setTimeout(()=>{document.getElementById('exam-screen').style.display='none';document.getElementById('result-screen').style.display='block';window.scrollTo(0,0)},500)
-    }
+    document.querySelectorAll('.q-p3').forEach(q=>{
+        let c=q.dataset.correct.trim().toUpperCase(),i=q.querySelector('.short-ans'),v=i.value.trim().toUpperCase();
+        i.disabled=true;
+        if(v===c){sc+=0.5;corr++;q.classList.add('correct-color')}
+        else{q.classList.add('wrong-color');q.innerHTML+=`<div class='ans-explain'>Đúng: ${c}</div>`}
+    });
 
-    function rev(){let f=document.getElementById('exForm'),a=document.getElementById('revArea');a.innerHTML='';a.appendChild(f);event.target.style.display='none'}
+    let fSc=sc.toFixed(2);
+    document.getElementById('scVal').innerText=fSc;
+    document.getElementById('resCorr').innerText=corr;
+
+    let fd=new URLSearchParams();
+    fd.append('name',document.getElementById('sName').value);
+    fd.append('class',document.getElementById('sClass').value);
+    fd.append('test','Đề 03 - Chương 3');
+    fd.append('score',fSc);
+    fetch(API,{method:'POST',mode:'no-cors',body:fd}).catch(e=>console.log(e));
+
+    setTimeout(()=>{
+        document.getElementById('exam-screen').style.display='none';
+        document.getElementById('result-screen').style.display='block';
+        window.scrollTo(0,0)
+    },1000);
+}
+
+function rev(){
+    let f=document.getElementById('exForm'),a=document.getElementById('revArea');
+    a.innerHTML='';a.appendChild(f);
+    document.querySelector('#result-screen button[onclick="rev()"]').style.display='none';
+}
 </script>
 </body>
 </html>
+```
+
+=== HOÀN THÀNH QUY TRÌNH – Bạn có thể sao chép đoạn mã trên để sử dụng ===
