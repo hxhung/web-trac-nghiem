@@ -30,8 +30,8 @@ echo [2/3] Committing changes (git commit)...
 git commit -m "%commit_msg%"
 echo.
 
-echo [3/3] Pushing to GitHub (git push)...
-git push origin main
+echo [3/3] Pushing to GitHub (git push --force)...
+git push origin main --force
 if %errorlevel% neq 0 (
     echo.
     echo [ERROR] Push failed! Please check your network or GitHub permissions.
