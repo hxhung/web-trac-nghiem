@@ -198,10 +198,6 @@ set MSG=Update %date% %time%
 
 echo.
 
-call :BAR
-
-echo.
-
 git commit -m "%MSG%"
 
 if errorlevel 1 (
@@ -218,11 +214,7 @@ goto MENU
 
 echo.
 
-call :BAR
-
-echo.
-
-git push
+git push origin main --force
 
 if errorlevel 1 (
 
