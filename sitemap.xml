@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+    <!-- Trang chủ -->
+    <url>
+        <loc>https://hxhung.github.io/web-trac-nghiem/</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- Trang chủ với index.html -->
+    <url>
+        <loc>https://hxhung.github.io/web-trac-nghiem/index.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- Hướng dẫn sử dụng -->
+    <url>
+        <loc>https://hxhung.github.io/web-trac-nghiem/hdsd.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Liên hệ -->
+    <url>
+        <loc>https://hxhung.github.io/web-trac-nghiem/lienhe.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Thống kê -->
+    <url>
+        <loc>https://hxhung.github.io/web-trac-nghiem/statistics.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Sitemap HTML -->
+    <url>
+        <loc>https://hxhung.github.io/web-trac-nghiem/sitemap.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <!-- Đề thi số 01 -->
+    <url>
+        <loc>https://hxhung.github.io/web-trac-nghiem/de-01.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Đề thi số 02 -->
+    <url>
+        <loc>https://hxhung.github.io/web-trac-nghiem/de-02.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Đề thi số 03 -->
+    <url>
+        <loc>https://hxhung.github.io/web-trac-nghiem/de-03.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Đề thi số 04 -->
+    <url>
+        <loc>https://hxhung.github.io/web-trac-nghiem/de-04.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Đề thi số 05 -->
+    <url>
+        <loc>https://hxhung.github.io/web-trac-nghiem/de-05.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+  
+  <!-- Đề thi số 06 -->
+    <url>
+        <loc>https://hxhung.github.io/web-trac-nghiem/de-06.html</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+	<!-- Thêm các đề thi khác khi có -->
+    <!-- 
+    <url>
+        <loc>https://hxhung.github.io/web-trac-nghiem/de-06.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    -->
+
+</urlset>

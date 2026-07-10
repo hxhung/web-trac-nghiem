@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hệ thống thi trực tuyến GDPT 2018">
+    <title>Đề 1 - Hàm Số Mũ Và Logarit | Web trắc nghiệm Toán THPT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        :root{--primary:#0d6efd;--secondary:#6c757d;--success:#198754;--danger:#dc3545;--warning:#ffc107;--bg-p1:#e3f2fd;--border-p1:#1976d2;--bg-p2:#fff9e6;--border-p2:#f9a825;--bg-p3:#e8f5e9;--border-p3:#43a047;--exam-bg:#f5f5f5;}
+        *{box-sizing:border-box;}
+        body{background:var(--exam-bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:0;}
+        #welcome-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary),#0a58ca);padding:20px;}
+        .welcome-card{background:#fff;width:100%;max-width:500px;padding:40px;border-radius:15px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+        #exam-screen,#result-screen{display:none;}
+        .exam-container{max-width:900px;margin:0 auto;padding:20px;}
+        .exam-header{background:var(--primary);color:#fff;padding:15px 20px;border-radius:10px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+        .timer{font-size:1.5rem;font-weight:bold;}
+        .timer.warning{color:var(--warning);animation:blink 1s infinite;}
+        @keyframes blink{50%{opacity:0.5;}}
+        .part-header{background:#343a40;color:#fff;padding:12px 20px;border-radius:8px;margin:25px 0 15px;font-weight:bold;font-size:1.1rem;}
+        .question-box{background:#fff;border-radius:10px;padding:20px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,0.08);border-left:5px solid var(--primary);}
+        .q-p1{border-left-color:var(--border-p1);background:var(--bg-p1);}
+        .q-p2{border-left-color:var(--border-p2);background:var(--bg-p2);}
+        .q-p3{border-left-color:var(--border-p3);background:var(--bg-p3);}
+        .correct-color{border-left-color:var(--success)!important;}
+        .wrong-color{border-left-color:var(--danger)!important;}
+        .ans-explain{margin-top:10px;padding:8px 12px;background:#fff3cd;border-radius:6px;font-weight:bold;color:#856404;}
+        .option-label{display:block;padding:8px 12px;margin:5px 0;border-radius:6px;cursor:pointer;transition:background 0.2s;}
+        .option-label:hover{background:rgba(0,0,0,0.05);}
+        .tf-row{display:flex;align-items:center;gap:20px;padding:8px 0;border-bottom:1px solid #eee;flex-wrap:wrap;}
+        .tf-row span{flex:1;min-width:200px;}
+        .short-ans{width:100%;max-width:250px;padding:8px 12px;border:2px solid #ced4da;border-radius:6px;font-size:1rem;margin-top:10px;}
+        .result-container{max-width:700px;margin:40px auto;padding:30px;background:#fff;border-radius:15px;box-shadow:0 5px 20px rgba(0,0,0,0.1);}
+        .score-display{font-size:4rem;font-weight:bold;color:var(--primary);}
+        @media(max-width:600px){.complex-table thead{display:none;}.complex-table td{display:block;text-align:right;padding:8px 10px;border-bottom:1px solid #dee2e6;}.complex-table td::before{content:attr(data-label);float:left;font-weight:bold;}}
+        .custom-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;}
+        .custom-modal.show{display:flex;}
+        .modal-content-custom{background:#fff;padding:30px;border-radius:12px;max-width:400px;width:90%;}
+    </style>
+</head>
+<body>
+
+<!-- ===== MÀN HÌNH CHÀO ===== -->
+<div id="welcome-screen">
+    <div class="welcome-card">
+        <h2 class="fw-bold text-primary mb-1" id="examTitle">ĐỀ 1: ÔN TẬP CHƯƠNG</h2>
+        <p class="text-muted mb-4"><span id="examDuration">90</span> phút | 22 câu | 10 điểm</p>
+        <div class="mb-3 text-start">
+            <label class="form-label fw-bold">Họ và tên</label>
+            <input type="text" id="sName" class="form-control" placeholder="Nhập họ và tên...">
+        </div>
+        <div class="mb-4 text-start">
+            <label class="form-label fw-bold">Lớp</label>
+            <input type="text" id="sClass" class="form-control" placeholder="Nhập lớp...">
+        </div>
+        <button id="startBtn" class="btn btn-primary btn-lg w-100 fw-bold">BẮT ĐẦU THI →</button>
+    </div>
+</div>
+
+<!-- ===== MÀN HÌNH THI ===== -->
+<div id="exam-screen">
+    <div class="exam-container">
+        <div class="exam-header">
+            <div>
+                <div class="fw-bold fs-5" id="displayName"></div>
+                <div class="small opacity-75">Web trắc nghiệm Toán THPT</div>
+            </div>
+            <div class="text-center">
+                <div class="small opacity-75">Thời gian còn lại</div>
+                <div class="timer" id="timer">90:00</div>
+            </div>
+            <button id="submitBtnTop" class="btn btn-warning fw-bold">NỘP BÀI</button>
+        </div>
+
+        <form id="examForm">
+
+            <!-- ===== PHẦN I ===== -->
+            <div class="part-header">PHẦN I. Trắc nghiệm nhiều phương án lựa chọn — Thí sinh chọn một đáp án đúng (12 câu — 3,0 điểm)</div>
+            <div id="p1-container">
+
+                <!-- Câu 1 -->
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 1:</b> Tập xác định của hàm số $y = \log_2(x - 1)$ là</p>
+                    <label class="option-label"><input type="radio" id="q1-A" name="q1" value="A"> A. $(1; +\infty)$</label>
+                    <label class="option-label"><input type="radio" id="q1-B" name="q1" value="B"> B. $[1; +\infty)$</label>
+                    <label class="option-label"><input type="radio" id="q1-C" name="q1" value="C"> C. $(-\infty; 1)$</label>
+                    <label class="option-label"><input type="radio" id="q1-D" name="q1" value="D"> D. $\mathbb{R}$</label>
+                </div>
+
+                <!-- Câu 2 -->
+                <div class="question-box q-p1" data-correct="C">
+                    <p><b>Câu 2:</b> Hàm số $y = 2^x$ đồng biến trên tập nào sau đây?</p>
+                    <label class="option-label"><input type="radio" id="q2-A" name="q2" value="A"> A. $(-\infty; 0)$</label>
+                    <label class="option-label"><input type="radio" id="q2-B" name="q2" value="B"> B. $(0; +\infty)$</label>
+                    <label class="option-label"><input type="radio" id="q2-C" name="q2" value="C"> C. $\mathbb{R}$</label>
+                    <label class="option-label"><input type="radio" id="q2-D" name="q2" value="D"> D. $(1; +\infty)$</label>
+                </div>
+
+                <!-- Câu 3 -->
+                <div class="question-box q-p1" data-correct="C">
+                    <p><b>Câu 3:</b> Giá trị của $\log_3 81$ bằng</p>
+                    <label class="option-label"><input type="radio" id="q3-A" name="q3" value="A"> A. $2$</label>
+                    <label class="option-label"><input type="radio" id="q3-B" name="q3" value="B"> B. $3$</label>
+                    <label class="option-label"><input type="radio" id="q3-C" name="q3" value="C"> C. $4$</label>
+                    <label class="option-label"><input type="radio" id="q3-D" name="q3" value="D"> D. $9$</label>
+                </div>
+
+                <!-- Câu 4 -->
+                <div class="question-box q-p1" data-correct="B">
+                    <p><b>Câu 4:</b> Phương trình $2^x = 8$ có nghiệm là</p>
+                    <label class="option-label"><input type="radio" id="q4-A" name="q4" value="A"> A. $x = 2$</label>
+                    <label class="option-label"><input type="radio" id="q4-B" name="q4" value="B"> B. $x = 3$</label>
+                    <label class="option-label"><input type="radio" id="q4-C" name="q4" value="C"> C. $x = 4$</label>
+                    <label class="option-label"><input type="radio" id="q4-D" name="q4" value="D"> D. $x = 6$</label>
+                </div>
+
+                <!-- Câu 5 -->
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 5:</b> Cho $\log_2 3 = a$. Giá trị của $\log_2 12$ bằng</p>
+                    <label class="option-label"><input type="radio" id="q5-A" name="q5" value="A"> A. $a + 2$</label>
+                    <label class="option-label"><input type="radio" id="q5-B" name="q5" value="B"> B. $2a$</label>
+                    <label class="option-label"><input type="radio" id="q5-C" name="q5" value="C"> C. $a - 2$</label>
+                    <label class="option-label"><input type="radio" id="q5-D" name="q5" value="D"> D. $3a$</label>
+                </div>
+
+                <!-- Câu 6 -->
+                <div class="question-box q-p1" data-correct="C">
+                    <p><b>Câu 6:</b> Hàm số $y = \left(\dfrac{1}{3}\right)^x$ nghịch biến trên tập nào sau đây?</p>
+                    <label class="option-label"><input type="radio" id="q6-A" name="q6" value="A"> A. $(0; +\infty)$</label>
+                    <label class="option-label"><input type="radio" id="q6-B" name="q6" value="B"> B. $(-1; 1)$</label>
+                    <label class="option-label"><input type="radio" id="q6-C" name="q6" value="C"> C. $\mathbb{R}$</label>
+                    <label class="option-label"><input type="radio" id="q6-D" name="q6" value="D"> D. $(1; +\infty)$</label>
+                </div>
+
+                <!-- Câu 7 -->
+                <div class="question-box q-p1" data-correct="B">
+                    <p><b>Câu 7:</b> Bất phương trình $\log_2 x > 3$ có tập nghiệm là</p>
+                    <label class="option-label"><input type="radio" id="q7-A" name="q7" value="A"> A. $(6; +\infty)$</label>
+                    <label class="option-label"><input type="radio" id="q7-B" name="q7" value="B"> B. $(8; +\infty)$</label>
+                    <label class="option-label"><input type="radio" id="q7-C" name="q7" value="C"> C. $(9; +\infty)$</label>
+                    <label class="option-label"><input type="radio" id="q7-D" name="q7" value="D"> D. $(4; +\infty)$</label>
+                </div>
+
+                <!-- Câu 8 -->
+                <div class="question-box q-p1" data-correct="C">
+                    <p><b>Câu 8:</b> Cho $\log a = 2,\ \log b = 3$. Giá trị của $\log(a^2 b)$ bằng</p>
+                    <label class="option-label"><input type="radio" id="q8-A" name="q8" value="A"> A. $5$</label>
+                    <label class="option-label"><input type="radio" id="q8-B" name="q8" value="B"> B. $6$</label>
+                    <label class="option-label"><input type="radio" id="q8-C" name="q8" value="C"> C. $7$</label>
+                    <label class="option-label"><input type="radio" id="q8-D" name="q8" value="D"> D. $8$</label>
+                </div>
+
+                <!-- Câu 9 -->
+                <div class="question-box q-p1" data-correct="B">
+                    <p><b>Câu 9:</b> Phương trình $\log_3(x^2 - x) = \log_3(x + 3)$ có tổng các nghiệm bằng</p>
+                    <label class="option-label"><input type="radio" id="q9-A" name="q9" value="A"> A. $-1$</label>
+                    <label class="option-label"><input type="radio" id="q9-B" name="q9" value="B"> B. $2$</label>
+                    <label class="option-label"><input type="radio" id="q9-C" name="q9" value="C"> C. $3$</label>
+                    <label class="option-label"><input type="radio" id="q9-D" name="q9" value="D"> D. $4$</label>
+                </div>
+
+                <!-- Câu 10 -->
+                <div class="question-box q-p1" data-correct="B">
+                    <p><b>Câu 10:</b> Nghiệm của phương trình $4^x - 3 \cdot 2^x - 4 = 0$ là</p>
+                    <label class="option-label"><input type="radio" id="q10-A" name="q10" value="A"> A. $x = 1$</label>
+                    <label class="option-label"><input type="radio" id="q10-B" name="q10" value="B"> B. $x = 2$</label>
+                    <label class="option-label"><input type="radio" id="q10-C" name="q10" value="C"> C. $x = 3$</label>
+                    <label class="option-label"><input type="radio" id="q10-D" name="q10" value="D"> D. $x = 4$</label>
+                </div>
+
+                <!-- Câu 11 -->
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 11:</b> Đạo hàm của hàm số $y = e^x$ là</p>
+                    <label class="option-label"><input type="radio" id="q11-A" name="q11" value="A"> A. $e^x$</label>
+                    <label class="option-label"><input type="radio" id="q11-B" name="q11" value="B"> B. $x \cdot e^{x-1}$</label>
+                    <label class="option-label"><input type="radio" id="q11-C" name="q11" value="C"> C. $e^{x+1}$</label>
+                    <label class="option-label"><input type="radio" id="q11-D" name="q11" value="D"> D. $\dfrac{e^x}{x}$</label>
+                </div>
+
+                <!-- Câu 12 -->
+                <div class="question-box q-p1" data-correct="B">
+                    <p><b>Câu 12:</b> Tập xác định của hàm số $y = \sqrt{\log_2 x - 1}$ là</p>
+                    <label class="option-label"><input type="radio" id="q12-A" name="q12" value="A"> A. $(2; +\infty)$</label>
+                    <label class="option-label"><input type="radio" id="q12-B" name="q12" value="B"> B. $[2; +\infty)$</label>
+                    <label class="option-label"><input type="radio" id="q12-C" name="q12" value="C"> C. $(0; 2)$</label>
+                    <label class="option-label"><input type="radio" id="q12-D" name="q12" value="D"> D. $[0; 2]$</label>
+                </div>
+
+            </div><!-- /#p1-container -->
+
+            <!-- ===== PHẦN II ===== -->
+            <div class="part-header">PHẦN II. Trắc nghiệm đúng sai — Thí sinh trả lời Đúng hoặc Sai cho mỗi ý (4 câu — 4,0 điểm)</div>
+            <div id="p2-container">
+
+                <!-- Câu 13 -->
+                <div class="question-box q-p2" data-correct="T,F,T,F">
+                    <p><b>Câu 13:</b> Cho hàm số $y = \log_{0{,}5}(x^2 - 4x + 3)$. Với mỗi mệnh đề sau, hãy xác định Đúng hoặc Sai.</p>
+                    <div class="tf-row">
+                        <span>a) Hàm số xác định khi và chỉ khi $x^2 - 4x + 3 > 0$.</span>
+                        <label><input type="radio" id="q13-a-T" name="q13-a" value="T"> Đúng</label>
+                        <label><input type="radio" id="q13-a-F" name="q13-a" value="F"> Sai</label>
+                    </div>
+                    <div class="tf-row">
+                        <span>b) Hàm số đạt giá trị $0$ tại $x = 0$.</span>
+                        <label><input type="radio" id="q13-b-T" name="q13-b" value="T"> Đúng</label>
+                        <label><input type="radio" id="q13-b-F" name="q13-b" value="F"> Sai</label>
+                    </div>
+                    <div class="tf-row">
+                        <span>c) Tập xác định của hàm số là $(-\infty;\, 1) \cup (3;\, +\infty)$.</span>
+                        <label><input type="radio" id="q13-c-T" name="q13-c" value="T"> Đúng</label>
+                        <label><input type="radio" id="q13-c-F" name="q13-c" value="F"> Sai</label>
+                    </div>
+                    <div class="tf-row">
+                        <span>d) Hàm số đồng biến trên khoảng $(3;\, +\infty)$.</span>
+                        <label><input type="radio" id="q13-d-T" name="q13-d" value="T"> Đúng</label>
+                        <label><input type="radio" id="q13-d-F" name="q13-d" value="F"> Sai</label>
+                    </div>
+                </div>
+
+                <!-- Câu 14 -->
+                <div class="question-box q-p2" data-correct="T,T,T,F">
+                    <p><b>Câu 14:</b> Cho $a = \log_6 2,\ b = \log_6 3$. Với mỗi mệnh đề sau, hãy xác định Đúng hoặc Sai.</p>
+                    <div class="tf-row">
+                        <span>a) $a + b = 1$.</span>
+                        <label><input type="radio" id="q14-a-T" name="q14-a" value="T"> Đúng</label>
+                        <label><input type="radio" id="q14-a-F" name="q14-a" value="F"> Sai</label>
+                    </div>
+                    <div class="tf-row">
+                        <span>b) $\log_6 12 = 2a + b$.</span>
+                        <label><input type="radio" id="q14-b-T" name="q14-b" value="T"> Đúng</label>
+                        <label><input type="radio" id="q14-b-F" name="q14-b" value="F"> Sai</label>
+                    </div>
+                    <div class="tf-row">
+                        <span>c) $\log_6 18 = a + 2b$.</span>
+                        <label><input type="radio" id="q14-c-T" name="q14-c" value="T"> Đúng</label>
+                        <label><input type="radio" id="q14-c-F" name="q14-c" value="F"> Sai</label>
+                    </div>
+                    <div class="tf-row">
+                        <span>d) $\log_6 0{,}5 = a$.</span>
+                        <label><input type="radio" id="q14-d-T" name="q14-d" value="T"> Đúng</label>
+                        <label><input type="radio" id="q14-d-F" name="q14-d" value="F"> Sai</label>
+                    </div>
+                </div>
+
+                <!-- Câu 15 -->
+                <div class="question-box q-p2" data-correct="T,T,T,F">
+                    <p><b>Câu 15:</b> Xét bất phương trình $\left(\dfrac{1}{2}\right)^{2x-1} \leq \left(\dfrac{1}{2}\right)^{x+3}$. Với mỗi mệnh đề sau, hãy xác định Đúng hoặc Sai.</p>
+                    <div class="tf-row">
+                        <span>a) Vì cơ số $\dfrac{1}{2} < 1$ nên khi giải ta đổi chiều bất phương trình thành $2x - 1 \geq x + 3$.</span>
+                        <label><input type="radio" id="q15-a-T" name="q15-a" value="T"> Đúng</label>
+                        <label><input type="radio" id="q15-a-F" name="q15-a" value="F"> Sai</label>
+                    </div>
+                    <div class="tf-row">
+                        <span>b) Tập nghiệm của bất phương trình là $[4;\, +\infty)$.</span>
+                        <label><input type="radio" id="q15-b-T" name="q15-b" value="T"> Đúng</label>
+                        <label><input type="radio" id="q15-b-F" name="q15-b" value="F"> Sai</label>
+                    </div>
+                    <div class="tf-row">
+                        <span>c) Bất phương trình có vô số nghiệm.</span>
+                        <label><input type="radio" id="q15-c-T" name="q15-c" value="T"> Đúng</label>
+                        <label><input type="radio" id="q15-c-F" name="q15-c" value="F"> Sai</label>
+                    </div>
+                    <div class="tf-row">
+                        <span>d) $x = 3$ là một nghiệm của bất phương trình.</span>
+                        <label><input type="radio" id="q15-d-T" name="q15-d" value="T"> Đúng</label>
+                        <label><input type="radio" id="q15-d-F" name="q15-d" value="F"> Sai</label>
+                    </div>
+                </div>
+
+                <!-- Câu 16 -->
+                <div class="question-box q-p2" data-correct="T,T,F,T">
+                    <p><b>Câu 16:</b> Cho hàm số $f(x) = 2^x$. Với mỗi mệnh đề sau, hãy xác định Đúng hoặc Sai.</p>
+                    <div class="tf-row">
+                        <span>a) Hàm số đồng biến trên $\mathbb{R}$.</span>
+                        <label><input type="radio" id="q16-a-T" name="q16-a" value="T"> Đúng</label>
+                        <label><input type="radio" id="q16-a-F" name="q16-a" value="F"> Sai</label>
+                    </div>
+                    <div class="tf-row">
+                        <span>b) $f(x_1 + x_2) = f(x_1) \cdot f(x_2)$ với mọi $x_1,\, x_2 \in \mathbb{R}$.</span>
+                        <label><input type="radio" id="q16-b-T" name="q16-b" value="T"> Đúng</label>
+                        <label><input type="radio" id="q16-b-F" name="q16-b" value="F"> Sai</label>
+                    </div>
+                    <div class="tf-row">
+                        <span>c) Đồ thị hàm số đi qua điểm $O(0;\, 0)$.</span>
+                        <label><input type="radio" id="q16-c-T" name="q16-c" value="T"> Đúng</label>
+                        <label><input type="radio" id="q16-c-F" name="q16-c" value="F"> Sai</label>
+                    </div>
+                    <div class="tf-row">
+                        <span>d) $f(-x) = \dfrac{1}{f(x)}$ với mọi $x \in \mathbb{R}$.</span>
+                        <label><input type="radio" id="q16-d-T" name="q16-d" value="T"> Đúng</label>
+                        <label><input type="radio" id="q16-d-F" name="q16-d" value="F"> Sai</label>
+                    </div>
+                </div>
+
+            </div><!-- /#p2-container -->
+
+            <!-- ===== PHẦN III ===== -->
+            <div class="part-header">PHẦN III. Trắc nghiệm trả lời ngắn — Thí sinh điền đáp án vào ô trống (6 câu — 3,0 điểm)</div>
+            <div id="p3-container">
+
+                <!-- Câu 17 -->
+                <div class="question-box q-p3" data-correct="500">
+                    <p><b>Câu 17:</b> Tính $\log_4 2^1000$.</p>
+                    <input type="text" id="q17-input" class="short-ans" placeholder="Nhập đáp án...">
+                </div>
+
+                <!-- Câu 18 -->
+                <div class="question-box q-p3" data-correct="2">
+                    <p><b>Câu 18:</b> Tìm nghiệm $x$ của phương trình $3^{x+1} = 27$.</p>
+                    <input type="text" id="q18-input" class="short-ans" placeholder="Nhập đáp án...">
+                </div>
+
+                <!-- Câu 19 -->
+                <div class="question-box q-p3" data-correct="1.5">
+                    <p><b>Câu 19:</b> Tính $\log_4 8$. (Nhập kết quả dưới dạng số thập phân nếu cần)</p>
+                    <input type="text" id="q19-input" class="short-ans" placeholder="Nhập đáp án...">
+                </div>
+
+                <!-- Câu 20 -->
+                <div class="question-box q-p3" data-correct="1">
+                    <p><b>Câu 20:</b> Phương trình $9^x - 4 \cdot 3^x + 3 = 0$ có hai nghiệm $x_1 < x_2$. Tính $x_1 + x_2$.</p>
+                    <input type="text" id="q20-input" class="short-ans" placeholder="Nhập đáp án...">
+                </div>
+
+                <!-- Câu 21 -->
+                <div class="question-box q-p3" data-correct="5">
+                    <p><b>Câu 21:</b> Tính $2^{\log_2 5}$.</p>
+                    <input type="text" id="q21-input" class="short-ans" placeholder="Nhập đáp án...">
+                </div>
+
+                <!-- Câu 22 -->
+                <div class="question-box q-p3" data-correct="4">
+                    <p><b>Câu 22:</b> Có bao nhiêu số nguyên dương $x$ thỏa mãn bất phương trình $\log_3(2x - 1) < 2$?</p>
+                    <input type="text" id="q22-input" class="short-ans" placeholder="Nhập đáp án...">
+                </div>
+
+            </div><!-- /#p3-container -->
+
+        </form>
+
+        <div class="text-center mt-4 mb-5">
+            <button id="submitBtnBottom" class="btn btn-success btn-lg fw-bold px-5">NỘP BÀI</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MÀN HÌNH KẾT QUẢ ===== -->
+<div id="result-screen">
+    <div class="result-container">
+        <h1 class="fw-bold mb-4 text-center">KẾT QUẢ BÀI THI</h1>
+        <div class="row align-items-center mb-4">
+            <div class="col-md-5 text-center">
+                <div class="score-display" id="finalScore">0.00</div>
+                <div class="text-muted fw-bold">TỔNG ĐIỂM</div>
+            </div>
+            <div class="col-md-7 border-start ps-4">
+                <p><i class="fas fa-user me-2"></i> Học sinh: <span id="resultName" class="fw-bold"></span></p>
+                <p><i class="fas fa-users me-2"></i> Lớp: <span id="resultClass" class="fw-bold"></span></p>
+                <p><i class="fas fa-check-circle me-2 text-success"></i> Số câu đúng: <span id="resultCorrect" class="fw-bold"></span></p>
+            </div>
+        </div>
+        <!-- [BẮT BUỘC Ver 8.0] Nút TRANG CHỦ đặt cùng hàng LÀM LẠI / XEM LẠI -->
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="../index.html" class="btn btn-outline-secondary btn-lg px-4"><i class="fas fa-home me-2"></i>TRANG CHỦ</a>
+            <button id="retryBtn" class="btn btn-outline-primary btn-lg px-4"><i class="fas fa-redo me-2"></i>LÀM LẠI</button>
+            <button id="reviewBtn" class="btn btn-primary btn-lg px-4 shadow"><i class="fas fa-eye me-2"></i>XEM LẠI</button>
+        </div>
+        <div id="reviewArea" class="mt-4"></div>
+    </div>
+</div>
+
+<!-- Modal xác nhận -->
+<div id="customModal" class="custom-modal">
+    <div class="modal-content-custom">
+        <h5 id="modalTitle" class="fw-bold">Thông báo</h5>
+        <p id="modalMessage" class="mb-4"></p>
+        <div class="d-flex gap-2 justify-content-end">
+            <button id="modalCancel" class="btn btn-secondary">Hủy</button>
+            <button id="modalConfirm" class="btn btn-primary">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    // CẤU HÌNH TỈ LỆ ĐIỂM (Tổng 10)
+    const SCORE_RATIO = { P1: 3.0, P2: 4.0, P3: 3.0 };
+
+    const CONFIG = {
+        API: 'https://script.google.com/macros/s/AKfycbwQTV9HhyJ1Dm6vhO46hEXl5oDsEt9LBYNIQOOiIfXq7JAF1kedIs4zdCGQJYUiU7SZ/exec',
+        EXAM_DURATION: 5400, // 90 phút = 5400s
+        examId: 'de-11' // [Ver 8.0] Điền tên file thực tế, KHÔNG để 'de-new'
+    };
+
+    const state = { timeRemaining: CONFIG.EXAM_DURATION, timerInterval: null, isSubmitted: false };
+    const elements = {
+        welcome: document.getElementById('welcome-screen'),
+        exam: document.getElementById('exam-screen'),
+        result: document.getElementById('result-screen'),
+        examForm: document.getElementById('examForm'),
+        timer: document.getElementById('timer'),
+        sName: document.getElementById('sName'),
+        sClass: document.getElementById('sClass'),
+        submitBtnTop: document.getElementById('submitBtnTop'),
+        submitBtnBottom: document.getElementById('submitBtnBottom'),
+        retryBtn: document.getElementById('retryBtn'),
+        reviewBtn: document.getElementById('reviewBtn'),
+        modal: document.getElementById('customModal')
+    };
+
+    const utils = {
+        formatTime: (s) => {
+            const m = Math.floor(s / 60), sec = s % 60;
+            return `${m<10?'0':''}${m}:${sec<10?'0':''}${sec}`;
+        },
+        showModal: (title, msg, onConfirm) => {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = msg;
+            elements.modal.classList.add('show');
+            document.getElementById('modalConfirm').onclick = () => { elements.modal.classList.remove('show'); if(onConfirm) onConfirm(); };
+            document.getElementById('modalCancel').onclick = () => elements.modal.classList.remove('show');
+        }
+    };
+
+    const grading = {
+        addExplain: (q, ans) => {
+            // Xóa giải thích cũ nếu có (tránh lặp)
+            const oldExpl = q.querySelector('.ans-explain');
+            if (oldExpl) oldExpl.remove();
+            const div = document.createElement('div');
+            div.className = 'ans-explain';
+            let displayAns = ans;
+            // Nếu là câu P2: chuyển T/F sang Đ/S để hiển thị đẹp
+            if (q.classList.contains('q-p2')) {
+                const map = { 'T': 'Đ', 'F': 'S' };
+                displayAns = ans.split(',').map((val, idx) => {
+                    return `${String.fromCharCode(97 + idx)}-${map[val.trim()] || val}`;
+                }).join(', ');
+            }
+            div.textContent = 'Đáp án đúng: ' + displayAns;
+            q.appendChild(div);
+        },
+
+        calculate: () => {
+            // 1. ĐẾM SỐ LƯỢNG CÂU THỰC TẾ TRONG DOM (hỗ trợ đề không đủ 12/4/6)
+            const q1List = document.querySelectorAll('.q-p1');
+            const q2List = document.querySelectorAll('.q-p2');
+            const q3List = document.querySelectorAll('.q-p3');
+
+            // 2. TÍNH TRỌNG SỐ ĐIỂM ĐỘNG
+            const scorePerQ1 = q1List.length > 0 ? (SCORE_RATIO.P1 / q1List.length) : 0;
+            const scorePerQ3 = q3List.length > 0 ? (SCORE_RATIO.P3 / q3List.length) : 0;
+            const maxScoreP2 = q2List.length > 0 ? (SCORE_RATIO.P2 / q2List.length) : 0;
+            // Ma trận điểm chuẩn Bộ GD [0.1, 0.25, 0.5, 1.0] được tỉ lệ hóa
+            const scaleFactor = maxScoreP2 / 1.0;
+            const matrixP2 = [0.1, 0.25, 0.5, 1.0].map(s => s * scaleFactor);
+
+            let total = 0;
+            let correctCount = 0;
+
+            // --- CHẤM PHẦN I ---
+            q1List.forEach(q => {
+                const ans = q.dataset.correct;
+                const sel = q.querySelector('input:checked');
+                if (sel && sel.value === ans) {
+                    total += scorePerQ1; correctCount++;
+                    q.classList.add('correct-color'); q.classList.remove('wrong-color');
+                } else {
+                    q.classList.add('wrong-color'); q.classList.remove('correct-color');
+                    grading.addExplain(q, ans);
+                }
+            });
+
+            // --- CHẤM PHẦN II ---
+            q2List.forEach(q => {
+                const ansArr = q.dataset.correct.split(',');
+                let subCorrect = 0;
+                q.querySelectorAll('.tf-row').forEach((row, idx) => {
+                    const sel = row.querySelector('input:checked');
+                    const correctVal = ansArr[idx] ? ansArr[idx].trim() : '';
+                    if (sel && sel.value === correctVal) {
+                        subCorrect++; row.style.backgroundColor = '#d1e7dd'; // Xanh nhạt
+                    } else {
+                        row.style.backgroundColor = '#f8d7da'; // Đỏ nhạt
+                    }
+                });
+                if (subCorrect > 0) { total += matrixP2[subCorrect - 1]; }
+                if (subCorrect === 4) { correctCount++; q.classList.add('correct-color'); }
+                else { q.classList.remove('correct-color'); grading.addExplain(q, q.dataset.correct); }
+            });
+
+            // --- CHẤM PHẦN III ---
+            q3List.forEach(q => {
+                const ans = q.dataset.correct.trim().toUpperCase();
+                const inp = q.querySelector('input');
+                // Chuẩn hóa: viết hoa, bỏ khoảng trắng, đổi dấu phẩy thành chấm
+                const val = inp ? inp.value.trim().toUpperCase().replace(',', '.') : '';
+                if (val === ans) {
+                    total += scorePerQ3; correctCount++;
+                    q.classList.add('correct-color'); q.classList.remove('wrong-color');
+                } else {
+                    q.classList.add('wrong-color'); q.classList.remove('correct-color');
+                    grading.addExplain(q, ans);
+                }
+            });
+
+            return { total: Math.min(total, 10), correct: correctCount };
+        },
+
+        submit: (auto = false) => {
+            if (state.isSubmitted) return;
+            const processSubmit = () => {
+                // 1. Dừng đồng hồ
+                clearInterval(state.timerInterval);
+                state.isSubmitted = true;
+
+                // 2. Tính điểm
+                const res = grading.calculate();
+
+                // 3. Lấy thông tin học sinh
+                const sName = elements.sName.value.trim();
+                const sClass = elements.sClass.value.trim();
+                const examTitle = document.getElementById('examTitle').innerText;
+                const scoreStr = res.total.toFixed(2);
+
+                // 4. Gửi về Google Sheet (API) - GIỮ NGUYÊN
+                const form = new FormData();
+                form.append('name', sName);
+                form.append('class', sClass);
+                form.append('test', examTitle);
+                form.append('score', scoreStr);
+                fetch(CONFIG.API, { method: 'POST', body: form, mode: 'no-cors' })
+                    .then(() => console.log('Submitted to Sheet'))
+                    .catch(e => console.error('Error submitting:', e));
+
+                // 5. Lưu lịch sử vào LocalStorage - GIỮ NGUYÊN CẤU TRÚC
+                let history = [];
+                try {
+                    const existing = localStorage.getItem('exam_results');
+                    if (existing) history = JSON.parse(existing);
+                    history.unshift({
+                        timestamp: new Date().toISOString(),   // Bắt buộc dùng toISOString()
+                        testName: examTitle,                   // Khớp với statistics.html
+                        studentName: sName,
+                        score: scoreStr,
+                        correctAnswers: res.correct
+                    });
+                    if (history.length > 20) history = history.slice(0, 20);
+                    localStorage.setItem('exam_results', JSON.stringify(history));
+                } catch (e) { console.error('Storage error:', e); }
+
+                // 6. Hiển thị màn hình kết quả
+                document.getElementById('finalScore').textContent = scoreStr;
+                document.getElementById('resultName').textContent = sName;
+                document.getElementById('resultClass').textContent = sClass;
+                document.getElementById('resultCorrect').textContent = res.correct;
+                elements.exam.style.display = 'none';
+                elements.result.style.display = 'block';
+                window.scrollTo(0, 0);
+            };
+            if (auto) { processSubmit(); }
+            else { utils.showModal('Nộp bài', 'Bạn có chắc chắn muốn nộp bài thi không? Sau khi nộp bạn không thể sửa lại.', processSubmit); }
+        }
+    };
+
+    // --- BẮT ĐẦU ĐOẠN CODE TRỘN ĐỀ ---
+    const shuffleSystem = {
+        // Thuật toán xáo trộn Fisher-Yates chuẩn
+        shuffleArray: (array) => {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        },
+        execute: () => {
+            console.log("Hệ thống trộn đề đang chạy...");
+
+            // 1. Trộn thứ tự câu hỏi trong từng phần
+            const parts = ['#p1-container', '#p2-container', '#p3-container'];
+            parts.forEach(id => {
+                const container = document.querySelector(id);
+                if (!container) return;
+                const questions = Array.from(container.children).filter(el => el.classList.contains('question-box'));
+                if (questions.length === 0) return;
+                shuffleSystem.shuffleArray(questions);
+                // appendChild tự động di chuyển node trong DOM
+                questions.forEach(q => container.appendChild(q));
+            });
+
+            // 2. Đánh lại số thứ tự (Câu 1, Câu 2...) sau khi trộn
+            // Regex linh hoạt: chấp nhận "Câu 1:", "Câu 1.", "Câu 1"
+            const allQuestions = document.querySelectorAll('.question-box');
+            let count = 1;
+            allQuestions.forEach((q) => {
+                const labels = q.querySelectorAll('b, strong');
+                let foundLabel = false;
+                labels.forEach(label => {
+                    if (foundLabel) return;
+                    const text = label.textContent;
+                    if (text.match(/^Câu\s*\d+[:.]?/i)) {
+                        label.textContent = `Câu ${count}:`;
+                        foundLabel = true;
+                    }
+                });
+                if (!foundLabel) {
+                    const p = q.querySelector('p');
+                    if (p) { p.innerHTML = `<b>Câu ${count}:</b> ` + p.innerHTML; }
+                }
+                count++;
+            });
+            console.log("Đã trộn và đánh số lại xong.");
+        }
+    };
+    // --- KẾT THÚC ĐOẠN CODE TRỘN ---
+
+    const handlers = {
+        goHome: () => {
+            if (state.isSubmitted) {
+                window.location.href = '/index.html';
+            } else {
+                utils.showModal('Xác nhận', 'Bạn chưa nộp bài. Quay về trang chủ sẽ mất kết quả. Tiếp tục?', () => {
+                    window.location.href = '/index.html';
+                });
+            }
+        },
+        start: () => {
+            const n = elements.sName.value.trim(), c = elements.sClass.value.trim();
+            if (!n || !c) return utils.showModal('Thiếu thông tin', 'Vui lòng nhập tên và lớp!');
+            shuffleSystem.execute();
+            document.getElementById('displayName').textContent = `${n} - ${c}`;
+            elements.welcome.style.display = 'none';
+            elements.exam.style.display = 'block';
+            document.getElementById('timer').textContent = utils.formatTime(state.timeRemaining);
+            state.timerInterval = setInterval(() => {
+                state.timeRemaining--;
+                elements.timer.textContent = utils.formatTime(state.timeRemaining);
+                if (state.timeRemaining <= 0) grading.submit(true);
+                if (state.timeRemaining < 300) elements.timer.classList.add('warning');
+            }, 1000);
+        },
+        retry: () => location.reload(),
+        // [Giữ nguyên] Review mode: clone form, disable input, gọi MathJax.typeset()
+        review: () => {
+            const clone = elements.examForm.cloneNode(true);
+            clone.querySelectorAll('input').forEach(i => i.disabled = true);
+            const area = document.getElementById('reviewArea');
+            area.innerHTML = '<hr><h4 class="mb-3 text-primary">CHI TIẾT BÀI LÀM</h4>';
+            area.appendChild(clone);
+            MathJax.typeset();
+            document.getElementById('reviewBtn').style.display = 'none';
+        }
+    };
+
+    // Gán sự kiện
+    document.getElementById('startBtn').onclick = handlers.start;
+    elements.submitBtnTop.onclick = () => grading.submit();
+    elements.submitBtnBottom.onclick = () => grading.submit();
+    elements.retryBtn.onclick = handlers.retry;
+    elements.reviewBtn.onclick = handlers.review;
+    window.onbeforeunload = () => state.isSubmitted ? null : "Đang làm bài...";
+})();
+</script>
+</body>
+</html>

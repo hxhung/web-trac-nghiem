@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Cross-Origin Communication</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .test-section h2 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .test-section h2::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 2px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+        }
+
+        .log-box {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .log-success { color: #4caf50; }
+        .log-error { color: #f44336; }
+        .log-info { color: #2196f3; }
+        .log-warning { color: #ff9800; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-pending {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .status-success {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .status-error {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .data-preview {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        .data-preview h3 {
+            color: #667eea;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .data-item {
+            background: #f8f9fa;
+            border-left: 3px solid #667eea;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+
+        .data-item strong {
+            color: #333;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Cross-Origin Communication</h1>
+        <p class="subtitle">Kiểm tra kết nối giữa web-trac-nghiem và thi-truc-tuyen</p>
+
+        <!-- Test Section 1: Local Data -->
+        <div class="test-section">
+            <h2>📦 Dữ liệu Local (exam_results)</h2>
+            <button class="btn" onclick="checkLocalData()">Kiểm tra Local</button>
+            <button class="btn btn-success" onclick="seedLocalData()">Tạo dữ liệu mẫu</button>
+            <button class="btn btn-danger" onclick="clearLocalData()">Xóa Local</button>
+            <div id="localStatus"></div>
+        </div>
+
+        <!-- Test Section 2: Remote Data via Bridge -->
+        <div class="test-section">
+            <h2>🌐 Dữ liệu Remote (bridge.html)</h2>
+            <button class="btn" onclick="testBridge()">Test Bridge Communication</button>
+            <button class="btn btn-danger" onclick="clearRemoteData()">Xóa iframe</button>
+            <div id="bridgeStatus"></div>
+        </div>
+
+        <!-- Test Section 3: Merge Test -->
+        <div class="test-section">
+            <h2>🔄 Test Merge Data</h2>
+            <button class="btn btn-success" onclick="testFullMerge()">Test Full Merge</button>
+            <div id="mergeStatus"></div>
+        </div>
+
+        <!-- Console Log -->
+        <div class="test-section">
+            <h2>📝 Console Log</h2>
+            <button class="btn btn-danger" onclick="clearLog()">Clear Log</button>
+            <div class="log-box" id="logBox"></div>
+        </div>
+    </div>
+
+    <script>
+        const REMOTE_BRIDGE = 'https://hxhung.github.io/thi-truc-tuyen/bridge.html';
+        let iframe = null;
+
+        // ===== LOGGING =====
+        function log(message, type = 'info') {
+            const logBox = document.getElementById('logBox');
+            const timestamp = new Date().toLocaleTimeString('vi-VN');
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logBox.appendChild(logEntry);
+            logBox.scrollTop = logBox.scrollHeight;
+            console.log(`[${type.toUpperCase()}]`, message);
+        }
+
+        function clearLog() {
+            document.getElementById('logBox').innerHTML = '';
+        }
+
+        // ===== LOCAL DATA TESTS =====
+        function checkLocalData() {
+            log('🔍 Checking local data...', 'info');
+            try {
+                const data = localStorage.getItem('exam_results');
+                const parsed = data ? JSON.parse(data) : [];
+                
+                const statusDiv = document.getElementById('localStatus');
+                statusDiv.innerHTML = `
+                    <span class="status-badge status-success">✓ ${parsed.length} bài thi</span>
+                    <div class="data-preview">
+                        <h3>Dữ liệu local:</h3>
+                        ${parsed.length === 0 
+                            ? '<p style="color: #999;">Chưa có dữ liệu</p>'
+                            : parsed.map((item, i) => `
+                                <div class="data-item">
+                                    <strong>#${i + 1}:</strong> ${item.testName || 'N/A'} - 
+                                    <strong>Điểm:</strong> ${item.score || 0} - 
+                                    <strong>HS:</strong> ${item.studentName || 'N/A'}
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                `;
+                log(`✅ Local data: ${parsed.length} records`, 'success');
+            } catch (e) {
+                log(`❌ Error checking local data: ${e.message}`, 'error');
+                document.getElementById('localStatus').innerHTML = 
+                    `<span class="status-badge status-error">✗ Error</span>`;
+            }
+        }
+
+        function seedLocalData() {
+            log('🌱 Creating sample local data...', 'info');
+            const sampleData = [
+                {
+                    timestamp: new Date().toISOString(),
+                    testName: "Đề thi Toán 10 - Local",
+                    studentName: "Nguyễn Văn A",
+                    score: 8.5,
+                    correctAnswers: 17
+                },
+                {
+                    timestamp: new Date(Date.now() - 86400000).toISOString(),
+                    testName: "Đề thi Hóa 11 - Local",
+                    studentName: "Trần Thị B",
+                    score: 7.0,
+                    correctAnswers: 14
+                }
+            ];
+            
+            try {
+                localStorage.setItem('exam_results', JSON.stringify(sampleData));
+                log('✅ Sample data created successfully', 'success');
+                checkLocalData();
+            } catch (e) {
+                log(`❌ Error creating sample data: ${e.message}`, 'error');
+            }
+        }
+
+        function clearLocalData() {
+            if (confirm('Xóa toàn bộ dữ liệu local?')) {
+                log('🗑️ Clearing local data...', 'warning');
+                localStorage.removeItem('exam_results');
+                log('✅ Local data cleared', 'success');
+                checkLocalData();
+            }
+        }
+
+        // ===== BRIDGE TESTS =====
+        function testBridge() {
+            log('🌉 Testing bridge communication...', 'info');
+            
+            // Clear previous iframe if exists
+            if (iframe) {
+                iframe.remove();
+                iframe = null;
+                log('🗑️ Removed old iframe', 'info');
+            }
+
+            // Create new iframe
+            iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = REMOTE_BRIDGE;
+            document.body.appendChild(iframe);
+            log(`📤 Created iframe: ${REMOTE_BRIDGE}`, 'info');
+
+            const statusDiv = document.getElementById('bridgeStatus');
+            statusDiv.innerHTML = '<span class="status-badge status-pending">⏳ Loading...</span>';
+
+            let received = false;
+
+            // Listen for response
+            window.addEventListener('message', function handler(e) {
+                if (e.data && e.data.type === 'RESP_HISTORY_DATA') {
+                    received = true;
+                    log('📨 Received response from bridge!', 'success');
+                    
+                    try {
+                        const data = JSON.parse(e.data.payload || '[]');
+                        log(`✅ Parsed ${data.length} records from remote`, 'success');
+                        
+                        statusDiv.innerHTML = `
+                            <span class="status-badge status-success">✓ ${data.length} bài thi</span>
+                            <div class="data-preview">
+                                <h3>Dữ liệu remote:</h3>
+                                ${data.length === 0 
+                                    ? '<p style="color: #999;">Không có dữ liệu remote</p>'
+                                    : data.map((item, i) => `
+                                        <div class="data-item">
+                                            <strong>#${i + 1}:</strong> ${item.testName || 'N/A'} - 
+                                            <strong>Điểm:</strong> ${item.score || 0} - 
+                                            <strong>HS:</strong> ${item.studentName || 'N/A'} - 
+                                            <code>origin: ${item.origin || 'unknown'}</code>
+                                        </div>
+                                    `).join('')
+                                }
+                            </div>
+                        `;
+                        
+                        window.removeEventListener('message', handler);
+                    } catch (err) {
+                        log(`❌ Parse error: ${err.message}`, 'error');
+                        statusDiv.innerHTML = '<span class="status-badge status-error">✗ Parse Error</span>';
+                    }
+                }
+            });
+
+            // Send command when iframe loads
+            iframe.onload = () => {
+                log('✅ Iframe loaded, sending CMD_GET_HISTORY', 'info');
+                iframe.contentWindow.postMessage('CMD_GET_HISTORY', '*');
+            };
+
+            // Timeout
+            setTimeout(() => {
+                if (!received) {
+                    log('⏰ Timeout - No response from bridge', 'warning');
+                    statusDiv.innerHTML = '<span class="status-badge status-error">✗ Timeout</span>';
+                }
+            }, 3000);
+        }
+
+        function clearRemoteData() {
+            if (iframe) {
+                iframe.remove();
+                iframe = null;
+                log('🗑️ Removed iframe', 'info');
+                document.getElementById('bridgeStatus').innerHTML = '';
+            }
+        }
+
+        // ===== FULL MERGE TEST =====
+        function testFullMerge() {
+            log('🔄 Testing full merge process...', 'info');
+            
+            const statusDiv = document.getElementById('mergeStatus');
+            statusDiv.innerHTML = '<span class="status-badge status-pending">⏳ Processing...</span>';
+
+            // 1. Get local data
+            let localData = [];
+            try {
+                localData = JSON.parse(localStorage.getItem('exam_results') || '[]');
+                localData.forEach(d => d.origin = 'local');
+                log(`✅ Local: ${localData.length} records`, 'success');
+            } catch (e) {
+                log(`❌ Local error: ${e.message}`, 'error');
+            }
+
+            // 2. Create iframe for remote
+            if (iframe) iframe.remove();
+            iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = REMOTE_BRIDGE;
+            document.body.appendChild(iframe);
+
+            let merged = false;
+
+            const finalize = (remoteData = []) => {
+                if (merged) return;
+                merged = true;
+
+                log(`📊 Remote: ${remoteData.length} records`, 'success');
+
+                // Merge
+                const allData = [...localData, ...remoteData];
+                allData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+                log(`✅ Merged: ${allData.length} total records`, 'success');
+
+                statusDiv.innerHTML = `
+                    <span class="status-badge status-success">✓ Merge Complete</span>
+                    <div class="data-preview">
+                        <h3>Merged Data (${allData.length} records):</h3>
+                        <p style="margin-bottom: 10px;">
+                            <strong>Local:</strong> ${localData.length} | 
+                            <strong>Remote:</strong> ${remoteData.length}
+                        </p>
+                        ${allData.length === 0 
+                            ? '<p style="color: #999;">Không có dữ liệu</p>'
+                            : allData.slice(0, 5).map((item, i) => `
+                                <div class="data-item">
+                                    <strong>#${i + 1}:</strong> ${item.testName || 'N/A'} - 
+                                    <strong>Điểm:</strong> ${item.score || 0} - 
+                                    <strong>HS:</strong> ${item.studentName || 'N/A'} - 
+                                    <code>${item.origin || 'unknown'}</code>
+                                </div>
+                            `).join('')
+                        }
+                        ${allData.length > 5 ? `<p style="color: #999; margin-top: 10px;">... và ${allData.length - 5} bài thi khác</p>` : ''}
+                    </div>
+                `;
+
+                setTimeout(() => iframe.remove(), 1000);
+            };
+
+            // Listen for remote response
+            window.addEventListener('message', (e) => {
+                if (e.data && e.data.type === 'RESP_HISTORY_DATA') {
+                    try {
+                        const remoteData = JSON.parse(e.data.payload || '[]');
+                        finalize(remoteData);
+                    } catch (err) {
+                        log(`❌ Parse error: ${err.message}`, 'error');
+                        finalize([]);
+                    }
+                }
+            });
+
+            iframe.onload = () => {
+                log('📤 Sending CMD_GET_HISTORY to bridge...', 'info');
+                iframe.contentWindow.postMessage('CMD_GET_HISTORY', '*');
+            };
+
+            // Timeout
+            setTimeout(() => {
+                if (!merged) {
+                    log('⏰ Timeout - Using local only', 'warning');
+                    finalize([]);
+                }
+            }, 3000);
+        }
+
+        // ===== INIT =====
+        window.addEventListener('DOMContentLoaded', () => {
+            log('🚀 Test page initialized', 'success');
+            log('Ready to test cross-origin communication', 'info');
+            checkLocalData();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,606 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hệ thống thi trực tuyến GDPT 2018">
+    <title>LT TÍCH PHÂN</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        :root { --primary: #0d6efd; --secondary: #6c757d; --success: #198754; --danger: #dc3545; --warning: #ffc107; --bg-p1: #e3f2fd; --border-p1: #1976d2; --bg-p2: #fff9e6; --border-p2: #f9a825; --bg-p3: #e8f5e9; --border-p3: #43a047; --exam-bg: #f5f5f5; }
+        * { box-sizing: border-box; }
+        body { background: var(--exam-bg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; }
+        #welcome-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), #0a58ca); padding: 20px; }
+        .welcome-card { background: #fff; width: 100%; max-width: 500px; padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeIn 0.5s ease-in; }
+        #exam-screen { display: none; padding-bottom: 60px; background: var(--exam-bg); min-height: 100vh; }
+        .sticky-header { position: sticky; top: 0; z-index: 1020; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 12px 15px; margin-bottom: 20px; }
+        .timer { font-size: 1.5rem; font-weight: bold; color: var(--primary); font-variant-numeric: tabular-nums; }
+        .timer.warning { color: var(--danger); animation: pulse 1s infinite; }
+        .question-box { background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .q-p1 { background: var(--bg-p1); border-left-color: var(--border-p1); }
+        .q-p2 { background: var(--bg-p2); border-left-color: var(--border-p2); }
+        .q-p3 { background: var(--bg-p3); border-left-color: var(--border-p3); }
+        .part-header { background: linear-gradient(135deg, #e9ecef, #dee2e6); padding: 12px 20px; border-radius: 8px; margin: 25px 0 15px; font-weight: bold; font-size: 1.1rem; color: #333; border-left: 4px solid var(--primary); }
+        .q-item { display: block; padding: 10px; margin: 8px 0; cursor: pointer; border-radius: 6px; transition: background 0.2s ease; }
+        .q-item:hover { background: rgba(0,0,0,0.03); }
+        .tf-row { border-bottom: 1px solid rgba(0,0,0,0.1); padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
+        .tf-content { flex: 1; padding-right: 15px; }
+        .tf-opts { display: flex; gap: 15px; }
+        .short-ans { width: 100%; max-width: 300px; padding: 10px 15px; border: 2px solid #ddd; border-radius: 8px; }
+        #result-screen { display: none; padding: 40px 20px; max-width: 1000px; margin: 0 auto; }
+        .result-container { background: #fff; border-radius: 15px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .score-display { font-size: 4rem; font-weight: 800; color: var(--primary); }
+        .correct-color { background: #d1e7dd !important; border-left-color: var(--success) !important; }
+        .wrong-color { background: #f8d7da !important; border-left-color: var(--danger) !important; }
+        .ans-explain { font-weight: bold; color: var(--danger); font-style: italic; margin-top: 10px; padding: 8px 12px; background: rgba(220,53,69,0.1); border-radius: 5px; }
+        .question-box img { width: 50%; max-width: 600px; height: auto; display: block; margin: 10px auto; cursor: pointer; transition: transform 0.2s; }
+        @media (max-width: 768px) { .question-box img { width: 90%; } }
+        .question-box img:hover { transform: scale(1.05); }
+        .custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
+        .custom-modal.show { display: flex; }
+        .modal-content-custom { background: #fff; padding: 30px; border-radius: 15px; max-width: 400px; width: 90%; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    </style>
+</head>
+<body>
+    <div id="welcome-screen">
+        <div class="welcome-card">
+            <i class="fas fa-graduation-cap text-primary mb-4" style="font-size:50px"></i>
+            <h1 class="text-primary fw-bold mb-3" id="examTitle">LUYỆN TẬP<br> TÍCH PHÂN </h1>
+            <p class="text-muted mb-4"><i class="far fa-clock"></i> <span id="examDuration">90</span> phút | <i class="far fa-file-alt"></i> <span id="questionCount">40</span> Câu</p>
+            <input type="text" id="sName" class="form-control form-control-lg mb-3" placeholder="Nhập họ và tên..." required>
+            <input type="text" id="sClass" class="form-control form-control-lg mb-4" placeholder="Nhập lớp..." required>
+            <button id="startBtn" class="btn btn-primary btn-lg w-100 fw-bold shadow">BẮT ĐẦU LÀM BÀI</button>
+            <div class="mt-3"><a href="../index.html" class="text-secondary text-decoration-none small"><i class="fas fa-arrow-left"></i> Về trang chủ</a></div>
+        </div>
+    </div>
+
+    <div id="exam-screen">
+        <div class="sticky-header d-flex justify-content-between align-items-center">
+            <div><button id="homeBtn" class="btn btn-outline-secondary btn-sm me-2"><i class="fas fa-home"></i></button><span id="displayName" class="fw-bold"></span></div>
+            <div class="timer" id="timer">00:00</div>
+            <button id="submitBtnTop" type="button" class="btn btn-success btn-sm fw-bold">NỘP BÀI</button>
+        </div>
+        <div class="container" style="max-width:900px">
+            <form id="examForm">
+                <div class="part-header">PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn</div>
+                <div id="p1-container">
+                    <div class="question-box q-p1" data-correct="D"><p><b>Câu 1:</b> Cho hàm số $f(x)$ liên tục trên đoạn [a; b]. Phát biểu nào sau đây là sai?</p>
+                        <div class="q-item"><input type="radio" name="q1" id="q1-A" value="A"> <label for="q1-A">A. $\int_{a}^{b}f(x)dx=F(b)-F(a)$</label></div>
+                        <div class="q-item"><input type="radio" name="q1" id="q1-B" value="B"> <label for="q1-B">B. $\int_{a}^{b}f(x)dx=-\int_{b}^{a}f(x)dx$</label></div>
+                        <div class="q-item"><input type="radio" name="q1" id="q1-C" value="C"> <label for="q1-C">C. $\int_{a}^{a}f(x)dx=0$</label></div>
+                        <div class="q-item"><input type="radio" name="q1" id="q1-D" value="D"> <label for="q1-D">D. $\int_{a}^{b}f(x)dx=f(b)-f(a)$</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="A"><p><b>Câu 2:</b> Giá trị của tích phân $I=\int_{0}^{1}x^{5}dx$ bằng:</p>
+                        <div class="q-item"><input type="radio" name="q2" id="q2-A" value="A"> <label for="q2-A">A. $1/6$</label></div>
+                        <div class="q-item"><input type="radio" name="q2" id="q2-B" value="B"> <label for="q2-B">B. $1/5$</label></div>
+                        <div class="q-item"><input type="radio" name="q2" id="q2-C" value="C"> <label for="q2-C">C. 6</label></div>
+                        <div class="q-item"><input type="radio" name="q2" id="q2-D" value="D"> <label for="q2-D">D. 5</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="B"><p><b>Câu 3:</b> Cho $\int_{1}^{3}f(x)dx=4$ Tính giá trị của $I=\int_{1}^{3}5f(x)dx$.</p>
+                        <div class="q-item"><input type="radio" name="q3" id="q3-A" value="A"> <label for="q3-A">A. 9</label></div>
+                        <div class="q-item"><input type="radio" name="q3" id="q3-B" value="B"> <label for="q3-B">B. 20</label></div>
+                        <div class="q-item"><input type="radio" name="q3" id="q3-C" value="C"> <label for="q3-C">C. $4/5$</label></div>
+                        <div class="q-item"><input type="radio" name="q3" id="q3-D" value="D"> <label for="q3-D">D. $5/4$</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="C"><p><b>Câu 4:</b> Tích phân $I=\int_{0}^{\pi/2} \cos x dx$ có giá trị bằng:</p>
+                        <div class="q-item"><input type="radio" name="q4" id="q4-A" value="A"> <label for="q4-A">A. 0</label></div>
+                        <div class="q-item"><input type="radio" name="q4" id="q4-B" value="B"> <label for="q4-B">B. -1</label></div>
+                        <div class="q-item"><input type="radio" name="q4" id="q4-C" value="C"> <label for="q4-C">C. 1</label></div>
+                        <div class="q-item"><input type="radio" name="q4" id="q4-D" value="D"> <label for="q4-D">D. $\pi/2$</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="B"><p><b>Câu 5:</b> Cho $\int_{2}^{5}f(x)dx=10$ và $\int_{2}^{5}g(x)dx=3$ Tính $I=\int_{2}^{5}(f(x)-g(x))dx$.</p>
+                        <div class="q-item"><input type="radio" name="q5" id="q5-A" value="A"> <label for="q5-A">A. 13</label></div>
+                        <div class="q-item"><input type="radio" name="q5" id="q5-B" value="B"> <label for="q5-B">B. 7</label></div>
+                        <div class="q-item"><input type="radio" name="q5" id="q5-C" value="C"> <label for="q5-C">C. 30</label></div>
+                        <div class="q-item"><input type="radio" name="q5" id="q5-D" value="D"> <label for="q5-D">D. $10/3$</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="A"><p><b>Câu 6:</b> Khẳng định nào sau đây đúng với mọi hàm số $f(x)$ liên tục trên đoạn [1; 4]?</p>
+                        <div class="q-item"><input type="radio" name="q6" id="q6-A" value="A"> <label for="q6-A">A. $\int_{1}^{4}f(x)dx=\int_{1}^{2}f(x)dx+\int_{2}^{4}f(x)dx$</label></div>
+                        <div class="q-item"><input type="radio" name="q6" id="q6-B" value="B"> <label for="q6-B">B. $\int_{1}^{4}f(x)dx=\int_{1}^{2}f(x)dx-\int_{2}^{4}f(x)dx$</label></div>
+                        <div class="q-item"><input type="radio" name="q6" id="q6-C" value="C"> <label for="q6-C">C. $\int_{1}^{4}f(x)dx=\int_{1}^{2}f(x)dx\cdot\int_{2}^{4}f(x)dx$</label></div>
+                        <div class="q-item"><input type="radio" name="q6" id="q6-D" value="D"> <label for="q6-D">D. $\int_{1}^{4}f(x)dx=\int_{4}^{1}f(x)dx$</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="C"><p><b>Câu 7:</b> Giá trị của tích phân $I=\int_{1}^{e}\frac{1}{x}dx$ bằng:</p>
+                        <div class="q-item"><input type="radio" name="q7" id="q7-A" value="A"> <label for="q7-A">A. e</label></div>
+                        <div class="q-item"><input type="radio" name="q7" id="q7-B" value="B"> <label for="q7-B">B. 0</label></div>
+                        <div class="q-item"><input type="radio" name="q7" id="q7-C" value="C"> <label for="q7-C">C. 1</label></div>
+                        <div class="q-item"><input type="radio" name="q7" id="q7-D" value="D"> <label for="q7-D">D. $ln(e-1)$</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="D"><p><b>Câu 8:</b> Cho $\int_{0}^{2}f(x)dx=3$ Tính giá trị của $\int_{0}^{2}[f(x)+4]dx$.</p>
+                        <div class="q-item"><input type="radio" name="q8" id="q8-A" value="A"> <label for="q8-A">A. 5</label></div>
+                        <div class="q-item"><input type="radio" name="q8" id="q8-B" value="B"> <label for="q8-B">B. 7</label></div>
+                        <div class="q-item"><input type="radio" name="q8" id="q8-C" value="C"> <label for="q8-C">C. 4</label></div>
+                        <div class="q-item"><input type="radio" name="q8" id="q8-D" value="D"> <label for="q8-D">D. 11</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="B"><p><b>Câu 9:</b> Tích phân $I=\int_{0}^{1}e^{2x}dx$ bằng:</p>
+                        <div class="q-item"><input type="radio" name="q9" id="q9-A" value="A"> <label for="q9-A">A. $e^{2}-1$</label></div>
+                        <div class="q-item"><input type="radio" name="q9" id="q9-B" value="B"> <label for="q9-B">B. $\frac{e^{2}-1}{2}$</label></div>
+                        <div class="q-item"><input type="radio" name="q9" id="q9-C" value="C"> <label for="q9-C">C. $2(e^{2}-1)$</label></div>
+                        <div class="q-item"><input type="radio" name="q9" id="q9-D" value="D"> <label for="q9-D">D. $e^{2}$</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="A"><p><b>Câu 10:</b> Nếu $\int_{a}^{b}f(t)dt=5$ thì giá trị của $\int_{a}^{b}f(x)dx$ bằng:</p>
+                        <div class="q-item"><input type="radio" name="q10" id="q10-A" value="A"> <label for="q10-A">A. 5</label></div>
+                        <div class="q-item"><input type="radio" name="q10" id="q10-B" value="B"> <label for="q10-B">B. -5</label></div>
+                        <div class="q-item"><input type="radio" name="q10" id="q10-C" value="C"> <label for="q10-C">C. $5(b-a)$</label></div>
+                        <div class="q-item"><input type="radio" name="q10" id="q10-D" value="D"> <label for="q10-D">D. Không xác định được</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="A"><p><b>Câu 11:</b> Giá trị của tích phân $I=\int_{1}^{2}\frac{1}{x^{2}}dx$ là:</p>
+                        <div class="q-item"><input type="radio" name="q11" id="q11-A" value="A"> <label for="q11-A">A. $1/2$</label></div>
+                        <div class="q-item"><input type="radio" name="q11" id="q11-B" value="B"> <label for="q11-B">B. $-1/2$</label></div>
+                        <div class="q-item"><input type="radio" name="q11" id="q11-C" value="C"> <label for="q11-C">C. $3/4$</label></div>
+                        <div class="q-item"><input type="radio" name="q11" id="q11-D" value="D"> <label for="q11-D">D. 2</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="B"><p><b>Câu 12:</b> Cho $\int_{-1}^{3}f(x)dx=2$ và $\int_{2}^{3}f(x)dx=-5$. Tính $\int_{-1}^{2}f(x)dx$.</p>
+                        <div class="q-item"><input type="radio" name="q12" id="q12-A" value="A"> <label for="q12-A">A. -3</label></div>
+                        <div class="q-item"><input type="radio" name="q12" id="q12-B" value="B"> <label for="q12-B">B. 7</label></div>
+                        <div class="q-item"><input type="radio" name="q12" id="q12-C" value="C"> <label for="q12-C">C. -7</label></div>
+                        <div class="q-item"><input type="radio" name="q12" id="q12-D" value="D"> <label for="q12-D">D. 3</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="C"><p><b>Câu 13:</b> Cho nguyên hàm $F(x)$ của hàm $f(x)=sin~x$ thỏa mãn $F(0)=1$ Tính giá trị $F(\pi)$.</p>
+                        <div class="q-item"><input type="radio" name="q13" id="q13-A" value="A"> <label for="q13-A">A. 1</label></div>
+                        <div class="q-item"><input type="radio" name="q13" id="q13-B" value="B"> <label for="q13-B">B. 2</label></div>
+                        <div class="q-item"><input type="radio" name="q13" id="q13-C" value="C"> <label for="q13-C">C. 3</label></div>
+                        <div class="q-item"><input type="radio" name="q13" id="q13-D" value="D"> <label for="q13-D">D. 0</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="A"><p><b>Câu 14:</b> Tích phân $I=\int_{0}^{\pi/4}\frac{1}{cos^{2}x}dx$ có giá trị bằng:</p>
+                        <div class="q-item"><input type="radio" name="q14" id="q14-A" value="A"> <label for="q14-A">A. 1</label></div>
+                        <div class="q-item"><input type="radio" name="q14" id="q14-B" value="B"> <label for="q14-B">B. $\sqrt{3}$</label></div>
+                        <div class="q-item"><input type="radio" name="q14" id="q14-C" value="C"> <label for="q14-C">C. $\sqrt{3}/3$</label></div>
+                        <div class="q-item"><input type="radio" name="q14" id="q14-D" value="D"> <label for="q14-D">D. 0</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="B"><p><b>Câu 15:</b> Cho $\int_{0}^{1}f(x)dx=2$ Tính giá trị của $I=\int_{1}^{0}3f(x)dx$.</p>
+                        <div class="q-item"><input type="radio" name="q15" id="q15-A" value="A"> <label for="q15-A">A. 6</label></div>
+                        <div class="q-item"><input type="radio" name="q15" id="q15-B" value="B"> <label for="q15-B">B. -6</label></div>
+                        <div class="q-item"><input type="radio" name="q15" id="q15-C" value="C"> <label for="q15-C">C. $2/3$</label></div>
+                        <div class="q-item"><input type="radio" name="q15" id="q15-D" value="D"> <label for="q15-D">D. $-2/3$</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="A"><p><b>Câu 16:</b> Giá trị của tích phân $I=\int_{1}^{2}(3x^{2}+1)dx$ bằng:</p>
+                        <div class="q-item"><input type="radio" name="q16" id="q16-A" value="A"> <label for="q16-A">A. 8</label></div>
+                        <div class="q-item"><input type="radio" name="q16" id="q16-B" value="B"> <label for="q16-B">B. 10</label></div>
+                        <div class="q-item"><input type="radio" name="q16" id="q16-C" value="C"> <label for="q16-C">C. 9</label></div>
+                        <div class="q-item"><input type="radio" name="q16" id="q16-D" value="D"> <label for="q16-D">D. 7</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="B"><p><b>Câu 17:</b> Cho hàm số $f(x)$ liên tục trên R và $F(x)$ là một nguyên hàm của $f(x)$. Biết $F(1)=3$ và $F(5)=10$. Tính $\int_{1}^{5}f(x)dx$.</p>
+                        <div class="q-item"><input type="radio" name="q17" id="q17-A" value="A"> <label for="q17-A">A. 13</label></div>
+                        <div class="q-item"><input type="radio" name="q17" id="q17-B" value="B"> <label for="q17-B">B. 7</label></div>
+                        <div class="q-item"><input type="radio" name="q17" id="q17-C" value="C"> <label for="q17-C">C. -7</label></div>
+                        <div class="q-item"><input type="radio" name="q17" id="q17-D" value="D"> <label for="q17-D">D. 30</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="B"><p><b>Câu 18:</b> Giá trị của tích phân $I=\int_{0}^{1}3^{x}dx$ bằng:</p>
+                        <div class="q-item"><input type="radio" name="q18" id="q18-A" value="A"> <label for="q18-A">A. $3/ln~3$</label></div>
+                        <div class="q-item"><input type="radio" name="q18" id="q18-B" value="B"> <label for="q18-B">B. $2/ln~3$</label></div>
+                        <div class="q-item"><input type="radio" name="q18" id="q18-C" value="C"> <label for="q18-C">C. 3ln3</label></div>
+                        <div class="q-item"><input type="radio" name="q18" id="q18-D" value="D"> <label for="q18-D">D. 2ln3</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="A"><p><b>Câu 19:</b> Tích phân $I=\int_{1}^{4}\sqrt{x}dx$ có giá trị bằng:</p>
+                        <div class="q-item"><input type="radio" name="q19" id="q19-A" value="A"> <label for="q19-A">A. $14/3$</label></div>
+                        <div class="q-item"><input type="radio" name="q19" id="q19-B" value="B"> <label for="q19-B">B. $7/3$</label></div>
+                        <div class="q-item"><input type="radio" name="q19" id="q19-C" value="C"> <label for="q19-C">C. 2</label></div>
+                        <div class="q-item"><input type="radio" name="q19" id="q19-D" value="D"> <label for="q19-D">D. $16/3$</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="A"><p><b>Câu 20:</b> Cho $\int_{0}^{1}f^{\prime}(x)dx=10$ và biết $f(0)=5$. Tính giá trị của $f(1)$.</p>
+                        <div class="q-item"><input type="radio" name="q20" id="q20-A" value="A"> <label for="q20-A">A. 15</label></div>
+                        <div class="q-item"><input type="radio" name="q20" id="q20-B" value="B"> <label for="q20-B">B. 5</label></div>
+                        <div class="q-item"><input type="radio" name="q20" id="q20-C" value="C"> <label for="q20-C">C. -5</label></div>
+                        <div class="q-item"><input type="radio" name="q20" id="q20-D" value="D"> <label for="q20-D">D. 10</label></div>
+                    </div>
+                    <div class="question-box q-p1" data-correct="A"><p><b>Câu 21:</b> Diện tích hình thang cong (phần tô đậm trong hình) được tính theo công thức nào dưới đây?</p>
+                        <img src="pic/K12.C3.B2.LT_tichphan_C21.png" alt="Hình câu 21">
+                        <div class="q-item"><input type="radio" name="q21" id="q21-A" value="A"> <label for="q21-A">A. $S=\int_{0}^{2}f(x)dx$</label></div>
+                        <div class="q-item"><input type="radio" name="q21" id="q21-B" value="B"> <label for="q21-B">B. $S=\int_{0}^{4}f(x)dx$</label></div>
+                        <div class="q-item"><input type="radio" name="q21" id="q21-C" value="C"> <label for="q21-C">C. $S=\int_{2}^{4}f(x)dx$</label></div>
+                        <div class="q-item"><input type="radio" name="q21" id="q21-D" value="D"> <label for="q21-D">D. $S=\int_{1}^{2}f(x)dx$</label></div>
+                    </div>
+                </div>
+
+                <div class="part-header">PHẦN II. Câu trắc nghiệm đúng sai</div>
+                <div id="p2-container">
+                    <div class="question-box q-p2" data-correct="T,F,T,T"><p><b>Câu 22:</b> Cho hàm số $f(x)=4x^{3}-2x$. Xét tính đúng/sai của các khẳng định sau:</p>
+                        <div class="tf-row"><div class="tf-content">A. $\int_{0}^{1}f(x)dx=[x^{4}-x^{2}]|_{0}^{1}$</div><div class="tf-opts"><label><input type="radio" name="q22-a" value="T"> Đ</label><label><input type="radio" name="q22-a" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">B. Giá trị của tích phân $\int_{0}^{1}f(x)dx$ bằng 1.</div><div class="tf-opts"><label><input type="radio" name="q22-b" value="T"> Đ</label><label><input type="radio" name="q22-b" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">C. Hàm số $F(x)=x^{4}-x^{2}+5$ là một nguyên hàm của $f(x)$.</div><div class="tf-opts"><label><input type="radio" name="q22-c" value="T"> Đ</label><label><input type="radio" name="q22-c" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">D. Giá trị tích phân $\int_{0}^{1}2f(x)dx$ bằng 0.</div><div class="tf-opts"><label><input type="radio" name="q22-d" value="T"> Đ</label><label><input type="radio" name="q22-d" value="F"> S</label></div></div>
+                    </div>
+                    <div class="question-box q-p2" data-correct="T,F,T,T"><p><b>Câu 23:</b> Cho các giá trị tích phân $\int_{1}^{2}f(x)dx=3$ và $\int_{1}^{5}f(x)dx=8$ Khi đó:</p>
+                        <div class="tf-row"><div class="tf-content">A. Giá trị của $\int_{2}^{5}f(x)dx$ bằng 5.</div><div class="tf-opts"><label><input type="radio" name="q23-a" value="T"> Đ</label><label><input type="radio" name="q23-a" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">B. Giá trị của $\int_{5}^{1}f(x)dx$ bằng 8.</div><div class="tf-opts"><label><input type="radio" name="q23-b" value="T"> Đ</label><label><input type="radio" name="q23-b" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">C. Tích phân $\int_{1}^{2}(f(x)+1)dx$ bằng 4.</div><div class="tf-opts"><label><input type="radio" name="q23-c" value="T"> Đ</label><label><input type="radio" name="q23-c" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">D. Tích phân $\int_{2}^{1}f(x)dx$ bằng –3.</div><div class="tf-opts"><label><input type="radio" name="q23-d" value="T"> Đ</label><label><input type="radio" name="q23-d" value="F"> S</label></div></div>
+                    </div>
+                    <div class="question-box q-p2" data-correct="T,T,T,F"><p><b>Câu 24:</b> Cho hàm số $f(x)=\begin{cases}2x,&khi~x\le1\\ 3x^{2}-1,&khi~x>1\end{cases}.$ Xét tích phân $I=\int_{0}^{2}f(x)dx$:</p>
+                        <div class="tf-row"><div class="tf-content">A. Hàm số $f(x)$ liên tục tại điểm $x=1$.</div><div class="tf-opts"><label><input type="radio" name="q24-a" value="T"> Đ</label><label><input type="radio" name="q24-a" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">B. Có thể tách $I=\int_{0}^{1}2xdx+\int_{1}^{2}(3x^{2}-1)dx$.</div><div class="tf-opts"><label><input type="radio" name="q24-b" value="T"> Đ</label><label><input type="radio" name="q24-b" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">C. Giá trị của tích phân $\int_{0}^{1}f(x)dx$ bằng 1.</div><div class="tf-opts"><label><input type="radio" name="q24-c" value="T"> Đ</label><label><input type="radio" name="q24-c" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">D. Tổng giá trị của tích phân I bằng 6.</div><div class="tf-opts"><label><input type="radio" name="q24-d" value="T"> Đ</label><label><input type="radio" name="q24-d" value="F"> S</label></div></div>
+                    </div>
+                    <div class="question-box q-p2" data-correct="T,F,T,T"><p><b>Câu 25:</b> Xét tích phân chứa dấu giá trị tuyệt đối $I=\int_{0}^{3}|x-1|dx$:</p>
+                        <div class="tf-row"><div class="tf-content">A. Biểu thức $x-1$ đổi dấu tại điểm $x=1$.</div><div class="tf-opts"><label><input type="radio" name="q25-a" value="T"> Đ</label><label><input type="radio" name="q25-a" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">B. Có thể viết $I=\int_{0}^{1}(x-1)dx+\int_{1}^{3}(x-1)dx$.</div><div class="tf-opts"><label><input type="radio" name="q25-b" value="T"> Đ</label><label><input type="radio" name="q25-b" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">C. Giá trị của tích phân $\int_{0}^{1}|x-1|dx$ bằng $1/2$.</div><div class="tf-opts"><label><input type="radio" name="q25-c" value="T"> Đ</label><label><input type="radio" name="q25-c" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">D. Giá trị cuối cùng của tích phân là 2,5</div><div class="tf-opts"><label><input type="radio" name="q25-d" value="T"> Đ</label><label><input type="radio" name="q25-d" value="F"> S</label></div></div>
+                    </div>
+                    <div class="question-box q-p2" data-correct="T,T,T,T"><p><b>Câu 26:</b> Một vật chuyển động với vận tốc $v(t)=3t+2(m/s)$ Gọi $s(t)$ là quãng đường vật đi được (m):</p>
+                        <div class="tf-row"><div class="tf-content">A. Quãng đường vật đi từ giây thứ 1 đến giây thứ 3 là $S=\int_{1}^{3}(3t+2)dt$.</div><div class="tf-opts"><label><input type="radio" name="q26-a" value="T"> Đ</label><label><input type="radio" name="q26-a" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">B. Hàm số quãng đường $s(t)$ chính là một nguyên hàm của hàm vận tốc $v(t)$.</div><div class="tf-opts"><label><input type="radio" name="q26-b" value="T"> Đ</label><label><input type="radio" name="q26-b" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">C. Nếu tại thời điểm ban đầu $s(0)=0$ thì $s(t)=1,5t^{2}+2t$.</div><div class="tf-opts"><label><input type="radio" name="q26-c" value="T"> Đ</label><label><input type="radio" name="q26-c" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">D. Sau 2 giây đầu tiên, vật đi được quãng đường dài 10 m.</div><div class="tf-opts"><label><input type="radio" name="q26-d" value="T"> Đ</label><label><input type="radio" name="q26-d" value="F"> S</label></div></div>
+                    </div>
+                    <div class="question-box q-p2" data-correct="T,T,F,T"><p><b>Câu 27:</b> Cho biết $\int_{0}^{\pi/2}sinxdx=1$ Xét các khẳng định sau:</p>
+                        <div class="tf-row"><div class="tf-content">A. Giá trị của tích phân $\int_{0}^{\pi/2} 4 sin xdx$ bằng 4.</div><div class="tf-opts"><label><input type="radio" name="q27-a" value="T"> Đ</label><label><input type="radio" name="q27-a" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">B. Giá trị của tích phân $\int_{0}^{\pi/2}(sin~x+cos~x)dx$ bằng 2.</div><div class="tf-opts"><label><input type="radio" name="q27-b" value="T"> Đ</label><label><input type="radio" name="q27-b" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">C. Tích phân đảo cận $\int_{\pi/2}^{0} sinxdx$ có giá trị bằng 1.</div><div class="tf-opts"><label><input type="radio" name="q27-c" value="T"> Đ</label><label><input type="radio" name="q27-c" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">D. Tích phân $\int_{0}^{\pi/2}(sin~x-1)dx$ có giá trị bằng $1-\pi/2$.</div><div class="tf-opts"><label><input type="radio" name="q27-d" value="T"> Đ</label><label><input type="radio" name="q27-d" value="F"> S</label></div></div>
+                    </div>
+                    <div class="question-box q-p2" data-correct="T,T,T,F"><p><b>Câu 28:</b> Chi phí biên để sản xuất x sản phẩm là $C^{\prime}(x)=2x+10$ (USD/sản phẩm):</p>
+                        <div class="tf-row"><div class="tf-content">A. Tổng chi phí tăng thêm khi sản xuất từ 10 đến 20 sản phẩm là $\int_{10}^{20}(2x+10)dx$.</div><div class="tf-opts"><label><input type="radio" name="q28-a" value="T"> Đ</label><label><input type="radio" name="q28-a" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">B. Nếu chi phí cố định $C(0)=100$ USD thì hàm tổng chi phí là $C(x)=x^{2}+10x+100$.</div><div class="tf-opts"><label><input type="radio" name="q28-b" value="T"> Đ</label><label><input type="radio" name="q28-b" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">C. Chi phí để sản xuất thêm 10 sản phẩm đầu tiên là 200 USD.</div><div class="tf-opts"><label><input type="radio" name="q28-c" value="T"> Đ</label><label><input type="radio" name="q28-c" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">D. Giá trị tích phân $\int_{0}^{10}C^{\prime}(x)dx$ biểu thị tổng chi phí sản xuất 10 sản phẩm (bao gồm chi phí cố định).</div><div class="tf-opts"><label><input type="radio" name="q28-d" value="T"> Đ</label><label><input type="radio" name="q28-d" value="F"> S</label></div></div>
+                    </div>
+                    <div class="question-box q-p2" data-correct="T,T,T,F"><p><b>Câu 29:</b> Một quần thể vi khuẩn có tốc độ tăng trưởng $P'(t)=100e^{0,5t}$ (con/giờ):</p>
+                        <div class="tf-row"><div class="tf-content">A. Số lượng vi khuẩn tăng thêm sau 2 giờ đầu tiên là $\int_{0}^{2}100e^{0.5t}dt$.</div><div class="tf-opts"><label><input type="radio" name="q29-a" value="T"> Đ</label><label><input type="radio" name="q29-a" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">B. Nếu ban đầu có 500 con thì số lượng sau t giờ là $P(t)=200e^{0,5t}+300$.</div><div class="tf-opts"><label><input type="radio" name="q29-b" value="T"> Đ</label><label><input type="radio" name="q29-b" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">C. Tại thời điểm $t=0$ số lượng vi khuẩn tăng với tốc độ 100 con/giờ.</div><div class="tf-opts"><label><input type="radio" name="q29-c" value="T"> Đ</label><label><input type="radio" name="q29-c" value="F"> S</label></div></div>
+                        <div class="tf-row"><div class="tf-content">D. Giá trị $\int_{0}^{4}P^{\prime}(t)dt$ chính là số lượng vi khuẩn tại thời điểm 4 giờ.</div><div class="tf-opts"><label><input type="radio" name="q29-d" value="T"> Đ</label><label><input type="radio" name="q29-d" value="F"> S</label></div></div>
+                    </div>
+                </div>
+
+                <div class="part-header">PHẦN III. Câu trắc nghiệm trả lời ngắn</div>
+                <div id="p3-container">
+                    <div class="question-box q-p3" data-correct="27"><p><b>Câu 30:</b> Một ô tô đang chạy với vận tốc 18 m/s thì người lái đạp phanh, ô tô chuyển động chậm dần đều với vận tốc $v(t)=-6t+18(m/s)$. Hỏi từ lúc đạp phanh đến khi dừng hẳn, ô tô di chuyển được bao nhiêu mét?</p><input type="text" class="short-ans" placeholder="Nhập đáp án..."></div>
+                    <div class="question-box q-p3" data-correct="18"><p><b>Câu 31:</b> Cho $\int_{1}^{5}f(x)dx=6$ và $\int_{1}^{5}g(x)dx=-2$. Tính giá trị của tích phân $I=\int_{1}^{5}(2f(x)-3g(x))dx$.</p><input type="text" class="short-ans" placeholder="Nhập đáp án..."></div>
+                    <div class="question-box q-p3" data-correct="1"><p><b>Câu 32:</b> Tính giá trị của tích phân $I=\int_{0}^{2}|x^{2}-x|dx$.</p><input type="text" class="short-ans" placeholder="Nhập đáp án..."></div>
+                    <div class="question-box q-p3" data-correct="21"><p><b>Câu 33:</b> Cường độ dòng điện trong một dây dẫn tại thời điểm t là $I(t)=4t+1$ (A). Tính điện lượng (C) truyền qua dây dẫn trong khoảng thời gian từ $t=0$ đến $t=3$ giây.</p><input type="text" class="short-ans" placeholder="Nhập đáp án..."></div>
+                    <div class="question-box q-p3" data-correct="44"><p><b>Câu 34:</b> Tốc độ tăng trưởng chiều cao của một loại cây sau t năm là $h^{\prime}(t)=1,5t+5(cm/n\tilde{a}m)$. Biết cây con khi trồng cao 12 cm. Hỏi sau 4 năm cây cao bao nhiêu centimét?</p><input type="text" class="short-ans" placeholder="Nhập đáp án..."></div>
+                    <div class="question-box q-p3" data-correct="300"><p><b>Câu 35:</b> Lợi nhuận biên của một công ty khi sản xuất x sản phẩm là $P^{\prime}(x)=16-0,02x$ (triệu đồng/đơn vị). Tính tổng lợi nhuận tăng thêm khi sản xuất từ 40 lên 60 đơn vị sản phẩm.</p><input type="text" class="short-ans" placeholder="Nhập đáp án..."></div>
+                    <div class="question-box q-p3" data-correct="25"><p><b>Câu 36:</b> Một vật rơi tự do với vận tốc $v(t)=10t(m/s)$. Tính quãng đường vật rơi được trong giây thứ 3 (tức là từ $t=2$ đến $t=3$).</p><input type="text" class="short-ans" placeholder="Nhập đáp án..."></div>
+                    <div class="question-box q-p3" data-correct="0.64"><p><b>Câu 37:</b> Tính giá trị trung bình của hàm số $f(x)=sin~x$ trên đoạn [0;π] (làm tròn đến hàng phần trăm).</p><input type="text" class="short-ans" placeholder="Nhập đáp án..."></div>
+                    <div class="question-box q-p3" data-correct="2"><p><b>Câu 38:</b> Cho biết tích phân $\int_{0}^{1}(2f(x)-1)dx=3$ Tính giá trị của $K=\int_{0}^{1}f(x)dx$.</p><input type="text" class="short-ans" placeholder="Nhập đáp án..."></div>
+                    <div class="question-box q-p3" data-correct="475"><p><b>Câu 39:</b> Một bình chứa nước bị rỉ với tốc độ $V^{\prime}(t)=100-2t(lit/phit).$ Tính lượng nước đã chảy ra khỏi bình trong 5 phút đầu tiên.</p><input type="text" class="short-ans" placeholder="Nhập đáp án..."></div>
+                    <div class="question-box q-p3" data-correct="7"><p><b>Câu 40:</b> Biết diện tích hình thang cong (phần tô đậm trên hình vẽ) có dạng $S=a+b~ln~3$. Tính $a+b$</p><img src="pic/K12.C3.B2.LT_tichphan_C40.png" alt="Hình câu 40"><input type="text" class="short-ans" placeholder="Nhập đáp án..."></div>
+                </div>
+            </form>
+            <div class="text-center mt-4"><button id="submitBtnBottom" type="button" class="btn btn-success btn-lg fw-bold">NỘP BÀI</button></div>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <div class="result-container">
+            <h1 class="fw-bold mb-4 text-center">KẾT QUẢ BÀI THI</h1>
+            <div class="row align-items-center mb-4">
+                <div class="col-md-5 text-center"><div class="score-display" id="finalScore">0.00</div><div class="text-muted fw-bold">TỔNG ĐIỂM</div></div>
+                <div class="col-md-7 border-start ps-4">
+                    <p><i class="fas fa-user me-2"></i> Học sinh: <span id="resultName" class="fw-bold"></span></p>
+                    <p><i class="fas fa-users me-2"></i> Lớp: <span id="resultClass" class="fw-bold"></span></p>
+                    <p><i class="fas fa-check-circle me-2 text-success"></i> Số câu đúng: <span id="resultCorrect" class="fw-bold"></span></p>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="../index.html" class="btn btn-outline-secondary btn-lg px-4"><i class="fas fa-home me-2"></i>TRANG CHỦ</a>
+                <button id="retryBtn" class="btn btn-outline-primary btn-lg px-4"><i class="fas fa-redo me-2"></i>LÀM LẠI</button>
+                <button id="reviewBtn" class="btn btn-primary btn-lg px-4 shadow"><i class="fas fa-eye me-2"></i>XEM LẠI</button>
+            </div>
+            <div id="reviewArea" class="mt-4"></div>
+        </div>
+    </div>
+
+    <div id="customModal" class="custom-modal">
+        <div class="modal-content-custom">
+            <h5 id="modalTitle" class="fw-bold">Thông báo</h5>
+            <p id="modalMessage" class="mb-4"></p>
+            <div class="d-flex gap-2 justify-content-end">
+                <button id="modalCancel" class="btn btn-secondary">Hủy</button>
+                <button id="modalConfirm" class="btn btn-primary">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+		// CẤU HÌNH TỈ LỆ ĐIỂM (Tổng 10)
+        const SCORE_RATIO = { P1: 3.0, P2: 4.0, P3: 3.0 };
+        
+        const CONFIG = {
+            API: 'https://script.google.com/macros/s/AKfycbwQTV9HhyJ1Dm6vhO46hEXl5oDsEt9LBYNIQOOiIfXq7JAF1kedIs4zdCGQJYUiU7SZ/exec',
+            EXAM_DURATION: 5400,
+            examId: 'de-tich-phan-full'
+        };
+
+        const state = { timeRemaining: CONFIG.EXAM_DURATION, timerInterval: null, isSubmitted: false };
+        const elements = {
+            welcome: document.getElementById('welcome-screen'),
+            exam: document.getElementById('exam-screen'),
+            result: document.getElementById('result-screen'),
+            examForm: document.getElementById('examForm'),
+            timer: document.getElementById('timer'),
+            sName: document.getElementById('sName'),
+            sClass: document.getElementById('sClass'),
+            submitBtnTop: document.getElementById('submitBtnTop'),
+            submitBtnBottom: document.getElementById('submitBtnBottom'),
+            retryBtn: document.getElementById('retryBtn'),
+            reviewBtn: document.getElementById('reviewBtn'),
+            homeBtn: document.getElementById('homeBtn'),
+            modal: document.getElementById('customModal')
+        };
+
+        const utils = {
+            formatTime: (s) => {
+                const m = Math.floor(s / 60), sec = s % 60;
+                return `${m<10?'0':''}${m}:${sec<10?'0':''}${sec}`;
+            },
+            showModal: (title, msg, onConfirm) => {
+                document.getElementById('modalTitle').textContent = title;
+                document.getElementById('modalMessage').textContent = msg;
+                elements.modal.classList.add('show');
+                document.getElementById('modalConfirm').onclick = () => { elements.modal.classList.remove('show'); if(onConfirm) onConfirm(); };
+                document.getElementById('modalCancel').onclick = () => elements.modal.classList.remove('show');
+            }
+        };
+
+        const grading = {
+            // Hàm hiển thị giải thích (giữ nguyên logic hiển thị Đ/S cho phần 2)
+            addExplain: (q, ans) => {
+                // Xóa giải thích cũ nếu có (tránh bị lặp khi nộp nhiều lần - dù logic chặn nộp lại nhưng cứ an toàn)
+                const oldExpl = q.querySelector('.ans-explain');
+                if (oldExpl) oldExpl.remove();
+
+                const div = document.createElement('div');
+                div.className = 'ans-explain';
+                let displayAns = ans;
+                
+                // Nếu là câu hỏi phần 2 (Đúng/Sai), format lại đáp án cho đẹp (A-Đ, B-S...)
+                if (q.classList.contains('q-p2')) {
+                    const map = { 'T': 'Đ', 'F': 'S' };
+                    // Giả sử ans dạng "T,F,T,F" -> convert sang hiển thị
+                    displayAns = ans.split(',').map((val, idx) => {
+                        return `${String.fromCharCode(97 + idx)}-${map[val.trim()] || val}`;
+                    }).join(', ');
+                }
+                
+                div.textContent = 'Đáp án đúng: ' + displayAns;
+                q.appendChild(div);
+            },
+
+            calculate: () => {
+                // 1. ĐẾM SỐ LƯỢNG CÂU HỎI THỰC TẾ TRONG DOM
+                const q1List = document.querySelectorAll('.q-p1');
+                const q2List = document.querySelectorAll('.q-p2');
+                const q3List = document.querySelectorAll('.q-p3');
+
+                // 2. TÍNH TOÁN TRỌNG SỐ ĐIỂM (DYNAMIC)
+                // Phần 1: Tổng 3 điểm chia đều
+                const scorePerQ1 = q1List.length > 0 ? (SCORE_RATIO.P1 / q1List.length) : 0;
+                
+                // Phần 3: Tổng 3 điểm chia đều
+                const scorePerQ3 = q3List.length > 0 ? (SCORE_RATIO.P3 / q3List.length) : 0;
+
+                // Phần 2: Tổng 4 điểm chia đều. 
+                // Mỗi câu phần 2 sẽ có giá trị tối đa là maxScoreP2.
+                const maxScoreP2 = q2List.length > 0 ? (SCORE_RATIO.P2 / q2List.length) : 0;
+                
+                // Ma trận điểm chuẩn của Bộ GD cho 4 ý: [0.1, 0.25, 0.5, 1.0] điểm.
+                // Ta cần tỉ lệ hóa (scale) ma trận này theo maxScoreP2.
+                // Ví dụ: Nếu 1 câu chỉ được tối đa 0.5 điểm (thay vì 1.0), thì các mức điểm con cũng giảm đi một nửa.
+                const scaleFactor = maxScoreP2 / 1.0; 
+                const matrixP2 = [0.1, 0.25, 0.5, 1.0].map(s => s * scaleFactor);
+
+                let total = 0;
+                let correctCount = 0; // Đếm số câu đúng hoàn toàn
+
+                // --- CHẤM PHẦN I ---
+                q1List.forEach(q => {
+                    const ans = q.dataset.correct;
+                    const sel = q.querySelector('input:checked');
+                    if (sel && sel.value === ans) {
+                        total += scorePerQ1;
+                        correctCount++;
+                        q.classList.add('correct-color');
+                        q.classList.remove('wrong-color');
+                    } else {
+                        q.classList.add('wrong-color');
+                        q.classList.remove('correct-color');
+                        grading.addExplain(q, ans);
+                    }
+                });
+
+                // --- CHẤM PHẦN II ---
+                q2List.forEach(q => {
+                    const ansArr = q.dataset.correct.split(','); // Mảng đáp án đúng [T, F, T, F]
+                    let subCorrect = 0; // Số ý đúng trong 1 câu
+
+                    // Duyệt qua 4 dòng (a, b, c, d)
+                    q.querySelectorAll('.tf-row').forEach((row, idx) => {
+                        const sel = row.querySelector('input:checked');
+                        const correctVal = ansArr[idx] ? ansArr[idx].trim() : '';
+                        
+                        // Tô màu dòng
+                        if (sel && sel.value === correctVal) {
+                            subCorrect++;
+                            row.style.backgroundColor = '#d1e7dd'; // Xanh nhạt
+                        } else {
+                            row.style.backgroundColor = '#f8d7da'; // Đỏ nhạt
+                        }
+                    });
+
+                    // Cộng điểm dựa trên số ý đúng (dùng ma trận đã scale)
+                    if (subCorrect > 0) {
+                        total += matrixP2[subCorrect - 1];
+                    }
+
+                    // Nếu đúng cả 4 ý thì tính là 1 câu đúng trọn vẹn
+                    if (subCorrect === 4) {
+                        correctCount++;
+                        q.classList.add('correct-color');
+                    } else {
+                        q.classList.remove('correct-color'); // P2 không tô đỏ cả câu, chỉ tô đỏ dòng
+                        grading.addExplain(q, q.dataset.correct);
+                    }
+                });
+
+                // --- CHẤM PHẦN III ---
+                q3List.forEach(q => {
+                    // Chuẩn hóa đáp án đúng
+                    const ans = q.dataset.correct.trim().toUpperCase();
+                    const inp = q.querySelector('input');
+                    
+                    // Chuẩn hóa câu trả lời HS: Hoa, bỏ khoảng trắng, đổi dấu phẩy thành chấm
+                    const val = inp ? inp.value.trim().toUpperCase().replace(',', '.') : '';
+                    
+                    if (val === ans) {
+                        total += scorePerQ3;
+                        correctCount++;
+                        q.classList.add('correct-color');
+                        q.classList.remove('wrong-color');
+                    } else {
+                        q.classList.add('wrong-color');
+                        q.classList.remove('correct-color');
+                        grading.addExplain(q, ans);
+                    }
+                });
+
+                // Làm tròn tổng điểm (dù logic submit có làm tròn, ở đây trả về raw cũng được, nhưng max là 10)
+                return { 
+                    total: Math.min(total, 10), 
+                    correct: correctCount 
+                };
+            },
+
+            // Hàm Submit đầy đủ logic (không viết tắt)
+            submit: (auto = false) => {
+                if (state.isSubmitted) return;
+
+                const processSubmit = () => {
+                    // 1. Dừng đồng hồ
+                    clearInterval(state.timerInterval);
+                    state.isSubmitted = true;
+
+                    // 2. Tính điểm
+                    const res = grading.calculate();
+                    
+                    // 3. Lấy thông tin học sinh
+                    const sName = elements.sName.value.trim();
+                    const sClass = elements.sClass.value.trim();
+                    const examTitle = document.getElementById('examTitle').innerText;
+                    const scoreStr = res.total.toFixed(2); // Làm tròn 2 chữ số
+
+                    // 4. Gửi về Google Sheet (API)
+                    const form = new FormData();
+                    form.append('name', sName);
+                    form.append('class', sClass);
+                    form.append('test', examTitle);
+                    form.append('score', scoreStr);
+
+                    fetch(CONFIG.API, { method: 'POST', body: form, mode: 'no-cors' })
+                        .then(() => console.log('Submitted to Sheet'))
+                        .catch(e => console.error('Error submitting:', e));
+
+                    // 5. Lưu lịch sử vào LocalStorage
+                    let history = [];
+                    try {
+                        const existing = localStorage.getItem('exam_results');
+                        if (existing) history = JSON.parse(existing);
+                        
+                        history.unshift({
+                            timestamp: new Date().toISOString(),
+                            testName: examTitle,
+                            studentName: sName,
+                            score: scoreStr,
+                            correctAnswers: res.correct
+                        });
+                        // Giới hạn lịch sử 10 bài gần nhất để nhẹ bộ nhớ
+                        if (history.length > 20) history = history.slice(0, 20);
+                        
+                        localStorage.setItem('exam_results', JSON.stringify(history));
+                    } catch (e) { console.error('Storage error:', e); }
+
+                    // 6. Hiển thị màn hình kết quả (DOM manipulation)
+                    document.getElementById('finalScore').textContent = scoreStr;
+                    document.getElementById('resultName').textContent = sName;
+                    document.getElementById('resultClass').textContent = sClass;
+                    document.getElementById('resultCorrect').textContent = res.correct;
+
+                    // Ẩn màn hình thi, hiện màn hình kết quả
+                    elements.exam.style.display = 'none';
+                    elements.result.style.display = 'block';
+                    
+                    // Cuộn lên đầu trang
+                    window.scrollTo(0, 0);
+                };
+
+                if (auto) {
+                    // Tự động nộp khi hết giờ
+                    processSubmit();
+                } else {
+                    // Hỏi xác nhận khi người dùng bấm nút nộp
+                    utils.showModal(
+                        'Nộp bài', 
+                        'Bạn có chắc chắn muốn nộp bài thi không? Sau khi nộp bạn không thể sửa lại.', 
+                        processSubmit
+                    );
+                }
+            }
+        };
+        // --- ĐOẠN CODE Trộn ---
+        const shuffleSystem = {
+            shuffleArray: (array) => { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } },
+            execute: () => {
+                ['#p1-container', '#p2-container', '#p3-container'].forEach(id => {
+                    const container = document.querySelector(id); if (!container) return;
+                    const questions = Array.from(container.children).filter(el => el.classList.contains('question-box'));
+                    if (questions.length === 0) return;
+                    shuffleSystem.shuffleArray(questions);
+                    questions.forEach(q => container.appendChild(q));
+                });
+                let count = 1;
+                document.querySelectorAll('.question-box').forEach((q) => {
+                    const label = q.querySelector('b, strong');
+                    if (label && label.textContent.match(/^Câu\s*\d+[:.]?/i)) label.textContent = `Câu ${count}:`;
+                    count++;
+                });
+            }
+        };
+
+        const handlers = {
+            goHome: () => {
+                if(state.isSubmitted) window.location.href = '../index.html';
+                else utils.showModal('Xác nhận', 'Chưa nộp bài. Quay về trang chủ sẽ mất kết quả. Tiếp tục?', () => window.location.href = '../index.html');
+            },
+            start: () => {
+                const n = elements.sName.value.trim(), c = elements.sClass.value.trim();
+                if(!n || !c) return utils.showModal('Thiếu thông tin', 'Vui lòng nhập tên và lớp!');
+                shuffleSystem.execute();
+                document.getElementById('displayName').textContent = `${n} - ${c}`;
+                elements.welcome.style.display = 'none'; elements.exam.style.display = 'block';
+                state.timerInterval = setInterval(() => {
+                    state.timeRemaining--; elements.timer.textContent = utils.formatTime(state.timeRemaining);
+                    if(state.timeRemaining < 300) elements.timer.classList.add('warning');
+                    if(state.timeRemaining <= 0) grading.submit(true);
+                }, 1000);
+            },
+            review: () => {
+                const clone = elements.examForm.cloneNode(true);
+                clone.querySelectorAll('input').forEach(i => i.disabled = true);
+                const area = document.getElementById('reviewArea');
+                area.innerHTML = '<hr><h4 class="mb-3 text-primary">CHI TIẾT BÀI LÀM</h4>';
+                area.appendChild(clone); MathJax.typeset();
+                document.getElementById('reviewBtn').style.display = 'none';
+            }
+        };
+
+        document.getElementById('startBtn').onclick = handlers.start;
+        elements.submitBtnTop.onclick = () => grading.submit();
+        elements.submitBtnBottom.onclick = () => grading.submit();
+        elements.retryBtn.onclick = () => location.reload();
+        elements.reviewBtn.onclick = handlers.review;
+        elements.homeBtn.onclick = handlers.goHome;
+        window.onbeforeunload = () => state.isSubmitted ? null : "Đang làm bài...";
+    })();
+    </script>
+</body>
+</html>

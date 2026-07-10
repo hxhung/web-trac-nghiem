@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hệ thống thi trực tuyến GDPT 2018">
+    <title>Đề 1: Ôn tập giữa HK2 | Web trắc nghiệm Toán THPT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        :root { --primary: #0d6efd; --secondary: #6c757d; --success: #198754; --danger: #dc3545; --warning: #ffc107; --bg-p1: #e3f2fd; --border-p1: #1976d2; --bg-p2: #fff9e6; --border-p2: #f9a825; --bg-p3: #e8f5e9; --border-p3: #43a047; --exam-bg: #f5f5f5; }
+        * { box-sizing: border-box; }
+        body { background: var(--exam-bg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; }
+        #welcome-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), #0a58ca); padding: 20px; }
+        .welcome-card { background: #fff; width: 100%; max-width: 500px; padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        #exam-screen, #result-screen { display: none; }
+        .exam-container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .exam-header { background: var(--primary); color: #fff; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .timer { font-size: 1.5rem; font-weight: bold; }
+        .timer.warning { color: var(--warning); animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+        .part-header { background: #343a40; color: #fff; padding: 12px 20px; border-radius: 8px; margin: 25px 0 15px; font-weight: bold; font-size: 1.1rem; }
+        .question-box { background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid var(--primary); }
+        .q-p1 { border-left-color: var(--border-p1); background: var(--bg-p1); }
+        .q-p2 { border-left-color: var(--border-p2); background: var(--bg-p2); }
+        .q-p3 { border-left-color: var(--border-p3); background: var(--bg-p3); }
+        .correct-color { border-left-color: var(--success) !important; }
+        .wrong-color { border-left-color: var(--danger) !important; }
+        .ans-explain { margin-top: 10px; padding: 8px 12px; background: #fff3cd; border-radius: 6px; font-weight: bold; color: #856404; }
+        .option-label { display: block; padding: 8px 12px; margin: 5px 0; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+        .option-label:hover { background: rgba(0,0,0,0.05); }
+        .tf-row { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .tf-row span { flex: 1; }
+        .tf-row label { white-space: nowrap; margin-left: 12px; }
+        .short-ans { width: 100%; max-width: 250px; padding: 8px 12px; border: 2px solid #ced4da; border-radius: 6px; font-size: 1rem; margin-top: 10px; }
+        .result-container { max-width: 700px; margin: 40px auto; padding: 30px; background: #fff; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .score-display { font-size: 4rem; font-weight: bold; color: var(--primary); }
+        .custom-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
+        .custom-modal.show { display: flex; }
+        .modal-content-custom { background: #fff; padding: 30px; border-radius: 12px; max-width: 400px; width: 90%; }
+    </style>
+</head>
+<body>
+
+<div id="welcome-screen">
+    <div class="welcome-card">
+        <h2 class="fw-bold text-primary mb-1" id="examTitle">Ôn tập giữa HK2 - Đề 1</h2>
+        <p class="text-muted mb-4"><span id="examDuration">90</span> phút | 22 câu | 10 điểm</p>
+        <div class="mb-3 text-start">
+            <label class="form-label fw-bold">Họ và tên</label>
+            <input type="text" id="sName" class="form-control" placeholder="Nhập họ và tên...">
+        </div>
+        <div class="mb-4 text-start">
+            <label class="form-label fw-bold">Lớp</label>
+            <input type="text" id="sClass" class="form-control" placeholder="Nhập lớp...">
+        </div>
+        <button id="startBtn" class="btn btn-primary btn-lg w-100 fw-bold">BẮT ĐẦU THI →</button>
+    </div>
+</div>
+
+<div id="exam-screen">
+    <div class="exam-container">
+        <div class="exam-header">
+            <div>
+                <div class="fw-bold fs-5" id="displayName"></div>
+                <div class="small opacity-75">Web trắc nghiệm Toán THPT</div>
+            </div>
+            <div class="text-center">
+                <div class="small opacity-75">Thời gian còn lại</div>
+                <div class="timer" id="timer">90:00</div>
+            </div>
+            <button id="submitBtnTop" class="btn btn-warning fw-bold">NỘP BÀI</button>
+        </div>
+        <form id="examForm">
+            <div class="part-header">PHẦN I. Trắc nghiệm nhiều phương án lựa chọn (12 câu)</div>
+            <div id="p1-container">
+                <!-- Câu 1 -->
+                <div class="question-box q-p1" data-correct="D">
+                    <p><b>Câu 1:</b> Cho hàm số $y = f(x)$ là hàm số liên tục trên $[a;b]$. Đẳng thức nào sau đây sai?</p>
+                    <label class="option-label"><input type="radio" name="q1" value="A"> A. $\int_a^b k dx = k(b-a), \forall k \in \mathbb{R} \setminus \{0\}$.</label>
+                    <label class="option-label"><input type="radio" name="q1" value="B"> B. $\int_a^b f(x) dx = \int_a^c f(x) dx + \int_c^b f(x) dx, (a < c < b)$.</label>
+                    <label class="option-label"><input type="radio" name="q1" value="C"> C. $\int_a^b f(x) dx = -\int_b^a f(x) dx$.</label>
+                    <label class="option-label"><input type="radio" name="q1" value="D"> D. $\int_a^b f(x) dx = \int_b^a f(x) dx$.</label>
+                </div>
+                <!-- Câu 2 -->
+                <div class="question-box q-p1" data-correct="B">
+                    <p><b>Câu 2:</b> Trong các mệnh đề sau, mệnh đề nào sai?</p>
+                    <label class="option-label"><input type="radio" name="q2" value="A"> A. $\int kf(x) dx = k\int f(x) dx (k \neq 0)$.</label>
+                    <label class="option-label"><input type="radio" name="q2" value="B"> B. $\int \frac{f(x)}{g(x)} dx = \frac{\int f(x) dx}{\int g(x) dx}$.</label>
+                    <label class="option-label"><input type="radio" name="q2" value="C"> C. $\int f'(x) dx = f(x) + C$.</label>
+                    <label class="option-label"><input type="radio" name="q2" value="D"> D. $\int [f(x) + g(x)] dx = \int f(x) dx + \int g(x) dx$.</label>
+                </div>
+                <!-- Câu 3 -->
+                <div class="question-box q-p1" data-correct="C">
+                    <p><b>Câu 3:</b> Viết phương trình mặt phẳng $(P)$ đi qua điểm $M(1;-2;3)$ và có véc tơ pháp tuyến $\vec{n}=(1;2;-3)$.</p>
+                    <label class="option-label"><input type="radio" name="q3" value="A"> A. $x - 2y + 3z + 12 = 0$.</label>
+                    <label class="option-label"><input type="radio" name="q3" value="B"> B. $x - 2y + 3z + 11 = 0$.</label>
+                    <label class="option-label"><input type="radio" name="q3" value="C"> C. $x + 2y - 3z + 12 = 0$.</label>
+                    <label class="option-label"><input type="radio" name="q3" value="D"> D. $x + 2y - 3z + 11 = 0$.</label>
+                </div>
+                <!-- Câu 4 -->
+                <div class="question-box q-p1" data-correct="D">
+                    <p><b>Câu 4:</b> Diện tích hình phẳng được giới hạn bởi đồ thị $y = x^2$, trục hoành và hai đường thẳng $x = 0$, $x = 3$ bằng:</p>
+                    <label class="option-label"><input type="radio" name="q4" value="A"> A. $10$.</label>
+                    <label class="option-label"><input type="radio" name="q4" value="B"> B. $11$.</label>
+                    <label class="option-label"><input type="radio" name="q4" value="C"> C. $8$.</label>
+                    <label class="option-label"><input type="radio" name="q4" value="D"> D. $9$.</label>
+                </div>
+                <!-- Câu 5 -->
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 5:</b> Họ nguyên hàm của hàm số $f(x) = 2^{2x} \cdot 3^x \cdot 7^x$ là:</p>
+                    <label class="option-label"><input type="radio" name="q5" value="A"> A. $\frac{84^x}{\ln 84} + C$.</label>
+                    <label class="option-label"><input type="radio" name="q5" value="B"> B. $84^x \ln 84 + C$.</label>
+                    <label class="option-label"><input type="radio" name="q5" value="C"> C. $42^x \ln 42 + C$.</label>
+                    <label class="option-label"><input type="radio" name="q5" value="D"> D. $\frac{42^x}{\ln 42} + C$.</label>
+                </div>
+                <!-- Câu 6 -->
+                <div class="question-box q-p1" data-correct="B">
+                    <p><b>Câu 6:</b> Cho hàm số $f(x) = 3x^2 + \frac{1}{x} (x \neq 0)$. Khi đó $\int f(x) dx$ bằng:</p>
+                    <label class="option-label"><input type="radio" name="q6" value="A"> A. $3x^3 + \ln x + C$.</label>
+                    <label class="option-label"><input type="radio" name="q6" value="B"> B. $x^3 + \ln |x| + C$.</label>
+                    <label class="option-label"><input type="radio" name="q6" value="C"> C. $3x^3 + \ln |x| + C$.</label>
+                    <label class="option-label"><input type="radio" name="q6" value="D"> D. $x^3 + \ln x + C$.</label>
+                </div>
+                <!-- Câu 7 -->
+                <div class="question-box q-p1" data-correct="D">
+                    <p><b>Câu 7:</b> Trong không gian $Oxyz$, cho hai điểm $A(4;0;-1), B(2;2;3)$. Phương trình mặt phẳng trung trực của đoạn $AB$ là:</p>
+                    <label class="option-label"><input type="radio" name="q7" value="A"> A. $-x + y + 2z + 2 = 0$.</label>
+                    <label class="option-label"><input type="radio" name="q7" value="B"> B. $-x + y + 2z - 1 = 0$.</label>
+                    <label class="option-label"><input type="radio" name="q7" value="C"> C. $-x + y + 2z = 0$.</label>
+                    <label class="option-label"><input type="radio" name="q7" value="D"> D. $-x + y + 2z + 1 = 0$.</label>
+                </div>
+                <!-- Câu 8 -->
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 8:</b> Cho số thực $C \in \mathbb{R}$. Trong các công thức sau, công thức nào sai?</p>
+                    <label class="option-label"><input type="radio" name="q8" value="A"> A. $\int \sin x dx = \cos x + C$.</label>
+                    <label class="option-label"><input type="radio" name="q8" value="B"> B. $\int \cos x dx = \sin x + C$.</label>
+                    <label class="option-label"><input type="radio" name="q8" value="C"> C. $\int dx = x + C$.</label>
+                    <label class="option-label"><input type="radio" name="q8" value="D"> D. $\int x^\alpha dx = \frac{x^{\alpha+1}}{\alpha+1} + C (\alpha \neq -1)$.</label>
+                </div>
+                <!-- Câu 9 -->
+                <div class="question-box q-p1" data-correct="B">
+                    <p><b>Câu 9:</b> Tìm số thực $m$ biết $\int_0^m (2x-7) dx = -12$.</p>
+                    <label class="option-label"><input type="radio" name="q9" value="A"> A. $m = -3, m = 4$.</label>
+                    <label class="option-label"><input type="radio" name="q9" value="B"> B. $m = 3, m = 4$.</label>
+                    <label class="option-label"><input type="radio" name="q9" value="C"> C. $m = -3, m = -4$.</label>
+                    <label class="option-label"><input type="radio" name="q9" value="D"> D. $m = 3, m = -4$.</label>
+                </div>
+                <!-- Câu 10 -->
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 10:</b> Cho $f'(x) = 3 - 5 \cos x$ và $f(0) = 10$. Mệnh đề nào sau đây đúng?</p>
+                    <label class="option-label"><input type="radio" name="q10" value="A"> A. $f(x) = 3x - 5 \sin x + 10$.</label>
+                    <label class="option-label"><input type="radio" name="q10" value="B"> B. $f(x) = 3 - 5 \cos x + 12$.</label>
+                    <label class="option-label"><input type="radio" name="q10" value="C"> C. $f(x) = 3x + 5 \sin x + 10$.</label>
+                    <label class="option-label"><input type="radio" name="q10" value="D"> D. $f(x) = 3 + 5 \cos x + 2$.</label>
+                </div>
+                <!-- Câu 11 -->
+                <div class="question-box q-p1" data-correct="D">
+                    <p><b>Câu 11:</b> Nếu $f(4) = 19$ và $\int_1^4 f'(x) dx = 10$. Giá trị của $f(1)$ bằng:</p>
+                    <label class="option-label"><input type="radio" name="q11" value="A"> A. $29$.</label>
+                    <label class="option-label"><input type="radio" name="q11" value="B"> B. $1$.</label>
+                    <label class="option-label"><input type="radio" name="q11" value="C"> C. $-9$.</label>
+                    <label class="option-label"><input type="radio" name="q11" value="D"> D. $9$.</label>
+                </div>
+                <!-- Câu 12 -->
+                <div class="question-box q-p1" data-correct="C">
+                    <p><b>Câu 12:</b> Cho $F(x)$ là một nguyên hàm của $f(x)$ trên đoạn $[a;b]$ thì:</p>
+                    <label class="option-label"><input type="radio" name="q12" value="A"> A. $\int_a^b f(x) dx = F(a) - F(b)$.</label>
+                    <label class="option-label"><input type="radio" name="q12" value="B"> B. $\int_a^b f(x) dx = F(a) \cdot F(b)$.</label>
+                    <label class="option-label"><input type="radio" name="q12" value="C"> C. $\int_a^b f(x) dx = F(b) - F(a)$.</label>
+                    <label class="option-label"><input type="radio" name="q12" value="D"> D. $\int_a^b f(x) dx = F(a) + F(b)$.</label>
+                </div>
+            </div>
+
+            <div class="part-header">PHẦN II. Trắc nghiệm đúng sai (4 câu)</div>
+            <div id="p2-container">
+                <!-- Câu 13 -->
+                <div class="question-box q-p2" data-correct="T,T,T,T">
+                    <p><b>Câu 13:</b> Trong không gian $Oxyz$, mặt phẳng $(P)$ cắt các trục $Ox, Oy, Oz$ lần lượt tại $A(2;0;0), B(0;3;0), C(0;0;4)$.</p>
+                    <div class="tf-row"><span>a) Mặt phẳng $(P)$ có phương trình: $\frac{x}{2} + \frac{y}{3} + \frac{z}{4} = 1$.</span>
+                        <label><input type="radio" name="q13-a" value="T"> Đúng</label><label><input type="radio" name="q13-a" value="F"> Sai</label></div>
+                    <div class="tf-row"><span>b) Mặt phẳng qua $M(1;0;1)$ song song $(P)$ có PT: $6x + 4y + 3z - 9 = 0$.</span>
+                        <label><input type="radio" name="q13-b" value="T"> Đúng</label><label><input type="radio" name="q13-b" value="F"> Sai</label></div>
+                    <div class="tf-row"><span>c) Mặt phẳng $(ABC)$ có phương trình tổng quát là $6x + 4y + 3z - 12 = 0$.</span>
+                        <label><input type="radio" name="q13-c" value="T"> Đúng</label><label><input type="radio" name="q13-c" value="F"> Sai</label></div>
+                    <div class="tf-row"><span>d) Khoảng cách từ $O$ đến mặt phẳng $(P)$ bằng $\frac{12}{\sqrt{61}}$.</span>
+                        <label><input type="radio" name="q13-d" value="T"> Đúng</label><label><input type="radio" name="q13-d" value="F"> Sai</label></div>
+                </div>
+                <!-- Câu 14 -->
+                <div class="question-box q-p2" data-correct="T,T,T,T">
+                    <p><b>Câu 14:</b> Cho mặt phẳng $(P)$ đi qua $A(0;2;1)$ và song song với giá của $\vec{u}=(2;0;4), \vec{v}=(2;3;1)$.</p>
+                    <div class="tf-row"><span>a) $(P)$ có một vectơ pháp tuyến là $\vec{n}=(2;-1;-1)$.</span>
+                        <label><input type="radio" name="q14-a" value="T"> Đúng</label><label><input type="radio" name="q14-a" value="F"> Sai</label></div>
+                    <div class="tf-row"><span>b) Phương trình mặt phẳng $(P): 2x - y - z + 3 = 0$.</span>
+                        <label><input type="radio" name="q14-b" value="T"> Đúng</label><label><input type="radio" name="q14-b" value="F"> Sai</label></div>
+                    <div class="tf-row"><span>c) Mặt phẳng qua $M(1;1;1)$ song song $(P)$ là $2x - y - z = 0$.</span>
+                        <label><input type="radio" name="q14-c" value="T"> Đúng</label><label><input type="radio" name="q14-c" value="F"> Sai</label></div>
+                    <div class="tf-row"><span>d) Góc giữa $(P)$ và $(Oxy)$ có $\cos \alpha = \frac{1}{\sqrt{6}}$.</span>
+                        <label><input type="radio" name="q14-d" value="T"> Đúng</label><label><input type="radio" name="q14-d" value="F"> Sai</label></div>
+                </div>
+                <!-- Câu 15 -->
+                <div class="question-box q-p2" data-correct="T,F,F,T">
+                    <p><b>Câu 15:</b> Cho hàm số $f(x) = x^2 + 2x$.</p>
+                    <div class="tf-row"><span>a) $\int f(x) dx = \frac{x^3}{3} + x^2 + C$.</span>
+                        <label><input type="radio" name="q15-a" value="T"> Đúng</label><label><input type="radio" name="q15-a" value="F"> Sai</label></div>
+                    <div class="tf-row"><span>b) $\int_0^1 (x^2 + 2x) dx = \frac{2}{3}$.</span>
+                        <label><input type="radio" name="q15-b" value="T"> Đúng</label><label><input type="radio" name="q15-b" value="F"> Sai</label></div>
+                    <div class="tf-row"><span>c) Diện tích giới hạn bởi $y=f(x), Ox, x=0, x=2$ bằng $\frac{10}{3}$.</span>
+                        <label><input type="radio" name="q15-c" value="T"> Đúng</label><label><input type="radio" name="q15-c" value="F"> Sai</label></div>
+                    <div class="tf-row"><span>d) Quay hình phẳng giới hạn bởi $y=f(x), Ox, x=0, x=1$ quanh $Ox$ có $V = \frac{38}{15}\pi$.</span>
+                        <label><input type="radio" name="q15-d" value="T"> Đúng</label><label><input type="radio" name="q15-d" value="F"> Sai</label></div>
+                </div>
+                <!-- Câu 16 -->
+                <div class="question-box q-p2" data-correct="T,T,T,F">
+                    <p><b>Câu 16:</b> Vật chuyển động có gia tốc $a(t) = 3t^2 + 2 (m/s^2)$, vận tốc đầu là $5 m/s$.</p>
+                    <div class="tf-row"><span>a) $v(t) = \int a(t) dt$.</span>
+                        <label><input type="radio" name="q16-a" value="T"> Đúng</label><label><input type="radio" name="q16-a" value="F"> Sai</label></div>
+                    <div class="tf-row"><span>b) $v(t) = t^3 + 2t + 5$.</span>
+                        <label><input type="radio" name="q16-b" value="T"> Đúng</label><label><input type="radio" name="q16-b" value="F"> Sai</label></div>
+                    <div class="tf-row"><span>c) Vận tốc tại $t = 4(s)$ là $77 m/s$.</span>
+                        <label><input type="radio" name="q16-c" value="T"> Đúng</label><label><input type="radio" name="q16-c" value="F"> Sai</label></div>
+                    <div class="tf-row"><span>d) Quãng đường vật đi được trong 4 giây đầu là 99m.</span>
+                        <label><input type="radio" name="q16-d" value="T"> Đúng</label><label><input type="radio" name="q16-d" value="F"> Sai</label></div>
+                </div>
+            </div>
+
+            <div class="part-header">PHẦN III. Trắc nghiệm trả lời ngắn (6 câu)</div>
+            <div id="p3-container">
+                <div class="question-box q-p3" data-correct="6">
+                    <p><b>Câu 17:</b> Biết $\int_1^2 \left( 1 + \frac{3}{x} \right) dx = a + b \ln c$ ($a,b,c \in \mathbb{Z}, c < 7$). Tính $S = a + b + c$.</p>
+                    <input type="text" id="q17-input" class="short-ans" placeholder="Nhập đáp án...">
+                </div>
+                <div class="question-box q-p3" data-correct="27">
+                    <p><b>Câu 18:</b> Một vật chuyển động trong 4 giờ với vận tốc $v (km/h)$ phụ thuộc thời gian $t (h)$ có đồ thị của vận tốc như hình dưới. Trong khoảng thời gian 3 giờ kể từ khi bắt đầu chuyển động, đồ thị đó là một phần của đường parabol có đỉnh $I(2;9)$ và trục đối xứng song song với trục tung, khoảng thời gian còn lại đồ thị là một đoạn thẳng song song với trục hoành. Tính quãng đường $s (km)$ mà vật di chuyển được trong 4 giờ đó.</p>
+					<div class="exam-image-container">
+					<img src="pic/on_giua_hk2_de_1_cau_18.png" alt="Đồ thị vận tốc câu 18" class="exam-img">
+					<p class="img-caption"><i>Hình 1. Đồ thị vận tốc v(t) của vật chuyển động</i></p>
+					</div>
+                    <input type="text" id="q18-input" class="short-ans" placeholder="Nhập đáp án...">
+                </div>
+                <div class="question-box q-p3" data-correct="0">
+                    <p><b>Câu 19:</b> Cho $A(6;4;3)$. Mặt phẳng $(\alpha)$ qua $A$ và chứa trục $Ox$ có dạng $ax + by + cz = 0$. Tính $P = 4b + 3c$.</p>
+                    <input type="text" id="q19-input" class="short-ans" placeholder="Nhập đáp án...">
+                </div>
+                <div class="question-box q-p3" data-correct="3">
+                    <p><b>Câu 20:</b> Tìm $n$ để $(\alpha): 2x + 6y + 3z + 5 = 0$ song song $(\beta): x + 3y + \frac{n}{2}z - 1 = 0$.</p>
+                    <input type="text" id="q20-input" class="short-ans" placeholder="Nhập đáp án...">
+                </div>
+                <div class="question-box q-p3" data-correct="10.3">
+                    <p><b>Câu 21:</b> Cho $f(x) = (x^2 - 2)(2x + 1)$. Biết $F(2) = 9$, tính $F(0)$ (làm tròn đến hàng phần chục).</p>
+                    <input type="text" id="q21-input" class="short-ans" placeholder="Nhập đáp án...">
+                </div>
+                <div class="question-box q-p3" data-correct="9">
+                    <p><b>Câu 22:</b> Cho $f(x) = \sin x$. Biết $F(\pi/2) = 10$, tính $F(0)$.</p>
+                    <input type="text" id="q22-input" class="short-ans" placeholder="Nhập đáp án...">
+                </div>
+            </div>
+        </form>
+        <div class="text-center mt-4">
+            <button id="submitBtnBottom" class="btn btn-success btn-lg fw-bold px-5">NỘP BÀI</button>
+        </div>
+    </div>
+</div>
+
+<div id="result-screen">
+    <div class="result-container text-center">
+        <h1 class="fw-bold mb-4">KẾT QUẢ BÀI THI</h1>
+        <div class="score-display mb-2" id="finalScore">0.00</div>
+        <div class="text-muted fw-bold mb-4">TỔNG ĐIỂM</div>
+        <div class="text-start mb-4 p-3 border rounded bg-light">
+            <p><i class="fas fa-user me-2"></i> Học sinh: <span id="resultName" class="fw-bold"></span></p>
+            <p><i class="fas fa-users me-2"></i> Lớp: <span id="resultClass" class="fw-bold"></span></p>
+            <p><i class="fas fa-check-circle me-2 text-success"></i> Số câu đúng: <span id="resultCorrect" class="fw-bold"></span></p>
+        </div>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="../index.html" class="btn btn-outline-secondary btn-lg px-4"><i class="fas fa-home me-2"></i>TRANG CHỦ</a>
+            <button id="retryBtn" class="btn btn-outline-primary btn-lg px-4"><i class="fas fa-redo me-2"></i>LÀM LẠI</button>
+            <button id="reviewBtn" class="btn btn-primary btn-lg px-4 shadow"><i class="fas fa-eye me-2"></i>XEM LẠI</button>
+        </div>
+        <div id="reviewArea" class="mt-4"></div>
+    </div>
+</div>
+
+<div id="customModal" class="custom-modal"><div class="modal-content-custom"><h5 id="modalTitle" class="fw-bold"></h5><p id="modalMessage" class="mb-4"></p><div class="d-flex gap-2 justify-content-end"><button id="modalCancel" class="btn btn-secondary">Hủy</button><button id="modalConfirm" class="btn btn-primary">Xác nhận</button></div></div></div>
+
+<script>
+(function() {
+    const SCORE_RATIO = { P1: 3.0, P2: 4.0, P3: 3.0 };
+    const CONFIG = {
+        API: 'https://script.google.com/macros/s/AKfycbwQTV9HhyJ1Dm6vhO46hEXl5oDsEt9LBYNIQOOiIfXq7JAF1kedIs4zdCGQJYUiU7SZ/exec',
+        EXAM_DURATION: 5400,
+        examId: 'K12-GHK2-de-1'
+    };
+    const state = { timeRemaining: CONFIG.EXAM_DURATION, timerInterval: null, isSubmitted: false };
+    const elements = {
+        welcome: document.getElementById('welcome-screen'), exam: document.getElementById('exam-screen'), result: document.getElementById('result-screen'),
+        timer: document.getElementById('timer'), sName: document.getElementById('sName'), sClass: document.getElementById('sClass'),
+        submitBtnTop: document.getElementById('submitBtnTop'), submitBtnBottom: document.getElementById('submitBtnBottom'),
+        retryBtn: document.getElementById('retryBtn'), reviewBtn: document.getElementById('reviewBtn'), modal: document.getElementById('customModal')
+    };
+    const utils = {
+        formatTime: (s) => { const m = Math.floor(s/60), sec = s%60; return `${m<10?'0':''}${m}:${sec<10?'0':''}${sec}`; },
+        showModal: (title, msg, onConfirm) => {
+            document.getElementById('modalTitle').textContent = title; document.getElementById('modalMessage').textContent = msg;
+            elements.modal.classList.add('show');
+            document.getElementById('modalConfirm').onclick = () => { elements.modal.classList.remove('show'); if(onConfirm) onConfirm(); };
+            document.getElementById('modalCancel').onclick = () => elements.modal.classList.remove('show');
+        }
+    };
+    const grading = {
+        addExplain: (q, ans) => {
+            const old = q.querySelector('.ans-explain'); if(old) old.remove();
+            const div = document.createElement('div'); div.className = 'ans-explain';
+            let display = ans;
+            if(q.classList.contains('q-p2')) {
+                const map = {'T':'Đ', 'F':'S'};
+                display = ans.split(',').map((v, i) => `${String.fromCharCode(97+i)}-${map[v.trim()]}`).join(', ');
+            }
+            div.textContent = 'Đáp án đúng: ' + display; q.appendChild(div);
+        },
+        calculate: () => {
+            const q1 = document.querySelectorAll('.q-p1'), q2 = document.querySelectorAll('.q-p2'), q3 = document.querySelectorAll('.q-p3');
+            const s1 = 3.0/12, s3 = 3.0/6, m2 = [0.4, 1.0, 2.0, 4.0].map(v => v * (4.0/4.0/4.0)); // Logic matrix P2
+            let total = 0, correct = 0;
+            q1.forEach(q => {
+                const ans = q.dataset.correct, sel = q.querySelector('input:checked');
+                if(sel && sel.value === ans) { total += s1; correct++; q.classList.add('correct-color'); }
+                else { q.classList.add('wrong-color'); grading.addExplain(q, ans); }
+            });
+            q2.forEach(q => {
+                const ans = q.dataset.correct.split(','), rows = q.querySelectorAll('.tf-row'); let sub = 0;
+                rows.forEach((r, i) => {
+                    const sel = r.querySelector('input:checked');
+                    if(sel && sel.value === ans[i].trim()) { sub++; r.style.backgroundColor = '#d1e7dd'; }
+                    else r.style.backgroundColor = '#f8d7da';
+                });
+                const matrix = [0.1, 0.25, 0.5, 1.0]; if(sub>0) total += matrix[sub-1];
+                if(sub===4) { correct++; q.classList.add('correct-color'); }
+                else grading.addExplain(q, q.dataset.correct);
+            });
+            q3.forEach(q => {
+                const ans = q.dataset.correct.trim().toUpperCase(), val = q.querySelector('input').value.trim().toUpperCase().replace(',','.');
+                if(val === ans) { total += s3; correct++; q.classList.add('correct-color'); }
+                else { q.classList.add('wrong-color'); grading.addExplain(q, ans); }
+            });
+            return { total: Math.min(total, 10), correct };
+        },
+        submit: (auto = false) => {
+            if(state.isSubmitted) return;
+            const process = () => {
+                clearInterval(state.timerInterval); state.isSubmitted = true;
+                const res = grading.calculate();
+                const sName = elements.sName.value.trim(), sClass = elements.sClass.value.trim(), examT = document.getElementById('examTitle').innerText;
+                const scoreStr = res.total.toFixed(2);
+                const fd = new FormData(); fd.append('name', sName); fd.append('class', sClass); fd.append('test', examT); fd.append('score', scoreStr);
+                fetch(CONFIG.API, { method: 'POST', body: fd, mode: 'no-cors' });
+                let hist = JSON.parse(localStorage.getItem('exam_results') || '[]');
+                hist.unshift({ timestamp: new Date().toISOString(), testName: examT, studentName: sName, score: scoreStr, correctAnswers: res.correct });
+                localStorage.setItem('exam_results', JSON.stringify(hist.slice(0,20)));
+                document.getElementById('finalScore').textContent = scoreStr;
+                document.getElementById('resultName').textContent = sName; document.getElementById('resultClass').textContent = sClass; document.getElementById('resultCorrect').textContent = res.correct;
+                elements.exam.style.display = 'none'; elements.result.style.display = 'block'; window.scrollTo(0,0);
+            };
+            if(auto) process(); else utils.showModal('Nộp bài', 'Xác nhận nộp bài thi?', process);
+        }
+    };
+    const handlers = {
+        start: () => {
+            if(!elements.sName.value.trim() || !elements.sClass.value.trim()) return utils.showModal('Thiếu thông tin', 'Nhập tên và lớp!');
+            document.getElementById('displayName').textContent = `${elements.sName.value} - ${elements.sClass.value}`;
+            elements.welcome.style.display = 'none'; elements.exam.style.display = 'block';
+            state.timerInterval = setInterval(() => {
+                state.timeRemaining--; elements.timer.textContent = utils.formatTime(state.timeRemaining);
+                if(state.timeRemaining <= 0) grading.submit(true);
+                if(state.timeRemaining < 300) elements.timer.classList.add('warning');
+            }, 1000);
+        },
+        review: () => {
+            const clone = document.getElementById('examForm').cloneNode(true);
+            clone.querySelectorAll('input').forEach(i => i.disabled = true);
+            const area = document.getElementById('reviewArea'); area.innerHTML = '<hr><h4 class="text-primary mb-3">CHI TIẾT BÀI LÀM</h4>'; area.appendChild(clone);
+            MathJax.typeset(); document.getElementById('reviewBtn').style.display = 'none';
+        }
+    };
+    document.getElementById('startBtn').onclick = handlers.start;
+    elements.submitBtnTop.onclick = () => grading.submit();
+    elements.submitBtnBottom.onclick = () => grading.submit();
+    document.getElementById('retryBtn').onclick = () => location.reload();
+    elements.reviewBtn.onclick = handlers.review;
+    window.onbeforeunload = () => state.isSubmitted ? null : "Dữ liệu sẽ bị mất!";
+})();
+</script>
+</body>
+</html>

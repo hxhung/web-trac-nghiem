@@ -1,0 +1,8 @@
+CẬP NHẬT PHIÊN BẢN
+Ver 1.3 - 10/01/2026
+      - Nâng cấp phần thống kê
+      - Fix một số lỗi
+Ver 1.4 - 14/01/2026
+      - Xóa cache khi cập nhật      
+Ver 2.1 - 21/01/2026
+      - Chia nhóm accordion cho các đề

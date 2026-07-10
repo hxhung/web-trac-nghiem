@@ -1,0 +1,785 @@
+<! --- DÙNG PROMPT 7.9.2 --->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hệ thống thi trực tuyến GDPT 2018">
+    <title>Thi thử THPT 2026 - Lần 1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        :root { --primary: #0d6efd; --secondary: #6c757d; --success: #198754; --danger: #dc3545; --warning: #ffc107; --bg-p1: #e3f2fd; --border-p1: #1976d2; --bg-p2: #fff9e6; --border-p2: #f9a825; --bg-p3: #e8f5e9; --border-p3: #43a047; --exam-bg: #f5f5f5; }
+        * { box-sizing: border-box; }
+        body { background: var(--exam-bg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; }
+        #welcome-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), #0a58ca); padding: 20px; }
+        .welcome-card { background: #fff; width: 100%; max-width: 500px; padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeIn 0.5s ease-in; }
+        #exam-screen { display: none; padding-bottom: 60px; background: var(--exam-bg); min-height: 100vh; }
+        .sticky-header { position: sticky; top: 0; z-index: 1020; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 12px 15px; margin-bottom: 20px; }
+        .timer { font-size: 1.5rem; font-weight: bold; color: var(--primary); font-variant-numeric: tabular-nums; }
+        .timer.warning { color: var(--danger); animation: pulse 1s infinite; }
+        .question-box { background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .q-p1 { background: var(--bg-p1); border-left-color: var(--border-p1); }
+        .q-p2 { background: var(--bg-p2); border-left-color: var(--border-p2); }
+        .q-p3 { background: var(--bg-p3); border-left-color: var(--border-p3); }
+        .part-header { background: linear-gradient(135deg, #e9ecef, #dee2e6); padding: 12px 20px; border-radius: 8px; margin: 25px 0 15px; font-weight: bold; font-size: 1.1rem; color: #333; border-left: 4px solid var(--primary); }
+        .q-item { display: block; padding: 10px; margin: 8px 0; cursor: pointer; border-radius: 6px; transition: background 0.2s ease; }
+        .q-item:hover { background: rgba(0,0,0,0.03); }
+        .tf-row { border-bottom: 1px solid rgba(0,0,0,0.1); padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
+        .tf-content { flex: 1; padding-right: 15px; }
+        .tf-opts { display: flex; gap: 15px; }
+        .short-ans { width: 100%; max-width: 300px; padding: 10px 15px; border: 2px solid #ddd; border-radius: 8px; }
+        #result-screen { display: none; padding: 40px 20px; max-width: 1000px; margin: 0 auto; }
+        .result-container { background: #fff; border-radius: 15px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .score-display { font-size: 4rem; font-weight: 800; color: var(--primary); }
+        .correct-color { background: #d1e7dd !important; border-left-color: var(--success) !important; }
+        .wrong-color { background: #f8d7da !important; border-left-color: var(--danger) !important; }
+        .ans-explain { font-weight: bold; color: var(--danger); font-style: italic; margin-top: 10px; padding: 8px 12px; background: rgba(220,53,69,0.1); border-radius: 5px; }
+        .custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
+        .custom-modal.show { display: flex; }
+        .modal-content-custom { background: #fff; padding: 30px; border-radius: 15px; max-width: 400px; width: 90%; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+   /* === CHUẨN ẢNH TOÀN HỆ THỐNG ĐỀ THI === */
+.question-box img {
+    width: 50%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+}
+
+@media (max-width: 768px) {
+    .question-box img {
+        width: 90%;
+    }
+}
+
+/* Wrapper cho mọi table trong đề */
+.table-wrap {
+    width: 100%;
+    margin: 12px auto;
+}
+
+/* Mobile: cho cuộn ngang */
+@media (max-width: 576px) {
+    .table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-wrap table {
+        min-width: 600px; /* tránh bóp cột */
+    }
+}
+
+/* Tablet: full width */
+@media (min-width: 577px) and (max-width: 991px) {
+    .table-wrap table {
+        width: 100%;
+    }
+}
+
+/* Desktop: giới hạn bề ngang bảng */
+@media (min-width: 992px) {
+    .table-wrap table {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<div id="welcome-screen">
+    <div class="welcome-card">
+        <i class="fas fa-graduation-cap text-primary mb-4" style="font-size:50px"></i>
+        <h2 class="text-primary fw-bold mb-3" id="examTitle">ĐỀ THI THỬ THPT 2026 <br> LẦN 1</h2>
+        <p class="text-muted mb-4"><i class="far fa-clock"></i> <span id="examDuration">90</span> phút | <i class="far fa-file-alt"></i> <span>22</span> Câu</p>
+        <input type="text" id="sName" class="form-control form-control-lg mb-3" placeholder="Nhập họ và tên..." required>
+        <input type="text" id="sClass" class="form-control form-control-lg mb-4" placeholder="Nhập lớp..." required>
+        <button id="startBtn" class="btn btn-primary btn-lg w-100 fw-bold shadow">BẮT ĐẦU LÀM BÀI</button>
+        <div class="mt-3"><a href="https://hxhung.github.io/web-trac-nghiem/" class="text-secondary text-decoration-none small"><i class="fas fa-arrow-left"></i> Về trang chủ</a></div>
+    </div>
+</div>
+
+<div id="exam-screen">
+    <div class="sticky-header d-flex justify-content-between align-items-center">
+        <div><button id="homeBtnTop" class="btn btn-outline-secondary btn-sm me-2" onclick="location.href='https://hxhung.github.io/web-trac-nghiem/index.html'"><i class="fas fa-home"></i></button><span id="displayName" class="fw-bold"></span></div>
+        <div class="timer" id="timer">90:00</div>
+        <button id="submitBtnTop" type="button" class="btn btn-success btn-sm fw-bold">NỘP BÀI</button>
+    </div>
+
+    <div class="container" style="max-width:900px">
+        <form id="examForm">
+            <!-- PHẦN I -->
+            <div class="part-header">PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (12 câu)</div>
+            <div id="p1-container">
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 1:</b> Mẫu số liệu thống kê điểm trung bình cuối học kì I môn Toán cuả một số học sinh lớp 12 được cho ở bảng sau:
+					<table class="table table-bordered table-sm text-center exam-table">
+    <thead class="table-light">
+        <tr>
+            <th>Khoảng điểm</th>
+            <th>$[6,5;7)$</th>
+            <th>$[7;7,5)$</th>
+            <th>$[7,5;8)$</th>
+            <th>$[8;8,5)$</th>
+            <th>$[8,5;9)$</th>
+            <th>$[9;9,5)$</th>
+            <th>$[9,5;10)$</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Tần số</th>
+            <td>8</td>
+            <td>10</td>
+            <td>16</td>
+            <td>24</td>
+            <td>13</td>
+            <td>7</td>
+            <td>4</td>
+        </tr>
+    </tbody>
+</table>
+					<br>Khoảng biến thiên cuả mẫu số liệu ghép nhóm trên là</p>
+                    <label class="q-item"><input type="radio" name="p1q1" value="A"> A. 3,5</label>
+                    <label class="q-item"><input type="radio" name="p1q1" value="B"> B. 3</label>
+                    <label class="q-item"><input type="radio" name="p1q1" value="C"> C. 2,5</label>
+                    <label class="q-item"><input type="radio" name="p1q1" value="D"> D. 3,25</label>
+                </div>
+                <div class="question-box q-p1" data-correct="C">
+                    <p><b>Câu 2:</b> Hàm số nào sau đây đồng biến trên $\mathbb{R}$?</p>
+                    <label class="q-item"><input type="radio" name="p1q2" value="A"> A. $y=\frac{2x-1}{x+1}$</label>
+                    <label class="q-item"><input type="radio" name="p1q2" value="B"> B. $y=-x^3+2x-5$</label>
+                    <label class="q-item"><input type="radio" name="p1q2" value="C"> C. $y=x^3+x+5$</label>
+                    <label class="q-item"><input type="radio" name="p1q2" value="D"> D. $y=-x^3+3x+5$</label>
+                </div>
+                <div class="question-box q-p1" data-correct="D">
+                    <p><b>Câu 3:</b> Cho hàm số $f(x)=ax^3+bx^2+cx+d$ có đồ thị như hình, hỏi hàm số đạt cực tiểu tại điểm nào?
+					<br> <img src="pic/k12.tn1.7.9.2_cau03.png" alt="Hình câu 3" style="display:block; margin:0 auto; max-width:100%; height:auto;">
+					</p>
+                    <label class="q-item"><input type="radio" name="p1q3" value="A"> A. $x=-3$</label>
+                    <label class="q-item"><input type="radio" name="p1q3" value="B"> B. $x=-1$</label>
+                    <label class="q-item"><input type="radio" name="p1q3" value="C"> C. $x=-2$</label>
+                    <label class="q-item"><input type="radio" name="p1q3" value="D"> D. $x=1$</label>
+                </div>
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 4:</b> Cho $\vec{u}=(-3;4;5)$, $\vec{v}=(-1;0;1)$. Chọn khẳng định đúng:</p>
+                    <label class="q-item"><input type="radio" name="p1q4" value="A"> A. $\vec{u}+\vec{v}=(-4;4;6)$</label>
+                    <label class="q-item"><input type="radio" name="p1q4" value="B"> B. $\vec{u}-\vec{v}=(2;4;4)$</label>
+                    <label class="q-item"><input type="radio" name="p1q4" value="C"> C. $\vec{u} \cdot \vec{v}=2$</label>
+                    <label class="q-item"><input type="radio" name="p1q4" value="D"> D. $3\vec{v}=(-3;0;-3)$</label>
+                </div>
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 5:</b> Tìm tọa độ trung điểm $I$ của đoạn thẳng $AB$ với $A(3;-2;-1), B(-1;5;0)$:</p>
+                    <label class="q-item"><input type="radio" name="p1q5" value="A"> A. $I(1;\frac{3}{2};-\frac{1}{2})$</label>
+                    <label class="q-item"><input type="radio" name="p1q5" value="B"> B. $I(-2;\frac{7}{2};\frac{1}{2})$</label>
+                    <label class="q-item"><input type="radio" name="p1q5" value="C"> C. $I(\frac{2}{3};1;-\frac{1}{3})$</label>
+                    <label class="q-item"><input type="radio" name="p1q5" value="D"> D. $I(2;3;-1)$</label>
+                </div>
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 6:</b> Cho $\vec{a}=(1;0;2)$, $\vec{b}=(-3;0;-6), \vec{c}=(2;-5;-1)$. Khẳng định SAI:</p>
+                    <label class="q-item"><input type="radio" name="p1q6" value="A"> A. $\vec{a}$ ngược hướng với $\vec{c}$</label>
+                    <label class="q-item"><input type="radio" name="p1q6" value="B"> B. $\vec{b}=-3\vec{a}$</label>
+                    <label class="q-item"><input type="radio" name="p1q6" value="C"> C. $\vec{b} \bot \vec{c}$</label>
+                    <label class="q-item"><input type="radio" name="p1q6" value="D"> D. $\vec{a}+\vec{b}-\vec{c}=(-4;5;-3)$</label>
+                </div>
+                <div class="question-box q-p1" data-correct="D">
+                    <p><b>Câu 7:</b> Cho hình chóp $S.ABC$. Mệnh đề nào đúng?</p>
+                    <label class="q-item"><input type="radio" name="p1q7" value="A"> A. $\overrightarrow{SA}-\overrightarrow{SB}=\overrightarrow{CS}$</label>
+                    <label class="q-item"><input type="radio" name="p1q7" value="B"> B. $\overrightarrow{SA}-\overrightarrow{SB}=\overrightarrow{SC}$</label>
+                    <label class="q-item"><input type="radio" name="p1q7" value="C"> C. $\overrightarrow{SA}-\overrightarrow{SB}=\overrightarrow{AB}$</label>
+                    <label class="q-item"><input type="radio" name="p1q7" value="D"> D. $\overrightarrow{SA}-\overrightarrow{SB}=\overrightarrow{BA}$</label>
+                </div>
+                <div class="question-box q-p1" data-correct="B">
+                    <p><b>Câu 8:</b> Cho hình lập phương $ABCD.A'B'C'D'$ tâm $O$. Khẳng định đúng:</p>
+                    <label class="q-item"><input type="radio" name="p1q8" value="A"> A. $\overrightarrow{AO}=\frac{1}{3}(\overrightarrow{AB}+\overrightarrow{AD}+\overrightarrow{AA'})$</label>
+                    <label class="q-item"><input type="radio" name="p1q8" value="B"> B. $\overrightarrow{AO}=\frac{1}{2}(\overrightarrow{AB}+\overrightarrow{AD}+\overrightarrow{AA'})$</label>
+                    <label class="q-item"><input type="radio" name="p1q8" value="C"> C. $\overrightarrow{AO}=\frac{1}{4}(\overrightarrow{AB}+\overrightarrow{AD}+\overrightarrow{AA'})$</label>
+                    <label class="q-item"><input type="radio" name="p1q8" value="D"> D. $\overrightarrow{AO}=\frac{2}{3}(\overrightarrow{AB}+\overrightarrow{AD}+\overrightarrow{AA'})$</label>
+                </div>
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 9:</b> Cho $f(x)$ liên tục trên $\mathbb{R}$. Tính $P = M + m$ trên $[0;5]$:
+					<br> <img src="pic/k12.tn1.7.9.2_cau09.png" alt="Hình câu 9" style="display:block; margin:0 auto; max-width:100%; height:auto;">
+					</p>
+					<label class="q-item"><input type="radio" name="p1q9" value="A"> A. $P=4$</label>
+                    <label class="q-item"><input type="radio" name="p1q9" value="B"> B. $P=5$</label>
+                    <label class="q-item"><input type="radio" name="p1q9" value="C"> C. $P=3$</label>
+                    <label class="q-item"><input type="radio" name="p1q9" value="D"> D. $P=2$</label>
+                </div>
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 10:</b> Đường tiệm cận xiên của $y=2x-1+\frac{3}{x-2}$ là:</p>
+                    <label class="q-item"><input type="radio" name="p1q10" value="A"> A. $y=2x-1$</label>
+                    <label class="q-item"><input type="radio" name="p1q10" value="B"> B. $y=x-2$</label>
+                    <label class="q-item"><input type="radio" name="p1q10" value="C"> C. $y=2x+1$</label>
+                    <label class="q-item"><input type="radio" name="p1q10" value="D"> D. $y=x+2$</label>
+                </div>
+                <div class="question-box q-p1" data-correct="B">
+                    <p><b>Câu 11:</b> Biết hình bên dưới là đồ thị $y=ax^3+bx^2+cx+d$. Xác định dấu $a, d$:
+					<br> <img src="pic/k12.tn1.7.9.2_cau11.png" alt="Hình câu 11" style="display:block; margin:0 auto; max-width:100%; height:auto;">
+					</p>
+                    <label class="q-item"><input type="radio" name="p1q11" value="A"> A. $a>0, d>0$</label>
+                    <label class="q-item"><input type="radio" name="p1q11" value="B"> B. $a>0, d<0$</label>
+                    <label class="q-item"><input type="radio" name="p1q11" value="C"> C. $a<0, d>0$</label>
+                    <label class="q-item"><input type="radio" name="p1q11" value="D"> D. $a<0, d<0$</label>
+                </div>
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 12:</b> Cho hai mẫu số liệu ghép nhóm A và B có bảng tần số ghép nhóm như sau
+					<br>					
+<table class="table table-bordered table-sm text-center exam-table">
+    <thead class="table-light">
+        <tr>
+            <th>Nhóm A</th>
+            <th>[1,6;1,8)</th>
+            <th>[1,8;2,0)</th>
+            <th>[2,0;2,2)</th>
+            <th>[2,2;2,4)</th>
+            <th>[2,4;2,6)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Tần số</th>
+            <td>12</td>
+            <td>25</td>
+            <td>18</td>
+            <td>10</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th>Nhóm B</th>
+            <th>[2,0;2,2)</th>
+            <th>[2,2;2,4)</th>
+            <th>[2,4;2,6)</th>
+            <th>[2,6;2,8)</th>
+            <th>[2,8;3,0)</th>
+        </tr>
+        <tr>
+            <th>Tần số</th>
+            <td>24</td>
+            <td>50</td>
+            <td>36</td>
+            <td>20</td>
+            <td>4</td>
+        </tr>
+    </tbody>
+</table>
+					<br> Gọi $S_{A}^{2}$ và $S_{B}^{2}$ lần lượt là phương sai của mẫu số liệu ghép nhóm $A$ và $B$. Khẳng định nào sau đây đúng?
+					</p>
+                    <label class="q-item"><input type="radio" name="p1q12" value="A"> A. $S_A^2=S_B^2$</label>
+                    <label class="q-item"><input type="radio" name="p1q12" value="B"> B. $S_B^2=4S_A^2$</label>
+                    <label class="q-item"><input type="radio" name="p1q12" value="C"> C. $S_B^2=2S_A^2$</label>
+                    <label class="q-item"><input type="radio" name="p1q12" value="D"> D. $S_A^2=S_B^2-0,16$</label>
+                </div>
+            </div>
+
+            <!-- PHẦN II -->
+            <div class="part-header">PHẦN II. Câu trắc nghiệm đúng sai (4 câu)</div>
+            <div id="p2-container">
+                <!-- Câu 1 -->
+                <div class="question-box q-p2" data-correct="T,F,T,T">
+<p>
+<b>Câu 1:</b> Ông A. muốn xây một cái bể chứa nước bằng bê-tông dạng hình hộp chữ nhật có nắp, đáy là hình vuông. Bể cần chứa được đúng $0{,}5\,\text{m}^3$ nước.Gọi độ dài cạnh đáy của bể là $x\,(\text{dm})$,
+biết rằng chi phí nguyên vật liệu xây dựng mỗi mét vuông diện tích bề mặt là như nhau và diện tích mặt cắt của các ống nước để dẫn nước vào &amp; ra là không đáng kể.
+</p>
+
+<div class="tf-row">
+    <div class="tf-content">
+        a) Chiều cao bể $h=\dfrac{500}{x^2}\,(\text{dm})$.
+    </div>
+    <div class="tf-opts">
+        <label><input type="radio" name="p2q1a" value="T"> Đ</label>
+        <label><input type="radio" name="p2q1a" value="F"> S</label>
+    </div>
+</div>
+
+<div class="tf-row">
+    <div class="tf-content">
+        b) Tổng diện tích bề mặt $S(x)=x^2+\dfrac{2000}{x}$.
+    </div>
+    <div class="tf-opts">
+        <label><input type="radio" name="p2q1b" value="T"> Đ</label>
+        <label><input type="radio" name="p2q1b" value="F"> S</label>
+    </div>
+</div>
+
+<div class="tf-row">
+    <div class="tf-content">
+        c) Đạo hàm $S'(x)=4x-\dfrac{2000}{x^2}$.
+    </div>
+    <div class="tf-opts">
+        <label><input type="radio" name="p2q1c" value="T"> Đ</label>
+        <label><input type="radio" name="p2q1c" value="F"> S</label>
+    </div>
+</div>
+
+<div class="tf-row">
+    <div class="tf-content">
+        d) Để chi phí nguyên vật liệu xây bể là thấp nhất,
+        độ dài cạnh đáy bể phải là $793{,}7\,(\text{mm})$
+        (làm tròn đến hàng phần chục).
+    </div>
+    <div class="tf-opts">
+        <label><input type="radio" name="p2q1d" value="T"> Đ</label>
+        <label><input type="radio" name="p2q1d" value="F"> S</label>
+    </div>
+</div>
+                </div>
+                <!-- Câu 2 -->
+                <div class="question-box q-p2" data-correct="T,F,F,T">
+                    <p><b>Câu 2:</b> Một tòa nhà được thiết kế để làm 2 phòng dạy học có trang bị máy chiếu. Mái nhà là dạng mái vát hình chữ nhật $CDFE$ như hình vẽ. Chiều dài của mỗi phòng học là $OA=40m$ và chiều rộng là $OB=30m$, chiều cao các bức tường $BD=12m,EA=8m$. Từ vị trí P cách B một khoảng $10m$, người ta xây các bậc thang cao dần về phía cuối của phòng học để đặt các dãy bàn ghế học sinh trên các bậc thang đó. Chiều rộng mỗi bậc thang là $3m$ và chiều cao mỗi bậc thang là $30cm$. Chủ tòa nhà muốn lắp giá treo máy chiếu tại vị trí $I$ là giao điểm của $DE$ và $CF$ như hình vẽ, vuông góc với mặt sàn sao cho không vướng vào đầu học sinh khi học sinh đứng tại bậc thang ngay dưới máy chiếu (chiều cao học sinh đó là $1,8m$) và cũng không che khuất tầm nhìn của học sinh ngồi ở hàng ghế sau cùng, tại vị trí $X$ trung điểm đoạn $SQ$ theo phương vuông góc bức tường $OBDC$(chiều cao mắt học sinh so với bậc thang tại đó là $1,3m$). Xét hệ trục tọa độ $Oxyz$, với $O$là gốc tọa độ, điểm $A\in Ox,B\in Oy,C\in Oz$có tọa độ không âm, đơn vị trên mỗi trục là mét. Các mệnh đề sau đúng hay sai?
+					<br> <img src="pic/k12.tn1.7.9.2_cau14.png" alt="Hình câu 11" style="display:block; margin:0 auto; max-width:100%; height:auto;">
+					</p>
+                    <div class="tf-row"><div class="tf-content">A) Tọa độ điểm $C(0;0;12)$.</div><div class="tf-opts"><label><input type="radio" name="p2q2a" value="T"> Đ</label><label><input type="radio" name="p2q2a" value="F"> S</label></div></div>
+                    <div class="tf-row"><div class="tf-content">B) Hình chiếu $I$ lên $(Oxy)$ là $I'(20;10;0)$.</div><div class="tf-opts"><label><input type="radio" name="p2q2b" value="T"> Đ</label><label><input type="radio" name="p2q2b" value="F"> S</label></div></div>
+                    <div class="tf-row"><div class="tf-content">C) Góc $\widehat{CFB} \approx 39^\circ$.</div><div class="tf-opts"><label><input type="radio" name="p2q2c" value="T"> Đ</label><label><input type="radio" name="p2q2c" value="F"> S</label></div></div>
+                    <div class="tf-row"><div class="tf-content">D) Tổng độ dài treo máy lớn nhất là $5,7m$.</div><div class="tf-opts"><label><input type="radio" name="p2q2d" value="T"> Đ</label><label><input type="radio" name="p2q2d" value="F"> S</label></div></div>
+                </div>
+                <!-- Câu 3 -->
+                <div class="question-box q-p2" data-correct="T,F,F,T">
+                    <p><b>Câu 3:</b> Thống kê 100 lần ông Minh đi xe buýt được cho trong bảng dưới đây:
+					<br>
+					<div class="table-responsive">
+    <table class="table table-bordered table-sm text-center exam-table">
+        <thead class="table-light">
+            <tr>
+                <th>Thời gian (phút)</th>
+                <th>$[15;18)$</th>
+                <th>$[18;21)$</th>
+                <th>$[21;24)$</th>
+                <th>$[24;27)$</th>
+                <th>$[27;30)$</th>
+                <th>$[30;33)$</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Số lượt</th>
+                <td>22</td>
+                <td>38</td>
+                <td>27</td>
+                <td>8</td>
+                <td>4</td>
+                <td>1</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<br> Các khẳng định sau là đúng hay sai?
+</p>
+                    <div class="tf-row"><div class="tf-content">a) Khoảng biến thiên là 18.</div><div class="tf-opts"><label><input type="radio" name="p2q3a" value="T"> Đ</label><label><input type="radio" name="p2q3a" value="F"> S</label></div></div>
+                    <div class="tf-row"><div class="tf-content">b) Tứ phân vị $Q_1 = \frac{683}{38}$.</div><div class="tf-opts"><label><input type="radio" name="p2q3b" value="T"> Đ</label><label><input type="radio" name="p2q3b" value="F"> S</label></div></div>
+                    <div class="tf-row"><div class="tf-content">c) Khoảng tứ phân vị $\Delta_Q = \frac{515}{114}$.</div><div class="tf-opts"><label><input type="radio" name="p2q3c" value="T"> Đ</label><label><input type="radio" name="p2q3c" value="F"> S</label></div></div>
+                    <div class="tf-row"><div class="tf-content">d) Biết rằng trong 100 lần đi trên, chỉ có đúng một lần ông Minh đi hết 32 phút. Thời gian của lần đi đó là giá trị ngoại lệ của mẫu số liệu ghép nhóm trên.</div><div class="tf-opts"><label><input type="radio" name="p2q3d" value="T"> Đ</label><label><input type="radio" name="p2q3d" value="F"> S</label></div></div>
+                </div>
+                <!-- Câu 4 -->
+                <div class="question-box q-p2" data-correct="T,T,F,T">
+                    <p><b>Câu 4:</b> Hàm số $y=f(x)=\frac{3x+5}{2x+2}$.</p>
+                    <div class="tf-row"><div class="tf-content">a) Hàm số không có cực trị.</div><div class="tf-opts"><label><input type="radio" name="p2q4a" value="T"> Đ</label><label><input type="radio" name="p2q4a" value="F"> S</label></div></div>
+                    <div class="tf-row"><div class="tf-content">b) Max trên $[1;3]$ bằng $7/4$.</div><div class="tf-opts"><label><input type="radio" name="p2q4b" value="T"> Đ</label><label><input type="radio" name="p2q4b" value="F"> S</label></div></div>
+                    <div class="tf-row"><div class="tf-content">c) Tâm đối xứng $I(1; 3/2)$.</div><div class="tf-opts"><label><input type="radio" name="p2q4c" value="T"> Đ</label><label><input type="radio" name="p2q4c" value="F"> S</label></div></div>
+                    <div class="tf-row"><div class="tf-content">d) Một công ty khi sản xuất  ${x}$ sản phẩm $\left( x\ge 1 \right)$ thì chi phí sản xuất trung bình một sản phẩm  được tính theo công thức $\overline{C}(x)=250f\left( x \right)$ (nghìn đồng). Khi đó số lượng sản phẩm sản xuất càng lớn thì chi phí sản xuất trung bình một sản phẩm sẽ giảm dần và luôn thấp hơn 375 nghìn đồng.</div><div class="tf-opts"><label><input type="radio" name="p2q4d" value="T"> Đ</label><label><input type="radio" name="p2q4d" value="F"> S</label></div></div>
+                </div>
+            </div>
+
+            <!-- PHẦN III -->
+            <div class="part-header">PHẦN III. Câu trắc nghiệm trả lời ngắn (6 câu)</div>
+            <div id="p3-container">
+                <div class="question-box q-p3" data-correct="296">
+                    <p><b>Câu 1:</b> Một tàu chở hàng di chuyển trên sông với vận tốc $v$ (km/h), $v > 0$. Biết chi phí nhiên liệu cho mỗi kilômét là $0,3.\sqrt{v} + \frac{1,6}{\sqrt{v}}$ (triệu đồng/km); chi phí bảo trì tính theo thời gian là $0,04.v.\sqrt{v}$ (triệu đồng/giờ); ngoài ra, chi phí vận hành cố định khác (nhân công, bảo hiểm. . . ) là 17,25 (triệu đồng/giờ). Gọi $v_0$ là vận tốc để tổng chi phí trên mỗi kilômét là nhỏ nhất và $C_{min}$ là giá trị chi phí thấp nhất đó. Tính giá trị biểu thức $P = v_0 + 100 \cdot C_{min}$.</p>
+                    <input type="text" class="short-ans" placeholder="Nhập kết quả...">
+                </div>
+                <div class="question-box q-p3" data-correct="1.52">
+                    <p>
+<b>Câu 2:</b>
+Một nhóm học sinh thiết kế một chiếc lều dã ngoại có dạng hình nón theo cách sau:
+Từ một tấm bạt hình tròn có diện tích $4{,}84\pi\,\text{m}^2$,
+nhóm cắt lấy một hình quạt có góc ở tâm là
+$\alpha\,(0<\alpha<2\pi)$ (như Hình 1)
+để làm thành mặt xung quanh của lều (như Hình 2).
+
+Sau đó, nhóm dùng một tấm bạt chống thấm cắt thành hình tròn để trải kín đáy lều.
+Biết chi phí loại bạt làm mặt xung quanh lều là
+$100\,000$ đồng$/\text{m}^2$
+và chi phí loại bạt làm đáy lều là
+$150\,000$ đồng$/\text{m}^2$.
+Giả sử phần bạt thừa sau khi cắt không tính vào chi phí
+và kích thước các mép nối không đáng kể.
+
+Để thiết kế được chiếc lều có diện tích đáy lớn nhất
+với tổng chi phí không vượt quá $2\,300\,000$ đồng,
+chiều cao $h$ của lều bằng bao nhiêu mét?
+(kết quả làm tròn đến hàng phần trăm).
+</p>
+
+<img src="pic/k12.tn1.7.9.2_cau18.png"
+     alt="Hình câu 2"
+     style="display:block; margin:0 auto; max-width:100%; height:auto;">
+
+                    <input type="text" class="short-ans" placeholder="Nhập kết quả...">
+                </div>
+                <div class="question-box q-p3" data-correct="91.4">
+                    <p><b>Câu 3:</b> Thâm niên công tác của các công nhân hai nhà máy A và B được cho như trong bảng dưới đây. Tính tổng hai phương sai về thâm niên công tác của công nhân làm việc tại hai nhà máy. (kết quả được qui tròn đến hàng phần chục).
+					<div class="table-responsive">
+    <table class="table table-bordered table-sm text-center exam-table">
+        <thead class="table-light">
+            <tr>
+                <th>Thâm niên công tác (năm)</th>
+                <th>$[0;5)$</th>
+                <th>$[5;10)$</th>
+                <th>$[10;15)$</th>
+                <th>$[15;20)$</th>
+                <th>$[20;25)$</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Số công nhân nhà máy $A$</th>
+                <td>30</td>
+                <td>18</td>
+                <td>20</td>
+                <td>22</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <th>Số công nhân nhà máy $B$</th>
+                <td>27</td>
+                <td>15</td>
+                <td>30</td>
+                <td>16</td>
+                <td>12</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+					
+					
+					
+					
+					
+					
+					
+					</p>
+                    <input type="text" class="short-ans" placeholder="Nhập kết quả...">
+                </div>
+                <div class="question-box q-p3" data-correct="433">
+                    <p>
+<b>Câu 4:</b>
+Sân hiên của một ngôi nhà là khoảng đất hình chữ nhật $ABCD$.
+Phần mái $HGFE$ của sân hiên này là mái dốc và được lợp bằng kính màu
+để hạn chế ánh sáng xuyên qua.
+Các mặt bên $ADHE$ và $CGHD$ nằm ở bức tường bên ngoài của ngôi nhà
+(trong đó các tứ giác $CGHD$ và $ABFE$ là hình chữ nhật).
+
+Đặt vào mô hình hệ trục tọa độ như hình vẽ, ta có
+$B\,(5;\tfrac{9}{2};0)$, $E\,(5;0;3)$ và $H\,(0;0;4)$
+(đơn vị tính bằng mét).
+
+Trên tường nhà có một ngọn đèn đặt tại điểm $L$,
+cách điểm $D$ một đoạn $8$ mét theo phương thẳng đứng.
+Phần có mái của sân hiên in bóng lên khu vườn bằng phẳng phía trước ngôi nhà
+dưới ánh đèn tạo thành khoảng đất hạn chế ánh sáng
+(không tính phần sân hiên) gọi là <i>khu vườn cổ tích</i>.
+
+Biết diện tích khu vườn cổ tích (đơn vị đo $\text{m}^2$) là
+$S=\dfrac{a}{b}$ (với $a,b\in\mathbb{N}^*$ và $\dfrac{a}{b}$ là phân số tối giản).
+Tổng $a+b$ có giá trị bằng bao nhiêu?
+</p>
+
+<img src="pic/k12.tn1.7.9.2_cau20.png"
+     alt="Hình câu 4"
+     style="display:block; margin:0 auto; max-width:100%; height:auto;">
+
+                    <input type="text" class="short-ans" placeholder="Nhập kết quả...">
+                </div>
+                <div class="question-box q-p3" data-correct="0">
+                    <p><b>Câu 5:</b> Cho hàm số $y=\frac{ax+b}{cx+d}$ có đồ thị như hình vẽ. Tính $a+d$.</p>
+					<br> <img src="pic/k12.tn1.7.9.2_cau21.png" alt="Hình câu 11" style="display:block; margin:0 auto; max-width:100%; height:auto;">
+                    <input type="text" class="short-ans" placeholder="Nhập kết quả...">
+                </div>
+                <div class="question-box q-p3" data-correct="5">
+                    <p><b>Câu 6:</b> Cho hình hộp $ABCD.{A}'{B}'{C}'{D}'$. Gọi $N$ là điểm trên đoạn ${C}'D$ sao cho $DN=\frac{1}{3}D{C}'$. Khi phân tích $\overrightarrow{BN}=x.\overrightarrow{BA}+y.\overrightarrow{BC}+z.\overrightarrow{B{B}'}$ thì giá trị $3x+2y+3z$ bằng bao nhiêu?</p>
+                    <input type="text" class="short-ans" placeholder="Nhập kết quả...">
+                </div>
+            </div>
+        </form>
+        <div class="text-center mt-4"><button id="submitBtnBottom" type="button" class="btn btn-success btn-lg fw-bold">NỘP BÀI</button></div>
+    </div>
+</div>
+
+<div id="result-screen">
+    <div class="result-container">
+        <h1 class="fw-bold mb-4 text-center">KẾT QUẢ BÀI THI</h1>
+        <div class="row align-items-center mb-4">
+            <div class="col-md-5 text-center"><div class="score-display" id="finalScore">0.00</div><div class="text-muted fw-bold">TỔNG ĐIỂM</div></div>
+            <div class="col-md-7 border-start ps-4">
+                <p><i class="fas fa-user me-2"></i> Học sinh: <span id="resultName" class="fw-bold"></span></p>
+                <p><i class="fas fa-users me-2"></i> Lớp: <span id="resultClass" class="fw-bold"></span></p>
+                <p><i class="fas fa-check-circle me-2 text-success"></i> Số câu đúng: <span id="resultCorrect" class="fw-bold"></span></p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="https://hxhung.github.io/web-trac-nghiem/index.html" class="btn btn-outline-secondary btn-lg px-4"><i class="fas fa-home me-2"></i>TRANG CHỦ</a>
+            <button id="retryBtn" class="btn btn-outline-primary btn-lg px-4"><i class="fas fa-redo me-2"></i>LÀM LẠI</button>
+            <button id="reviewBtn" class="btn btn-primary btn-lg px-4 shadow"><i class="fas fa-eye me-2"></i>XEM LẠI</button>
+        </div>
+    </div>
+    <div id="reviewArea" class="mt-4"></div>
+</div>
+
+<div id="customModal" class="custom-modal">
+    <div class="modal-content-custom">
+        <h5 id="modalTitle" class="fw-bold">Thông báo</h5>
+        <p id="modalMessage" class="mb-4"></p>
+        <div class="d-flex gap-2 justify-content-end">
+            <button id="modalCancel" class="btn btn-secondary">Hủy</button>
+            <button id="modalConfirm" class="btn btn-primary">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const CONFIG = {
+        API: 'https://script.google.com/macros/s/AKfycbwQTV9HhyJ1Dm6vhO46hEXl5oDsEt9LBYNIQOOiIfXq7JAF1kedIs4zdCGQJYUiU7SZ/exec',
+        EXAM_DURATION: 5400,
+        SCORES: { P1: 0.25, P2: [0.1, 0.25, 0.5, 1.0], P3: 0.5 }
+    };
+
+    const state = { timeRemaining: CONFIG.EXAM_DURATION, timerInterval: null, isSubmitted: false };
+
+    const elements = {
+        welcome: document.getElementById('welcome-screen'),
+        exam: document.getElementById('exam-screen'),
+        result: document.getElementById('result-screen'),
+        examForm: document.getElementById('examForm'),
+        timer: document.getElementById('timer'),
+        sName: document.getElementById('sName'),
+        sClass: document.getElementById('sClass'),
+        submitBtnTop: document.getElementById('submitBtnTop'),
+        submitBtnBottom: document.getElementById('submitBtnBottom'),
+        retryBtn: document.getElementById('retryBtn'),
+        reviewBtn: document.getElementById('reviewBtn'),
+        modal: document.getElementById('customModal')
+    };
+
+    const utils = {
+        formatTime: (s) => {
+            const m = Math.floor(s / 60), sec = s % 60;
+            return `${m<10?'0':''}${m}:${sec<10?'0':''}${sec}`;
+        },
+        showModal: (title, msg, onConfirm) => {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = msg;
+            elements.modal.classList.add('show');
+            document.getElementById('modalConfirm').onclick = () => { elements.modal.classList.remove('show'); if(onConfirm) onConfirm(); };
+            document.getElementById('modalCancel').onclick = () => elements.modal.classList.remove('show');
+        }
+    };
+
+    const grading = {
+        calculate: () => {
+            let total = 0, correct = 0;
+            document.querySelectorAll('.q-p1').forEach(q => {
+                const ans = q.dataset.correct, sel = q.querySelector('input:checked');
+                if(sel && sel.value === ans) { total += CONFIG.SCORES.P1; correct++; q.classList.add('correct-color'); }
+                else { q.classList.add('wrong-color'); grading.addExplain(q, ans); }
+            });
+            document.querySelectorAll('.q-p2').forEach(q => {
+                const ansArr = q.dataset.correct.split(',');
+                let subC = 0;
+                q.querySelectorAll('.tf-row').forEach((r, i) => {
+                    const sel = r.querySelector('input:checked');
+                    if(sel && sel.value === ansArr[i]) { subC++; r.style.backgroundColor='#d1e7dd'; }
+                    else r.style.backgroundColor='#f8d7da';
+                });
+                if(subC > 0) total += CONFIG.SCORES.P2[subC-1];
+                if(subC === 4) correct++;
+            });
+            document.querySelectorAll('.q-p3').forEach(q => {
+                const ans = q.dataset.correct.trim().toUpperCase();
+                const inp = q.querySelector('input');
+                const val = inp ? inp.value.trim().toUpperCase().replace(',', '.') : '';
+                if(val === ans) { total += CONFIG.SCORES.P3; correct++; q.classList.add('correct-color'); }
+                else { q.classList.add('wrong-color'); grading.addExplain(q, ans); }
+            });
+            return { total: total > 10 ? 10 : total, correct };
+        },
+        addExplain: (q, ans) => {
+            const div = document.createElement('div');
+            div.className = 'ans-explain';
+            let displayAns = ans;
+            if (q.classList.contains('q-p2')) {
+                const map = { 'T': 'Đ', 'F': 'S' };
+                displayAns = ans.split(',').map((v, i) => `${String.fromCharCode(97+i)}-${map[v.trim()]}`).join(', ');
+            }
+            div.textContent = 'Đáp án đúng: ' + displayAns;
+            q.appendChild(div);
+        },
+		submit: (auto = false) => {
+            if(state.isSubmitted) return;
+            const process = () => {
+                clearInterval(state.timerInterval);
+                state.isSubmitted = true;
+                const res = grading.calculate();
+                const sName = elements.sName.value.trim();
+                const sClass = elements.sClass.value.trim();
+                const scoreStr = res.total.toFixed(2);
+                const examTitle = document.getElementById('examTitle').innerText;
+                
+                // 1. Gửi Google Sheet (Giữ nguyên)
+                const form = new FormData();
+                form.append('name', sName); form.append('class', sClass);
+                form.append('test', examTitle); form.append('score', scoreStr);
+                fetch(CONFIG.API, { method: 'POST', body: form, mode: 'no-cors' }).catch(e => console.error(e));
+
+                // 2. LƯU LOCAL STORAGE (FIX LỖI)
+                try {
+                    // Tạo đối tượng kết quả mới
+                    const resultData = { 
+                        timestamp: new Date().toISOString(), 
+                        testName: examTitle, 
+                        studentName: sName, 
+                        score: scoreStr, 
+                        correctAnswers: res.correct 
+                    };
+                    
+                    // Lấy dữ liệu cũ một cách an toàn
+                    let history = [];
+                    const existingData = localStorage.getItem('exam_results');
+                    
+                    if (existingData) {
+                        try {
+                            history = JSON.parse(existingData);
+                            if (!Array.isArray(history)) history = []; // Nếu dữ liệu cũ không phải mảng thì reset
+                        } catch (parseError) {
+                            console.warn("Dữ liệu lịch sử cũ bị lỗi, sẽ tạo mới.", parseError);
+                            history = []; // Reset nếu parse lỗi
+                        }
+                    }
+
+                    // Thêm kết quả mới vào đầu danh sách
+                    history.unshift(resultData); 
+                    
+                    // Lưu lại
+                    localStorage.setItem('exam_results', JSON.stringify(history));
+                    console.log("Đã lưu kết quả vào LocalStorage thành công.");
+
+                } catch (e) { 
+                    console.error("Lỗi nghiêm trọng khi lưu LocalStorage:", e);
+                    // Không alert để tránh làm phiền, chỉ log lỗi
+                }
+
+                // 3. Hiển thị kết quả
+                document.getElementById('finalScore').textContent = scoreStr;
+                document.getElementById('resultName').textContent = sName;
+                document.getElementById('resultClass').textContent = sClass;
+                document.getElementById('resultCorrect').textContent = res.correct;
+                elements.exam.style.display = 'none';
+                elements.result.style.display = 'block';
+                window.scrollTo(0,0);
+            };
+            if(auto) process(); else utils.showModal('Nộp bài', 'Bạn chắc chắn muốn nộp bài?', process);
+        }
+		};
+// --- BẮT ĐẦU ĐOẠN CODE SỬA LỖI TRỘN ĐỀ ---
+    const shuffleSystem = {
+        // Thuật toán xáo trộn Fisher-Yates chuẩn
+        shuffleArray: (array) => {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        },
+        execute: () => {
+            console.log("Hệ thống trộn đề đang chạy..."); // Log để kiểm tra
+            
+            // 1. Trộn thứ tự các câu hỏi trong từng phần
+            const parts = ['#p1-container', '#p2-container', '#p3-container'];
+            
+            parts.forEach(id => {
+                const container = document.querySelector(id);
+                if (!container) return;
+                
+                // Lấy tất cả các thẻ div con trực tiếp là question-box
+                const questions = Array.from(container.children).filter(el => el.classList.contains('question-box'));
+                if (questions.length === 0) return;
+
+                // Trộn mảng
+                shuffleSystem.shuffleArray(questions);
+
+                // Sắp xếp lại trong DOM (appendChild sẽ tự động di chuyển node cũ)
+                questions.forEach(q => container.appendChild(q));
+            });
+
+            // 2. Đánh lại số thứ tự (Câu 1, Câu 2...) sau khi trộn
+            // Logic Regex linh hoạt: Chấp nhận "Câu 1:", "Câu 1.", "Câu 1", chữ hoa/thường
+            const allQuestions = document.querySelectorAll('.question-box'); 
+            let count = 1;
+            
+            allQuestions.forEach((q) => {
+                // Tìm thẻ in đậm chứa chữ "Câu"
+                const labels = q.querySelectorAll('b, strong');
+                let foundLabel = false;
+
+                labels.forEach(label => {
+                    if (foundLabel) return; // Chỉ sửa label đầu tiên tìm thấy
+                    const text = label.textContent;
+                    // Regex tìm: "Câu" + khoảng trắng + số + dấu câu bất kỳ hoặc không
+                    if (text.match(/^Câu\s*\d+[:.]?/i)) {
+                        label.textContent = `Câu ${count}:`;
+                        foundLabel = true;
+                    }
+                });
+                
+                // Nếu không tìm thấy thẻ b/strong hợp lệ, thêm vào đầu
+                if (!foundLabel) {
+                    const p = q.querySelector('p');
+                    if (p) {
+                        p.innerHTML = `<b>Câu ${count}:</b> ` + p.innerHTML;
+                    }
+                }
+                count++;
+            });
+            console.log("Đã trộn và đánh số lại xong.");
+        }
+    };
+    // --- KẾT THÚC ĐOẠN CODE SỬA LỖI ---
+    const handlers = {
+        start: () => {
+            if(!elements.sName.value.trim() || !elements.sClass.value.trim()) return utils.showModal('Thông báo', 'Vui lòng nhập tên và lớp!');
+            shuffleSystem.execute();
+			elements.welcome.style.display = 'none';
+            elements.exam.style.display = 'block';
+            document.getElementById('displayName').textContent = `${elements.sName.value} - ${elements.sClass.value}`;
+            state.timerInterval = setInterval(() => {
+                state.timeRemaining--;
+                elements.timer.textContent = utils.formatTime(state.timeRemaining);
+                if(state.timeRemaining <= 0) grading.submit(true);
+            }, 1000);
+        },
+        review: () => {
+            const clone = elements.examForm.cloneNode(true);
+            clone.querySelectorAll('input').forEach(i => i.disabled = true);
+            const area = document.getElementById('reviewArea');
+            area.innerHTML = '<hr><h4 class="text-primary">CHI TIẾT BÀI LÀM</h4>';
+            area.appendChild(clone);
+            MathJax.typeset();
+            elements.reviewBtn.style.display = 'none';
+        }
+    };
+
+    document.getElementById('startBtn').onclick = handlers.start;
+    elements.submitBtnTop.onclick = () => grading.submit();
+    elements.submitBtnBottom.onclick = () => grading.submit();
+    elements.retryBtn.onclick = () => location.reload();
+    elements.reviewBtn.onclick = handlers.review;
+})();
+</script>
+</body>
+</html>

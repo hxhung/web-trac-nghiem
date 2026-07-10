@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hệ thống thi trực tuyến GDPT 2018">
+    <title>Đề 08: Ôn tập tổng hợp HK1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        :root { --primary: #0d6efd; --secondary: #6c757d; --success: #198754; --danger: #dc3545; --warning: #ffc107; --bg-p1: #e3f2fd; --border-p1: #1976d2; --bg-p2: #fff9e6; --border-p2: #f9a825; --bg-p3: #e8f5e9; --border-p3: #43a047; --exam-bg: #f5f5f5; }
+        * { box-sizing: border-box; }
+        body { background: var(--exam-bg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; }
+        #welcome-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), #0a58ca); padding: 20px; }
+        .welcome-card { background: #fff; width: 100%; max-width: 500px; padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeIn 0.5s ease-in; }
+        #exam-screen { display: none; padding-bottom: 60px; background: var(--exam-bg); min-height: 100vh; }
+        .sticky-header { position: sticky; top: 0; z-index: 1020; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 12px 15px; margin-bottom: 20px; }
+        .timer { font-size: 1.5rem; font-weight: bold; color: var(--primary); font-variant-numeric: tabular-nums; }
+        .timer.warning { color: var(--danger); animation: pulse 1s infinite; }
+        .question-box { background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .q-p1 { background: var(--bg-p1); border-left-color: var(--border-p1); }
+        .q-p2 { background: var(--bg-p2); border-left-color: var(--border-p2); }
+        .q-p3 { background: var(--bg-p3); border-left-color: var(--border-p3); }
+        .part-header { background: linear-gradient(135deg, #e9ecef, #dee2e6); padding: 12px 20px; border-radius: 8px; margin: 25px 0 15px; font-weight: bold; font-size: 1.1rem; color: #333; border-left: 4px solid var(--primary); }
+        .q-item { display: block; padding: 10px; margin: 8px 0; cursor: pointer; border-radius: 6px; transition: background 0.2s ease; }
+        .q-item:hover { background: rgba(0,0,0,0.03); }
+        .tf-row { border-bottom: 1px solid rgba(0,0,0,0.1); padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
+        .tf-content { flex: 1; padding-right: 15px; }
+        .tf-opts { display: flex; gap: 15px; }
+        .short-ans { width: 100%; max-width: 300px; padding: 10px 15px; border: 2px solid #ddd; border-radius: 8px; }
+        #result-screen { display: none; padding: 40px 20px; max-width: 1000px; margin: 0 auto; }
+        .result-container { background: #fff; border-radius: 15px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .score-display { font-size: 4rem; font-weight: 800; color: var(--primary); }
+        .correct-color { background: #d1e7dd !important; border-left-color: var(--success) !important; }
+        .wrong-color { background: #f8d7da !important; border-left-color: var(--danger) !important; }
+        .ans-explain { font-weight: bold; color: var(--danger); font-style: italic; margin-top: 10px; padding: 8px 12px; background: rgba(220,53,69,0.1); border-radius: 5px; }
+        .custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
+        .custom-modal.show { display: flex; }
+        .modal-content-custom { background: #fff; padding: 30px; border-radius: 15px; max-width: 400px; width: 90%; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    </style>
+</head>
+<body>
+
+<div id="welcome-screen">
+    <div class="welcome-card">
+        <i class="fas fa-graduation-cap text-primary mb-4" style="font-size:50px"></i>
+        <h1 class="text-primary fw-bold mb-3" id="examTitle">ĐỀ 08: ÔN TẬP TỔNG HỢP HK1</h1>
+        <p class="text-muted mb-4"><i class="far fa-clock"></i> <span id="examDuration">90</span> phút | <i class="far fa-file-alt"></i> 22 Câu</p>
+        <input type="text" id="sName" class="form-control form-control-lg mb-3" placeholder="Nhập họ và tên..." required>
+        <input type="text" id="sClass" class="form-control form-control-lg mb-4" placeholder="Nhập lớp..." required>
+        <button id="startBtn" class="btn btn-primary btn-lg w-100 fw-bold shadow">BẮT ĐẦU LÀM BÀI</button>
+        <div class="mt-3"><a href="index.html" class="text-secondary text-decoration-none small"><i class="fas fa-arrow-left"></i> Về trang chủ</a></div>
+    </div>
+</div>
+
+<div id="exam-screen">
+    <div class="sticky-header d-flex justify-content-between align-items-center">
+        <div><button id="homeBtn" class="btn btn-outline-secondary btn-sm me-2"><i class="fas fa-home"></i></button><span id="displayName" class="fw-bold"></span></div>
+        <div class="timer" id="timer">90:00</div>
+        <button id="submitBtnTop" class="btn btn-success btn-sm fw-bold">NỘP BÀI</button>
+    </div>
+    <div class="container" style="max-width:900px">
+        <form id="examForm">
+            <div class="part-header">PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (12 câu)</div>
+            <div id="p1-container">
+                <div class="question-box q-p1" data-correct="B">
+                    <p><b>Câu 1:</b> Trong không gian $Oxyz$, cho $\vec{u}=(-4;2;-3)$ và $A(1;2;3)$. Tọa độ điểm $B$ thỏa mãn $\vec{AB}=\vec{u}$ là:</p>
+                    <label class="q-item"><input type="radio" name="q1" value="A"> A. $B(3;2;-4)$</label>
+                    <label class="q-item"><input type="radio" name="q1" value="B"> B. $B(-3;4;0)$</label>
+                    <label class="q-item"><input type="radio" name="q1" value="C"> C. $B(3;-4;0)$</label>
+                    <label class="q-item"><input type="radio" name="q1" value="D"> D. $B(-3;-4;-4)$</label>
+                </div>
+
+                <div class="question-box q-p1" data-correct="B">
+                    <p><b>Câu 2:</b> Tâm đối xứng của đồ thị hàm số $y=\frac{x}{x+1}$ là </p>
+                    <label class="q-item"><input type="radio" name="q2" value="A"> A. $I(-1;0)$.</label>
+                    <label class="q-item"><input type="radio" name="q2" value="B"> B. $I(-1;1)$.</label>
+                    <label class="q-item"><input type="radio" name="q2" value="C"> C. $I(0;1)$.</label>
+                    <label class="q-item"><input type="radio" name="q2" value="D"> D. $I(1;1)$</label>
+                </div>
+
+                <div class="question-box q-p1" data-correct="C">
+                    <p><b>Câu 3:</b> Cho hàm số $y = f(x)$ xác định trên $\mathbb{R} \setminus \{-1\}$, liên tục trên mỗi khoảng xác định và có bảng biến thiên như hình vẽ. Đồ thị hàm số có bao nhiêu đường tiệm cận đứng và ngang?</p>
+                    <div class="text-center"> <img src="pic/De-08-Cau-03.png" alt="Bảng xét dấu" style="max-width: 80%; height: auto; margin: 10px 0; border-radius: 5px;"> </div>
+                    <label class="q-item"><input type="radio" name="q3" value="A"> A. 1.</label>
+                    <label class="q-item"><input type="radio" name="q3" value="B"> B. 0.</label>
+                    <label class="q-item"><input type="radio" name="q3" value="C"> C. 3.</label>
+                    <label class="q-item"><input type="radio" name="q3" value="D"> D. 2.</label>
+                </div>
+
+                <div class="question-box q-p1" data-correct="C">
+                    <p><b>Câu 4:</b> Đồ thị một trong bốn hàm số dưới đây có dạng như hình vẽ, đó là hàm số nào?</p>
+                    <div class="text-center"> <img src="pic/De-08-Cau-04.png" alt="Bảng xét dấu" style="max-width: 80%; height: auto; margin: 10px 0; border-radius: 5px;"> </div>
+                    <label class="q-item"><input type="radio" name="q4" value="A"> A. $y = x - \frac{1}{x+1}$.</label>
+                    <label class="q-item"><input type="radio" name="q4" value="B"> B. $y = \frac{2x+1}{x+1}$.</label>
+                    <label class="q-item"><input type="radio" name="q4" value="C"> C. $y = \frac{x^2+x+1}{x+1}$.</label>
+                    <label class="q-item"><input type="radio" name="q4" value="D"> D. $y = \frac{x^2-x+1}{x+1}$.</label>
+                </div>
+
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 5:</b> Cho hình hộp $ABCD.A'B'C'D'$ và $I$ là trung điểm của $BD'$. Mệnh đề nào sau đây đúng?</p>
+                    <label class="q-item"><input type="radio" name="q5" value="A"> A. $\vec{BA} + \vec{BC} + \vec{BB'} = 2\vec{BI}$.</label>
+                    <label class="q-item"><input type="radio" name="q5" value="B"> B. $\vec{BA} + \vec{BC} + \vec{BB'} = \vec{BI}$.</label>
+                    <label class="q-item"><input type="radio" name="q5" value="C"> C. $\vec{BA} + \vec{BC} + \vec{BB'} = \frac{1}{2}\vec{BI}$.</label>
+                    <label class="q-item"><input type="radio" name="q5" value="D"> D. $\vec{BA} + \vec{BC} + \vec{BB'} = 3\vec{BI}$.</label>
+                </div>
+
+                <div class="question-box q-p1" data-correct="D">
+                    <p><b>Câu 6:</b> Hàm số $y = -x^3 + 3x^2 + 2$ đồng biến trên khoảng nào trong các khoảng sau?</p>
+                    <label class="q-item"><input type="radio" name="q6" value="A"> A. $(-\infty; 0)$.</label>
+                    <label class="q-item"><input type="radio" name="q6" value="B"> B. $(2; +\infty)$.</label>
+                    <label class="q-item"><input type="radio" name="q6" value="C"> C. $(-1; 1)$.</label>
+                    <label class="q-item"><input type="radio" name="q6" value="D"> D. $(0; 2)$.</label>
+                </div>
+
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 7:</b> Giá trị lớn nhất của hàm số $f(x) = x^3 - 3x^2 - 9x + 10$ trên đoạn $[-2; 2]$ bằng:</p>
+                    <label class="q-item"><input type="radio" name="q7" value="A"> A. 15.</label>
+                    <label class="q-item"><input type="radio" name="q7" value="B"> B. -12.</label>
+                    <label class="q-item"><input type="radio" name="q7" value="C"> C. -1.</label>
+                    <label class="q-item"><input type="radio" name="q7" value="D"> D. 10.</label>
+                </div>
+
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 8:</b> Cho điểm $M$ thỏa mãn $\vec{OM} = 2\vec{i} + 3\vec{j} - \vec{k}$. Tọa độ của điểm $M$ là:</p>
+                    <label class="q-item"><input type="radio" name="q8" value="A"> A. $(2; 3; -1)$.</label>
+                    <label class="q-item"><input type="radio" name="q8" value="B"> B. $(-2; -3; 1)$.</label>
+                    <label class="q-item"><input type="radio" name="q8" value="C"> C. $(2; -1; 3)$.</label>
+                    <label class="q-item"><input type="radio" name="q8" value="D"> D. $(2; 3; 1)$.</label>
+                </div>
+
+                <div class="question-box q-p1" data-correct="C">
+                    <p><b>Câu 9:</b> Mẫu số liệu ghép nhóm về chiều cao học sinh lớp 12A cho kết quả: Độ lệch chuẩn của mẫu số liệu này thuộc khoảng nào sau đây?</p>
+                    <div class="text-center"> <img src="pic/De-08-Cau-09.png" alt="Bảng xét dấu" style="max-width: 80%; height: auto; margin: 10px 0; border-radius: 5px;"> </div>
+                    <label class="q-item"><input type="radio" name="q9" value="A"> A. $(5,5; 6)$.</label>
+                    <label class="q-item"><input type="radio" name="q9" value="B"> B. $(6,5; 7)$.</label>
+                    <label class="q-item"><input type="radio" name="q9" value="C"> C. $(6; 6,5)$.</label>
+                    <label class="q-item"><input type="radio" name="q9" value="D"> D. $(7; 7,5)$.</label>
+                </div>
+
+                <div class="question-box q-p1" data-correct="A">
+                    <p><b>Câu 10:</b> Đồ thị hàm số $f(x) = \frac{x}{x^2+1}$ có bao nhiêu tiệm cận?</p>
+                    <label class="q-item"><input type="radio" name="q10" value="A"> A. 1.</label>
+                    <label class="q-item"><input type="radio" name="q10" value="B"> B. 2.</label>
+                    <label class="q-item"><input type="radio" name="q10" value="C"> C. 3.</label>
+                    <label class="q-item"><input type="radio" name="q10" value="D"> D. Không có.</label>
+                </div>
+
+                <div class="question-box q-p1" data-correct="B">
+                    <p><b>Câu 11:</b> Trong không gian $Oxyz$, cho $\vec{a} = (2; -3; 3), \vec{b} = (0; 2; -1), \vec{c} = (3; -1; 5)$. Tọa độ của vectơ $\vec{u} = 2\vec{a} + 3\vec{b} - 2\vec{c}$ là:</p>
+                    <label class="q-item"><input type="radio" name="q11" value="A"> A. $(10; -2; 13)$.</label>
+                    <label class="q-item"><input type="radio" name="q11" value="B"> B. $(-2; 2; -7)$.</label>
+                    <label class="q-item"><input type="radio" name="q11" value="C"> C. $(-2; 2; 7)$.</label>
+                    <label class="q-item"><input type="radio" name="q11" value="D"> D. $(2; -2; 7)$.</label>
+                </div>
+
+                <div class="question-box q-p1" data-correct="D">
+                    <p><b>Câu 12:</b> Gọi $R_1, R_2$ là khoảng biến thiên của mức thưởng Tết tổ A (40 người) và tổ B (50 người). Dựa vào bảng số liệu, khẳng định nào đúng?</p>
+                    <div class="text-center"> <img src="pic/De-08-Cau-12.png" alt="Bảng xét dấu" style="max-width: 80%; height: auto; margin: 10px 0; border-radius: 5px;"> </div>
+                    <label class="q-item"><input type="radio" name="q12" value="A"> A. $R_1 = 20$.</label>
+                    <label class="q-item"><input type="radio" name="q12" value="B"> B. $R_1 = R_2$.</label>
+                    <label class="q-item"><input type="radio" name="q12" value="C"> C. $R_1 < R_2$.</label>
+                    <label class="q-item"><input type="radio" name="q12" value="D"> D. $R_1 > R_2$.</label>
+                </div>
+            </div>
+
+            <div class="part-header">PHẦN II. Câu trắc nghiệm đúng sai (4 câu)</div>
+            <div id="p2-container">
+                <div class="question-box q-p2" data-correct="T,F,F,T">
+                    <p><b>Câu 1:</b> Trong không gian $Oxyz$, cho ba điểm $A(1; 2; 3), B(2; 1; 5), C(2; 4; 2)$.</p>
+                    <div class="tf-row"><span>a) Tọa độ trung điểm của $AB$ là $(\frac{3}{2}; \frac{3}{2}; 4)$.</span><div class="tf-opts"><label><input type="radio" name="q13a" value="T"> Đ</label> <label><input type="radio" name="q13a" value="F"> S</label></div></div>
+                    <div class="tf-row"><span>b) $\vec{OA} + 2\vec{OB} - \vec{OC} = (3; 0; 10)$.</span><div class="tf-opts"><label><input type="radio" name="q13b" value="T"> Đ</label> <label><input type="radio" name="q13b" value="F"> S</label></div></div>
+                    <div class="tf-row"><span>c) Góc giữa hai đường thẳng $AB$ và $AC$ bằng $30^\circ$.</span><div class="tf-opts"><label><input type="radio" name="q13c" value="T"> Đ</label> <label><input type="radio" name="q13c" value="F"> S</label></div></div>
+                    <div class="tf-row"><span>d) Điểm $M(a; b; 0) \in (Oxy)$ thỏa mãn $|\vec{MA} - 2\vec{MB}| = 7$. Khi đó $a+b=5$.</span><div class="tf-opts"><label><input type="radio" name="q13d" value="T"> Đ</label> <label><input type="radio" name="q13d" value="F"> S</label></div></div>
+                </div>
+
+                <div class="question-box q-p2" data-correct="T,T,F,F">
+                    <p><b>Câu 2:</b> Một vật đang đứng yên bắt đầu chuyển động nhanh dần đều với gia tốc $a(t) = a$ ($m/s^2, a > 0$). Quãng đường sau 3 giây là 18m.</p>
+                    <div class="tf-row"><span>a) Vận tốc tức thời của vật là $v(t) = at$ ($m/s$).</span><div class="tf-opts"><label><input type="radio" name="q14a" value="T"> Đ</label> <label><input type="radio" name="q14a" value="F"> S</label></div></div>
+                    <div class="tf-row"><span>b) Gia tốc của vật là $a = 4$.</span><div class="tf-opts"><label><input type="radio" name="q14b" value="T"> Đ</label> <label><input type="radio" name="q14b" value="F"> S</label></div></div>
+                    <div class="tf-row"><span>c) Vận tốc tại thời điểm $t = 5s$ là $10m/s$.</span><div class="tf-opts"><label><input type="radio" name="q14c" value="T"> Đ</label> <label><input type="radio" name="q14c" value="F"> S</label></div></div>
+                    <div class="tf-row"><span>d) Quãng đường đi được sau 6 giây kể từ lúc bắt đầu là 36m.</span><div class="tf-opts"><label><input type="radio" name="q14d" value="T"> Đ</label> <label><input type="radio" name="q14d" value="F"> S</label></div></div>
+                </div>
+
+                <div class="question-box q-p2" data-correct="F,T,F,F">
+                    <p><b>Câu 3:</b> Cho hàm số $f(x) = ax^3 + bx^2 + cx + d$ có bảng biến thiên như hình vẽ.</p>
+                    <div class="text-center"> <img src="pic/De-08-Cau-II.3.png" alt="Bảng xét dấu" style="max-width: 80%; height: auto; margin: 10px 0; border-radius: 5px;"> </div>
+                    <div class="tf-row"><span>a) Hàm số đồng biến trên khoảng $(-\infty; 2)$.</span><div class="tf-opts"><label><input type="radio" name="q15a" value="T"> Đ</label> <label><input type="radio" name="q15a" value="F"> S</label></div></div>
+                    <div class="tf-row"><span>b) Hàm số đạt cực tiểu tại $x = 3$.</span><div class="tf-opts"><label><input type="radio" name="q15b" value="T"> Đ</label> <label><input type="radio" name="q15b" value="F"> S</label></div></div>
+                    <div class="tf-row"><span>c) Trên khoảng $(-\infty; 3)$, giá trị nhỏ nhất của hàm số là -4.</span><div class="tf-opts"><label><input type="radio" name="q15c" value="T"> Đ</label> <label><input type="radio" name="q15c" value="F"> S</label></div></div>
+                    <div class="tf-row"><span>d) Đồ thị hàm số $y = \frac{2025}{f(x) + 2}$ có đúng 3 đường tiệm cận.</span><div class="tf-opts"><label><input type="radio" name="q15d" value="T"> Đ</label> <label><input type="radio" name="q15d" value="F"> S</label></div></div>
+                </div>
+
+                <div class="question-box q-p2" data-correct="T,F,T,F">
+                    <p><b>Câu 4:</b> Khảo sát thời gian sử dụng pin của một số máy tính được thể hiện bằng biểu đồ hình cột:</p>
+                    <div class="text-center"> <img src="pic/De-08-Cau-II.4.png" alt="Bảng xét dấu" style="max-width: 80%; height: auto; margin: 10px 0; border-radius: 5px;"> </div>
+                    <div class="tf-row"><span>a) Có tổng cộng 18 máy tính đã được khảo sát.</span><div class="tf-opts"><label><input type="radio" name="q16a" value="T"> Đ</label> <label><input type="radio" name="q16a" value="F"> S</label></div></div>
+                    <div class="tf-row"><span>b) Phương sai của mẫu số liệu ghép nhóm này xấp xỉ 0,3.</span><div class="tf-opts"><label><input type="radio" name="q16b" value="T"> Đ</label> <label><input type="radio" name="q16b" value="F"> S</label></div></div>
+                    <div class="tf-row"><span>c) Khoảng biến thiên của mẫu số liệu trên là 0,8 giờ.</span><div class="tf-opts"><label><input type="radio" name="q16c" value="T"> Đ</label> <label><input type="radio" name="q16c" value="F"> S</label></div></div>
+                    <div class="tf-row"><span>d) Khoảng tứ phân vị của mẫu số liệu ghép nhóm là 0,259.</span><div class="tf-opts"><label><input type="radio" name="q16d" value="T"> Đ</label> <label><input type="radio" name="q16d" value="F"> S</label></div></div>
+                </div>
+            </div>
+
+            <div class="part-header">PHẦN III. Câu trắc nghiệm trả lời ngắn (6 câu)</div>
+            <div id="p3-container">
+                <div class="question-box q-p3" data-correct="1">
+                    <p><b>Câu 1:</b> Hàm số $y=f(x)$ liên tục trên $\mathbb{R}$. Đồ thị đạo hàm $y=f'(x)$ như hình vẽ. Hỏi hàm số $y=f(x)$ có bao nhiêu điểm cực trị?</p>
+                    <div class="text-center"> <img src="pic/De-08-Cau-III.1.png" alt="Bảng xét dấu" style="max-width: 80%; height: auto; margin: 10px 0; border-radius: 5px;"> </div>
+                    <input type="text" class="short-ans" placeholder="Nhập đáp số...">
+                </div>
+
+                <div class="question-box q-p3" data-correct="140">
+                    <p><b>Câu 2:</b> Chi phí sản xuất $x$ bình nước là $C(x) = 10^6 + 2000x + 100x^2$. Giá bán mỗi bình là 30000đ. Cần sản xuất bao nhiêu bình để lợi nhuận tối đa?</p>
+                    <input type="text" class="short-ans" placeholder="Nhập số nguyên...">
+                </div>
+
+                <div class="question-box q-p3" data-correct="0.29">
+                    <p><b>Câu 3:</b> Kết quả đo chiều cao 100 cây tại nông trường. Tính khoảng tứ phân vị của mẫu số liệu ghép nhóm (làm tròn đến hàng phần trăm).</p>
+                    <div class="text-center"> <img src="pic/De-08-Cau-III.3.png" alt="Bảng xét dấu" style="max-width: 80%; height: auto; margin: 10px 0; border-radius: 5px;"> </div>
+                    <input type="text" class="short-ans" placeholder="Nhập số thập phân...">
+                </div>
+
+                <div class="question-box q-p3" data-correct="2">
+                    <p><b>Câu 4:</b> Trong không gian $Oxyz$, cho $A(-1; 2; 3), B(1; -4; 5), C(x; y; 7)$. Nếu $A, B, C$ thẳng hàng, giá trị của $P = 4x + y$ là bao nhiêu?</p>
+                    <input type="text" class="short-ans" placeholder="Nhập đáp số...">
+                </div>
+
+                <div class="question-box q-p3" data-correct="4">
+                    <p><b>Câu 5:</b> Cho $A(2;1;0), B(0;2;1), C(1;3;-1)$. Điểm $M \in (Oxy)$ sao cho $S = 2MA^2 + 3MB^2 - 4MC^2$ đạt giá trị nhỏ nhất. Tính độ dài đoạn $OM$.</p>
+                    <input type="text" class="short-ans" placeholder="Nhập đáp số...">
+                </div>
+
+                <div class="question-box q-p3" data-correct="2357">
+                    <p><b>Câu 6:</b> Tại một hội chợ, ban tổ chức đã thống kê số lượng khách tham gia trong một ngày mở cửa (từ 8g00 đến 23g00). Tốc độ thay đổi lượng khách là $B'(t) = -4t^3 + 72t^2 - 320t + 384$ ($t$ được tính bằng giờ từ lúc mở cửa, $B'(t)$ được tính khách/giờ). Lúc 9h00 có 300 người. Hỏi số người tối đa tham gia hội chợ là bao nhiêu?</p>
+                    <input type="text" class="short-ans" placeholder="Nhập số người...">
+                </div>
+            </div>
+
+        </form>
+        
+		<div class="text-center mt-4"><button id="submitBtnBottom" class="btn btn-success btn-lg fw-bold">NỘP BÀI</button></div>
+    </div>
+</div>
+
+<div id="result-screen">
+    <div class="result-container">
+        <h1 class="fw-bold mb-4 text-center">KẾT QUẢ BÀI THI</h1>
+        <div class="row align-items-center mb-4">
+            <div class="col-md-5 text-center"><div class="score-display" id="finalScore">0.00</div><div class="text-muted fw-bold">TỔNG ĐIỂM</div></div>
+            <div class="col-md-7 border-start ps-4">
+                <p><i class="fas fa-user me-2"></i> Học sinh: <span id="resultName" class="fw-bold"></span></p>
+                <p><i class="fas fa-users me-2"></i> Lớp: <span id="resultClass" class="fw-bold"></span></p>
+                <p><i class="fas fa-check-circle me-2 text-success"></i> Số câu đúng: <span id="resultCorrect" class="fw-bold"></span></p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="index.html" class="btn btn-outline-secondary btn-lg px-4"><i class="fas fa-home me-2"></i>TRANG CHỦ</a>
+            <button id="retryBtn" class="btn btn-outline-primary btn-lg px-4"><i class="fas fa-redo me-2"></i>LÀM LẠI</button>
+            <button id="reviewBtn" class="btn btn-primary btn-lg px-4 shadow"><i class="fas fa-eye me-2"></i>XEM LẠI</button>
+        </div>
+    </div>
+    <div id="reviewArea" class="mt-4"></div>
+</div>
+
+<div id="customModal" class="custom-modal">
+    <div class="modal-content-custom">
+        <h5 id="modalTitle" class="fw-bold">Thông báo</h5>
+        <p id="modalMessage" class="mb-4"></p>
+        <div class="d-flex gap-2 justify-content-end">
+            <button id="modalCancel" class="btn btn-secondary">Hủy</button>
+            <button id="modalConfirm" class="btn btn-primary">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const CONFIG = {
+        API: 'https://script.google.com/macros/s/AKfycbwQTV9HhyJ1Dm6vhO46hEXl5oDsEt9LBYNIQOOiIfXq7JAF1kedIs4zdCGQJYUiU7SZ/exec',
+        EXAM_DURATION: 5400,
+        examId: 'de-08',
+        SCORES: { P1: 0.25, P2: [0.1, 0.25, 0.5, 1.0], P3: 0.5 }
+    };
+
+    const state = { timeRemaining: CONFIG.EXAM_DURATION, timerInterval: null, isSubmitted: false };
+    const elements = {
+        welcome: document.getElementById('welcome-screen'),
+        exam: document.getElementById('exam-screen'),
+        result: document.getElementById('result-screen'),
+        examForm: document.getElementById('examForm'),
+        timer: document.getElementById('timer'),
+        sName: document.getElementById('sName'),
+        sClass: document.getElementById('sClass'),
+        submitBtnTop: document.getElementById('submitBtnTop'),
+        submitBtnBottom: document.getElementById('submitBtnBottom'),
+        retryBtn: document.getElementById('retryBtn'),
+        reviewBtn: document.getElementById('reviewBtn'),
+        modal: document.getElementById('customModal')
+    };
+
+    const utils = {
+        formatTime: (s) => {
+            const m = Math.floor(s / 60), sec = s % 60;
+            return `${m<10?'0':''}${m}:${sec<10?'0':''}${sec}`;
+        },
+        showModal: (title, msg, onConfirm) => {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = msg;
+            elements.modal.classList.add('show');
+            document.getElementById('modalConfirm').onclick = () => { elements.modal.classList.remove('show'); if(onConfirm) onConfirm(); };
+            document.getElementById('modalCancel').onclick = () => elements.modal.classList.remove('show');
+        }
+    };
+
+    const grading = {
+        calculate: () => {
+            let total = 0, correct = 0;
+            document.querySelectorAll('.q-p1').forEach(q => {
+                const ans = q.dataset.correct, sel = q.querySelector('input:checked');
+                if(sel && sel.value === ans) { total += CONFIG.SCORES.P1; correct++; q.classList.add('correct-color'); }
+                else { q.classList.add('wrong-color'); grading.addExplain(q, ans); }
+            });
+            document.querySelectorAll('.q-p2').forEach(q => {
+                const ansArr = q.dataset.correct.split(',');
+                let subC = 0;
+                q.querySelectorAll('.tf-row').forEach((r, i) => {
+                    const sel = r.querySelector('input:checked');
+                    if(sel && sel.value === ansArr[i]) { subC++; r.style.backgroundColor='#d1e7dd'; }
+                    else r.style.backgroundColor='#f8d7da';
+                });
+                if(subC > 0) total += CONFIG.SCORES.P2[subC-1];
+                if(subC === 4) correct++;
+            });
+            document.querySelectorAll('.q-p3').forEach(q => {
+                const ans = q.dataset.correct.trim().toUpperCase();
+                const inp = q.querySelector('input');
+                const val = inp ? inp.value.trim().toUpperCase().replace(',', '.') : '';
+                if(val === ans) { total += CONFIG.SCORES.P3; correct++; q.classList.add('correct-color'); }
+                else { q.classList.add('wrong-color'); grading.addExplain(q, ans); }
+            });
+            return { total: total > 10 ? 10 : total, correct };
+        },
+        addExplain: (q, ans) => {
+            const div = document.createElement('div');
+            div.className = 'ans-explain';
+            div.textContent = 'Đáp án đúng: ' + ans;
+            q.appendChild(div);
+        },
+        submit: (auto = false) => {
+            if(state.isSubmitted) return;
+            const process = () => {
+                clearInterval(state.timerInterval);
+                state.isSubmitted = true;
+                const res = grading.calculate();
+                const sName = elements.sName.value.trim(), sClass = elements.sClass.value.trim();
+                const scoreStr = res.total.toFixed(2);
+                const examTitle = document.getElementById('examTitle').innerText;
+                
+                // Gửi Sheet
+                const form = new FormData();
+                form.append('name', sName); form.append('class', sClass);
+                form.append('test', examTitle); form.append('score', scoreStr);
+                fetch(CONFIG.API, { method: 'POST', body: form, mode: 'no-cors' });
+
+                // LƯU VÀO LOCALSTORAGE CHO STATISTICS.HTML
+                try {
+                    const resultData = {
+                        timestamp: new Date().toISOString(),
+                        testName: examTitle,
+                        studentName: sName,
+                        score: scoreStr,
+                        correctAnswers: res.correct
+                    };
+                    const existingData = localStorage.getItem('exam_results');
+                    const history = existingData ? JSON.parse(existingData) : [];
+                    history.push(resultData);
+                    localStorage.setItem('exam_results', JSON.stringify(history));
+                } catch (e) {
+                    console.error("Lỗi khi lưu lịch sử:", e);
+                }
+
+                document.getElementById('finalScore').textContent = scoreStr;
+                document.getElementById('resultName').textContent = sName;
+                document.getElementById('resultClass').textContent = sClass;
+                document.getElementById('resultCorrect').textContent = res.correct;
+                elements.exam.style.display = 'none';
+                elements.result.style.display = 'block';
+                window.scrollTo(0,0);
+            };
+            if(auto) process(); else utils.showModal('Nộp bài', 'Bạn chắc chắn muốn nộp bài?', process);
+        }
+    };
+
+    // --- MODULE TRỘN CÂU HỎI (ĐÃ SỬA LỖI HIỂN THỊ TIÊU ĐỀ) ---
+    const shuffleSystem = {
+        shuffleArray: (array) => {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        },
+        execute: () => {
+            // 1. Trộn vị trí câu hỏi TRONG TỪNG PHẦN (Container)
+            const parts = ['.q-p1', '.q-p2', '.q-p3'];
+            parts.forEach(selector => {
+                const questions = Array.from(document.querySelectorAll(selector));
+                if (questions.length === 0) return;
+                // Lấy đúng thẻ cha chứa các câu hỏi này (p1-container, p2-container...)
+                const container = questions[0].parentNode;
+                shuffleSystem.shuffleArray(questions);
+                // Đẩy lại vào chính container đó => Tiêu đề (nằm ngoài container) không bị ảnh hưởng
+                questions.forEach(q => container.appendChild(q));
+            });
+            // 2. Đánh lại số thứ tự (Câu 1, Câu 2...)
+            const allQuestions = document.querySelectorAll('.question-box'); 
+            allQuestions.forEach((q, index) => {
+                const label = q.querySelector('b, strong');
+                if (label) {
+                    label.innerHTML = label.innerHTML.replace(/Câu \d+:/, `Câu ${index + 1}:`);
+                }
+            });
+        }
+    };
+
+    const handlers = {
+        start: () => {
+            const n = elements.sName.value.trim(), c = elements.sClass.value.trim();
+            if(!n || !c) return utils.showModal('Thiếu thông tin', 'Vui lòng nhập tên và lớp!');
+            
+            // KÍCH HOẠT TRỘN ĐỀ
+            shuffleSystem.execute();
+
+            document.getElementById('displayName').textContent = `${n} - ${c}`;
+            elements.welcome.style.display = 'none';
+            elements.exam.style.display = 'block';
+            state.timerInterval = setInterval(() => {
+                state.timeRemaining--;
+                elements.timer.textContent = utils.formatTime(state.timeRemaining);
+                if(state.timeRemaining <= 0) grading.submit(true);
+                if(state.timeRemaining < 300) elements.timer.classList.add('warning');
+            }, 1000);
+        },
+        retry: () => location.reload(),
+        review: () => {
+            const clone = elements.examForm.cloneNode(true);
+            clone.querySelectorAll('input').forEach(i => i.disabled = true);
+            const area = document.getElementById('reviewArea');
+            area.innerHTML = '<hr><h4 class="mb-3 text-primary">CHI TIẾT BÀI LÀM</h4>';
+            area.appendChild(clone);
+            MathJax.typeset();
+            document.getElementById('reviewBtn').style.display = 'none';
+        }
+    };
+
+    document.getElementById('startBtn').onclick = handlers.start;
+    elements.submitBtnTop.onclick = () => grading.submit();
+    elements.submitBtnBottom.onclick = () => grading.submit();
+    elements.retryBtn.onclick = handlers.retry;
+    elements.reviewBtn.onclick = handlers.review;
+    window.onbeforeunload = () => state.isSubmitted ? null : "Đang làm bài...";
+})();
+</script>
+</body>
+</html>

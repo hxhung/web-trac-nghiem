@@ -1,0 +1,1704 @@
+<!--
+  File: index.html
+  Version: 2.4.1 - JSON-DRIVEN
+  Author: hungcr
+  Updated: 2026-03-12
+
+  CHANGELOG Ver 2.3.0:
+  ✅ Quản lý đề thi bằng data/exams.json — thêm đề không cần sửa HTML
+  ✅ Xóa toàn bộ card tĩnh — accordion chỉ chứa container rỗng
+  ✅ Gộp 2 DOMContentLoaded thành 1 — tránh xung đột
+  ✅ loadExamsFromJSON() thay updateAccordionCounts() khi khởi động
+  ✅ Hỗ trợ field "questions" trong exams.json (mặc định 22)
+  ✅ Fix bug grade11-chapter6: thẻ div thừa gây vỡ accordion
+  ✅ Giảm ~45% dung lượng HTML so với v2.2
+
+  HƯỚNG DẪN THÊM ĐỀ (v2.3):
+  - Chỉ cần thêm object vào data/exams.json
+  - KHÔNG cần chỉnh sửa file này
+  
+  CHANGELOG Ver 2.4.0:
+	Thay đổi 1 — <head>      : Thêm 7 dòng sau <meta name="author">
+	Thay đổi 2 — Tab button  : Đổi <a> thành <button onclick>
+		Không xóa CSS của .tab-exam
+		Chỉ đổi tag <a> → <button>, giữ nguyên class
+	Thay đổi 3 — Footer      : Thêm link Privacy Policy
+	Thay đổi 4 — </body>     : Thêm modal + đăng ký SW
+	CHANGELOG Ver 2.4.1:
+		+ Đồng hồ cát loading khi khởi động
+		+ Ẩn loader sau khi JSON load xong
+		+ Safety timeout 10s tắt loader
+		+ Android banner tải APK
+		+ Dialog xác nhận Thi Trực Tuyến
+		+ Đăng ký Service Worker (PWA offline)
+		+ Link Privacy Policy trong footer
+		+ Chuyển @keyframes spinLoader lên <head>
+		+ Gộp DOMContentLoaded thành 1
+		+ Sửa tên file APK
+-->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Web trắc nghiệm Toán THPT | Luyện đề & kiểm tra online</title>
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" as="style">
+    
+    <meta name="description" content="Website trắc nghiệm Toán THPT theo chương trình GDPT 2018. Luyện đề, kiểm tra kiến thức, chấm điểm tự động, hỗ trợ học sinh và giáo viên.">
+    <meta name="keywords" content="trắc nghiệm toán, THPT, luyện đề toán, kiểm tra toán, chương trình 2018">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Web trắc nghiệm Toán THPT">
+    <meta property="og:description" content="Luyện đề trắc nghiệm Toán THPT theo chương trình GDPT 2018. Có đáp án, chấm điểm tự động.">
+    <meta property="og:url" content="https://hxhung.github.io/web-trac-nghiem/">
+    <meta property="og:image" content="https://hxhung.github.io/web-trac-nghiem/assets/og-image.png">
+
+    <meta name="author" content="Hồ Xuân Hưng">
+	<link rel="manifest" href="/web-trac-nghiem/manifest.json">
+<meta name="theme-color" content="#1e40af">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="TN Toán">
+<link rel="apple-touch-icon" href="/web-trac-nghiem/icons/web/apple-touch-icon.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+        body { 
+            background-color: #f8fafc; 
+            font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            color: #1e293b;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero-section { 
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); 
+            color: white; 
+            padding: 50px 0;
+            margin-bottom: 20px;
+            border-radius: 0 0 40px 40px; 
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.15); 
+        }
+
+        .text-gradient {
+            background: linear-gradient(90deg, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .title-separator {
+            height: 4px;
+            width: 60px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 10px;
+            margin: 15px auto;
+        }
+
+        /* ===== ANIMATION ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Đồng hồ cát loading */
+        @keyframes spinLoader {
+            0%   { transform: rotate(0deg); }
+            50%  { transform: rotate(180deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideUpModal {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .animate-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* ===== SEARCH BOX ===== */
+        .search-container {
+            max-width: 450px;
+            margin: 25px auto 0;
+            position: relative;
+        }
+
+        .search-box-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box-wrapper input { 
+            border-radius: 16px; 
+            padding: 12px 20px; 
+            padding-right: 50px;
+            border: none; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            font-size: 1rem; 
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            font-size: 1.3rem;
+            pointer-events: none;
+        }
+
+        .search-box-wrapper input:focus {
+            box-shadow: 0 10px 30px rgba(13, 110, 253, 0.2);
+            transform: scale(1.02);
+            outline: none;
+        }
+
+        /* ===== QUICK LINKS ===== */
+        .quick-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .quick-links .btn {
+            font-size: 0.95rem;
+            padding: 10px 24px;
+            border-radius: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-light-custom {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1e40af;
+            border: none;
+        }
+
+        .btn-light-custom:hover {
+            background: white;
+            color: #1e40af;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-outline-light-custom {
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            color: white;
+            background: transparent;
+        }
+
+        .btn-outline-light-custom:hover {
+            background: white;
+            color: #1e40af;
+            border-color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        /* ===== TAB NAVIGATION STYLING ===== */
+        .grade-tabs {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 5px auto 40px;
+            max-width: 900px;
+            flex-wrap: wrap;
+        }
+		
+		/* ===== SIZE TRÊN MÁY TÍNH CỦA TAB KHỐI 10 - 11 - 12 - THI TRỰC TUYẾN ===== */
+        .tab-btn {
+            flex: 1;
+            min-width: 150px;         /* 1. Độ rộng tối thiểu của nút */
+            padding: 10px 20px;       /* 2. Độ to của nút (trên/dưới - trái/phải) */  
+            font-weight: 700;         /* 3. Kích thước chữ (KHỐI 10...) */
+            font-size: 1.05rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            background: white;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .tab-btn:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Tab Thi Trực Tuyến - Đặc biệt */
+        .tab-exam {
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+            color: white !important;
+            border: none !important;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tab-exam:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+            color: white !important;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4) !important;
+        }
+        
+        /* ===== TAB CONTENT ===== */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        /* ===== ACCORDION ===== */
+        .accordion-item {
+            border: none;
+            margin-bottom: 1.5rem;
+            background: transparent;
+        }
+
+        .accordion-header {
+            border-radius: 20px !important;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .accordion-button {
+            padding: 1.25rem 1.5rem;
+            font-weight: 700;
+            color: #1e40af;
+            background-color: white;
+            border-radius: 20px !important;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background-color: #eff6ff;
+            color: #1e40af;
+            box-shadow: none;
+        }
+
+        /* Badge số lượng đề */
+        .accordion-badge {
+            font-size: 0.85rem;
+            padding: 6px 14px;
+            border-radius: 50px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            min-width: 150px;
+            text-align: center;
+            margin-left: 20px;
+            margin-right: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .accordion-button:not(.collapsed) .accordion-badge {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .accordion-body {
+            padding: 1.5rem 0;
+        }
+
+        /* ===== TEST CARD ===== */
+        .test-card { 
+            border: 1px solid rgba(0,0,0,0.10); 
+            border-radius: 24px; 
+            background: #f1f5f9; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            height: 100%; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.07); 
+            overflow: hidden; 
+        }
+
+        .test-card:hover { 
+            transform: translateY(-12px); 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1); 
+        }
+
+        .btn-modern {
+            border-radius: 14px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .meta-info {
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 15px;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-links {
+            margin-bottom: 20px;
+        }
+
+        .footer-links .btn {
+            font-size: 0.9rem;
+            padding: 8px 20px;
+            margin: 5px;
+        }
+
+        /* ===== MOBILE RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .quick-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .quick-links .btn {
+                width: 80%;
+                max-width: 300px;
+            }
+
+            /* ===== TAB NAVIGATION MOBILE ===== */
+            .grade-tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                padding: 0 15px;
+                gap: 10px;
+                margin: 5px auto 30px;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            .grade-tabs::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .tab-btn {
+                flex: 0 0 auto;
+                min-width: 110px;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            /* ===== MOBILE UX: STACK LAYOUT CHO ACCORDION HEADER ===== */
+            .accordion-button {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 1rem;
+            }
+
+            .accordion-button .flex-grow-1 {
+                width: 100%;
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+
+            .accordion-badge {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                margin-top: 5px;
+                min-width: auto !important;
+                width: fit-content;
+                font-size: 0.75rem !important;
+                padding: 4px 12px !important;
+            }
+
+            .accordion-button::after {
+                position: absolute;
+                right: 1rem;
+                top: 1.25rem;
+            }
+
+            /* Khối 10 - Chương II: Tên dài */
+            #grade10Accordion .accordion-item:nth-child(2) .flex-grow-1::after {
+                content: " (2 ẨN)";
+                font-size: 0.8rem;
+                opacity: 0.7;
+            }
+
+            /* Khối 10 - Chương V: Tên dài */
+            #grade10Accordion .accordion-item:nth-child(5) .flex-grow-1 {
+                font-size: 0.85rem;
+            }
+
+            /* Khối 11 - Chương III: Tên dài */
+            #grade11Accordion .accordion-item:nth-child(3) .flex-grow-1 {
+                font-size: 0.85rem;
+            }
+
+            .icon-box {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Mặc định khi người dùng vừa mở web/app, cái màn hình trắng che kín này sẽ hiện lên ngay lập tức và đồng hồ cát sẽ xoay -->
+<div id="app-loader" style="
+    position: fixed; inset: 0; background: #ffffff; 
+    z-index: 999999; display: flex; flex-direction: column; 
+    align-items: center; justify-content: center;">
+    
+    <div style="font-size: 3.5rem; animation: spinLoader 2s linear infinite;">
+        ⏳
+    </div>
+    <div style="margin-top: 15px; color: #1e40af; font-weight: 600; font-size: 1.1rem;">
+        Đang tải dữ liệu...
+    </div>
+</div>
+
+    <!-- ===== HERO SECTION ===== -->
+    <div class="hero-section text-center">
+        <div class="container">
+            <h1 class="fw-bold display-5 animate-up" style="animation-delay: 0.1s;">
+                🎓 ĐỀ THI - ĐỀ KIỂM TRA - ĐỀ ÔN TẬP
+            </h1>
+            
+            <h2 class="fw-bold text-gradient animate-up" style="font-size: 1.5rem; animation-delay: 0.2s;">
+                MÔN TOÁN - Chương trình 2018
+            </h2>
+
+            <div class="title-separator animate-up" style="animation-delay: 0.3s;"></div>
+
+            <p class="fw-bold opacity-75 animate-up" style="font-size: 1.2rem; animation-delay: 0.4s; letter-spacing: 0.5px;">
+                Chấm và ghi điểm tự động
+            </p>
+
+            <div class="search-container animate-up" style="animation-delay: 0.5s;">
+                <div class="search-box-wrapper" role="search" aria-label="Tìm kiếm đề thi">
+                    <input type="text" id="searchInput" class="form-control" 
+                           placeholder="Tìm kiếm bài thi..." 
+                           aria-label="Tìm kiếm bài thi">
+                    <span class="search-icon" aria-hidden="true">🔍</span>
+                </div>
+            </div>
+
+            <div class="quick-links mt-4 animate-up" style="animation-delay: 0.7s;">
+                <a href="statistics.html" class="btn btn-light-custom">
+                    📊 Thống kê
+                </a>
+                <a href="hdsd.html" class="btn btn-light-custom">
+                    📚 Hướng dẫn
+                </a>
+                <a href="lienhe.html" class="btn btn-outline-light-custom">
+                    ✉️ Liên hệ
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT CONTAINER ===== -->
+    <div class="container pb-5 flex-grow-1" style="margin-top: -20px;">
+        
+        <!-- ===== TAB NAVIGATION ===== -->
+        <div class="grade-tabs animate-up" style="animation-delay: 0.8s;">
+            <button class="tab-btn" data-grade="10">KHỐI 10</button>
+            <button class="tab-btn" data-grade="11">KHỐI 11</button>
+            <button class="tab-btn active" data-grade="12">KHỐI 12</button>
+            <button class="tab-btn tab-exam" onclick="confirmOpenExam()" style="border:none;cursor:pointer;">THI TRỰC TUYẾN 🔴</button>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB CONTENT: KHỐI 10                       -->
+        <!-- ========================================== -->
+        <div class="tab-content" id="grade10-content">
+            <div class="accordion" id="grade10Accordion">
+                
+                <!-- CHƯƠNG 1 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade10-chapter1">
+                            <span class="flex-grow-1">📘 CHƯƠNG I: MỆNH ĐỀ VÀ TẬP HỢP</span>
+                            <span class="accordion-badge group-count" data-group="grade10-chapter1">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade10-chapter1" class="accordion-collapse collapse" data-bs-parent="#grade10Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 2 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade10-chapter2">
+                            <span class="flex-grow-1">📐 CHƯƠNG II: BẤT PHƯƠNG TRÌNH VÀ HỆ BẤT PHƯƠNG TRÌNH BẬC NHẤT HAI ẨN</span>
+                            <span class="accordion-badge group-count" data-group="grade10-chapter2">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade10-chapter2" class="accordion-collapse collapse" data-bs-parent="#grade10Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 3 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade10-chapter3">
+                            <span class="flex-grow-1">📊 CHƯƠNG III: HỆ THỨC LƯỢNG TRONG TAM GIÁC</span>
+                            <span class="accordion-badge group-count" data-group="grade10-chapter3">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade10-chapter3" class="accordion-collapse collapse" data-bs-parent="#grade10Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 4 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade10-chapter4">
+                            <span class="flex-grow-1">🔷 CHƯƠNG IV: VECTƠ</span>
+                            <span class="accordion-badge group-count" data-group="grade10-chapter4">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade10-chapter4" class="accordion-collapse collapse" data-bs-parent="#grade10Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 5 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade10-chapter5">
+                            <span class="flex-grow-1">📈 CHƯƠNG V: CÁC SỐ ĐẶC TRƯNG CỦA MẪU SỐ LIỆU KHÔNG GHÉP NHÓM</span>
+                            <span class="accordion-badge group-count" data-group="grade10-chapter5">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade10-chapter5" class="accordion-collapse collapse" data-bs-parent="#grade10Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 6 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade10-chapter6">
+                            <span class="flex-grow-1">📉 CHƯƠNG VI: HÀM SỐ, ĐỒ THỊ VÀ ỨNG DỤNG</span>
+                            <span class="accordion-badge group-count" data-group="grade10-chapter6">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade10-chapter6" class="accordion-collapse collapse" data-bs-parent="#grade10Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 7 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade10-chapter7">
+                            <span class="flex-grow-1">📍 CHƯƠNG VII: PHƯƠNG PHÁP TỌA ĐỘ TRONG MẶT PHẲNG</span>
+                            <span class="accordion-badge group-count" data-group="grade10-chapter7">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade10-chapter7" class="accordion-collapse collapse" data-bs-parent="#grade10Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 8 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade10-chapter8">
+                            <span class="flex-grow-1">🎲 CHƯƠNG VIII: ĐẠI SỐ TỔ HỢP</span>
+                            <span class="accordion-badge group-count" data-group="grade10-chapter8">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade10-chapter8" class="accordion-collapse collapse" data-bs-parent="#grade10Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 9 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade10-chapter9">
+                            <span class="flex-grow-1">🎯 CHƯƠNG IX: TÍNH XÁC SUẤT THEO ĐỊNH NGHĨA CỔ ĐIỂN</span>
+                            <span class="accordion-badge group-count" data-group="grade10-chapter9">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade10-chapter9" class="accordion-collapse collapse" data-bs-parent="#grade10Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÔN TẬP GIỮA HK1 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade10-reviewgiuahk1">
+                            <span class="flex-grow-1">📋 ÔN TẬP GIỮA HỌC KỲ 1</span>
+                            <span class="accordion-badge group-count" data-group="grade10-reviewgiuahk1">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade10-reviewgiuahk1" class="accordion-collapse collapse" data-bs-parent="#grade10Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho phần này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÔN TẬP HK1 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade10-reviewhk1">
+                            <span class="flex-grow-1">📝 ÔN TẬP TỔNG HỢP HỌC KỲ 1</span>
+                            <span class="accordion-badge group-count" data-group="grade10-reviewhk1">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade10-reviewhk1" class="accordion-collapse collapse" data-bs-parent="#grade10Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho phần này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÔN TẬP GIỮA HK2 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade10-reviewgiuahk2">
+                            <span class="flex-grow-1">📋 ÔN TẬP GIỮA HỌC KỲ 2</span>
+                            <span class="accordion-badge group-count" data-group="grade10-reviewgiuahk2">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade10-reviewgiuahk2" class="accordion-collapse collapse" data-bs-parent="#grade10Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho phần này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÔN TẬP HK2 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade10-reviewhk2">
+                            <span class="flex-grow-1">📝 ÔN TẬP TỔNG HỢP HỌC KỲ 2</span>
+                            <span class="accordion-badge group-count" data-group="grade10-reviewhk2">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade10-reviewhk2" class="accordion-collapse collapse" data-bs-parent="#grade10Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho phần này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- END grade10Accordion -->
+        </div><!-- END grade10-content -->
+
+        <!-- ========================================== -->
+        <!-- TAB CONTENT: KHỐI 11                       -->
+        <!-- ========================================== -->
+        <div class="tab-content" id="grade11-content">
+            <div class="accordion" id="grade11Accordion">
+
+                <!-- CHƯƠNG 1 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade11-chapter1">
+                            <span class="flex-grow-1">📐 CHƯƠNG I: HÀM SỐ LƯỢNG GIÁC VÀ PHƯƠNG TRÌNH LƯỢNG GIÁC</span>
+                            <span class="accordion-badge group-count" data-group="grade11-chapter1">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade11-chapter1" class="accordion-collapse collapse" data-bs-parent="#grade11Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 2 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade11-chapter2">
+                            <span class="flex-grow-1">📊 CHƯƠNG II: DÃY SỐ. CẤP SỐ CỘNG VÀ CẤP SỐ NHÂN</span>
+                            <span class="accordion-badge group-count" data-group="grade11-chapter2">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade11-chapter2" class="accordion-collapse collapse" data-bs-parent="#grade11Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 3 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade11-chapter3">
+                            <span class="flex-grow-1">📈 CHƯƠNG III: CÁC SỐ ĐẶC TRƯNG ĐO XU THẾ TRUNG TÂM CỦA MẪU SỐ LIỆU GHÉP NHÓM</span>
+                            <span class="accordion-badge group-count" data-group="grade11-chapter3">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade11-chapter3" class="accordion-collapse collapse" data-bs-parent="#grade11Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 4 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade11-chapter4">
+                            <span class="flex-grow-1">🔷 CHƯƠNG IV: QUAN HỆ SONG SONG TRONG KHÔNG GIAN</span>
+                            <span class="accordion-badge group-count" data-group="grade11-chapter4">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade11-chapter4" class="accordion-collapse collapse" data-bs-parent="#grade11Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 5 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade11-chapter5">
+                            <span class="flex-grow-1">📉 CHƯƠNG V: GIỚI HẠN. HÀM SỐ LIÊN TỤC</span>
+                            <span class="accordion-badge group-count" data-group="grade11-chapter5">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade11-chapter5" class="accordion-collapse collapse" data-bs-parent="#grade11Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 6 — container rỗng, card do JSON inject -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade11-chapter6">
+                            <span class="flex-grow-1">📊 CHƯƠNG VI: HÀM SỐ MŨ VÀ HÀM SỐ LÔGARIT</span>
+                            <span class="accordion-badge group-count" data-group="grade11-chapter6">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade11-chapter6" class="accordion-collapse collapse" data-bs-parent="#grade11Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <!-- Render bởi loadExamsFromJSON() -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 7 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade11-chapter7">
+                            <span class="flex-grow-1">🔷 CHƯƠNG VII: QUAN HỆ VUÔNG GÓC TRONG KHÔNG GIAN</span>
+                            <span class="accordion-badge group-count" data-group="grade11-chapter7">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade11-chapter7" class="accordion-collapse collapse" data-bs-parent="#grade11Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 8 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade11-chapter8">
+                            <span class="flex-grow-1">🎯 CHƯƠNG VIII: CÁC QUY TẮC TÍNH XÁC SUẤT</span>
+                            <span class="accordion-badge group-count" data-group="grade11-chapter8">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade11-chapter8" class="accordion-collapse collapse" data-bs-parent="#grade11Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 9 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade11-chapter9">
+                            <span class="flex-grow-1">📈 CHƯƠNG IX: ĐẠO HÀM</span>
+                            <span class="accordion-badge group-count" data-group="grade11-chapter9">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade11-chapter9" class="accordion-collapse collapse" data-bs-parent="#grade11Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÔN TẬP GIỮA HK1 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade11-reviewgiuahk1">
+                            <span class="flex-grow-1">📋 ÔN TẬP GIỮA HỌC KỲ 1</span>
+                            <span class="accordion-badge group-count" data-group="grade11-reviewgiuahk1">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade11-reviewgiuahk1" class="accordion-collapse collapse" data-bs-parent="#grade11Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho phần này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÔN TẬP HK1 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade11-reviewhk1">
+                            <span class="flex-grow-1">📝 ÔN TẬP TỔNG HỢP HỌC KỲ 1</span>
+                            <span class="accordion-badge group-count" data-group="grade11-reviewhk1">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade11-reviewhk1" class="accordion-collapse collapse" data-bs-parent="#grade11Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho phần này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÔN TẬP GIỮA HK2 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade11-reviewgiuahk2">
+                            <span class="flex-grow-1">📋 ÔN TẬP GIỮA HỌC KỲ 2</span>
+                            <span class="accordion-badge group-count" data-group="grade11-reviewgiuahk2">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade11-reviewgiuahk2" class="accordion-collapse collapse" data-bs-parent="#grade11Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho phần này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÔN TẬP HK2 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade11-reviewhk2">
+                            <span class="flex-grow-1">📝 ÔN TẬP TỔNG HỢP HỌC KỲ 2</span>
+                            <span class="accordion-badge group-count" data-group="grade11-reviewhk2">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade11-reviewhk2" class="accordion-collapse collapse" data-bs-parent="#grade11Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho phần này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- END grade11Accordion -->
+        </div><!-- END grade11-content -->
+
+        <!-- ========================================== -->
+        <!-- TAB CONTENT: KHỐI 12                       -->
+        <!-- Toàn bộ card render bởi loadExamsFromJSON() -->
+        <!-- ========================================== -->
+        <div class="tab-content active" id="grade12-content">
+            <div class="accordion" id="grade12Accordion">
+
+                <!-- CHƯƠNG 1 -->
+                <div class="accordion-item animate-up" style="animation-delay: 0.9s;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade12-chapter1">
+                            <span class="flex-grow-1">📘 CHƯƠNG 1: ỨNG DỤNG ĐẠO HÀM</span>
+                            <span class="accordion-badge group-count" data-group="grade12-chapter1">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade12-chapter1" class="accordion-collapse collapse" data-bs-parent="#grade12Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <!-- Render bởi loadExamsFromJSON() -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 2 -->
+                <div class="accordion-item animate-up" style="animation-delay: 1.0s;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade12-chapter2">
+                            <span class="flex-grow-1">📐 CHƯƠNG 2: VECTƠ VÀ TỌA ĐỘ KHÔNG GIAN</span>
+                            <span class="accordion-badge group-count" data-group="grade12-chapter2">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade12-chapter2" class="accordion-collapse collapse" data-bs-parent="#grade12Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <!-- Render bởi loadExamsFromJSON() -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 3 -->
+                <div class="accordion-item animate-up" style="animation-delay: 1.1s;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade12-chapter3">
+                            <span class="flex-grow-1">📊 CHƯƠNG 3: MỨC ĐỘ PHÂN TÁN SỐ LIỆU</span>
+                            <span class="accordion-badge group-count" data-group="grade12-chapter3">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade12-chapter3" class="accordion-collapse collapse" data-bs-parent="#grade12Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <!-- Render bởi loadExamsFromJSON() -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 4 -->
+                <div class="accordion-item animate-up" style="animation-delay: 1.3s;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade12-chapter4">
+                            <span class="flex-grow-1">∫ CHƯƠNG 4: NGUYÊN HÀM - TÍCH PHÂN</span>
+                            <span class="accordion-badge group-count" data-group="grade12-chapter4">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade12-chapter4" class="accordion-collapse collapse" data-bs-parent="#grade12Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <!-- Render bởi loadExamsFromJSON() -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 5 -->
+                <div class="accordion-item animate-up" style="animation-delay: 1.4s;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade12-chapter5">
+                            <span class="flex-grow-1">🌐 CHƯƠNG V: PHƯƠNG PHÁP TỌA ĐỘ TRONG KHÔNG GIAN</span>
+                            <span class="accordion-badge group-count" data-group="grade12-chapter5">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade12-chapter5" class="accordion-collapse collapse" data-bs-parent="#grade12Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHƯƠNG 6 -->
+                <div class="accordion-item animate-up" style="animation-delay: 1.6s;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade12-chapter6">
+                            <span class="flex-grow-1">🎲 CHƯƠNG VI: XÁC SUẤT CÓ ĐIỀU KIỆN</span>
+                            <span class="accordion-badge group-count" data-group="grade12-chapter6">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade12-chapter6" class="accordion-collapse collapse" data-bs-parent="#grade12Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho chương này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÔN TẬP GIỮA HK1 -->
+                <div class="accordion-item animate-up" style="animation-delay: 1.7s;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade12-reviewgiuahk1">
+                            <span class="flex-grow-1">📋 ÔN TẬP GIỮA HỌC KỲ 1</span>
+                            <span class="accordion-badge group-count" data-group="grade12-reviewgiuahk1">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade12-reviewgiuahk1" class="accordion-collapse collapse" data-bs-parent="#grade12Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho phần này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÔN TẬP TỔNG HỢP HK1 -->
+                <div class="accordion-item animate-up" style="animation-delay: 1.8s;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade12-reviewhk1">
+                            <span class="flex-grow-1">📝 ÔN TẬP TỔNG HỢP HỌC KỲ 1</span>
+                            <span class="accordion-badge group-count" data-group="grade12-reviewhk1">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade12-reviewhk1" class="accordion-collapse collapse" data-bs-parent="#grade12Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <!-- Render bởi loadExamsFromJSON() -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÔN TẬP GIỮA HK2 -->
+                <div class="accordion-item animate-up" style="animation-delay: 1.9s;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade12-reviewgiuahk2">
+                            <span class="flex-grow-1">📋 ÔN TẬP GIỮA HỌC KỲ 2</span>
+                            <span class="accordion-badge group-count" data-group="grade12-reviewgiuahk2">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade12-reviewgiuahk2" class="accordion-collapse collapse" data-bs-parent="#grade12Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <!-- Render bởi loadExamsFromJSON() -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÔN TẬP TỔNG HỢP HK2 -->
+                <div class="accordion-item animate-up" style="animation-delay: 2.0s;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade12-reviewhk2">
+                            <span class="flex-grow-1">📝 ÔN TẬP TỔNG HỢP HỌC KỲ 2</span>
+                            <span class="accordion-badge group-count" data-group="grade12-reviewhk2">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade12-reviewhk2" class="accordion-collapse collapse" data-bs-parent="#grade12Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <p class="text-center text-muted">Chưa có đề thi cho phần này</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÔN TẬP CUỐI NĂM & ĐỀ THI THỬ -->
+                <div class="accordion-item animate-up" style="animation-delay: 2.1s;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#grade12-chapter7">
+                            <span class="flex-grow-1">🎓 ÔN TẬP CUỐI NĂM & ĐỀ THI THỬ</span>
+                            <span class="accordion-badge group-count" data-group="grade12-chapter7">0 đề</span>
+                        </button>
+                    </h2>
+                    <div id="grade12-chapter7" class="accordion-collapse collapse" data-bs-parent="#grade12Accordion">
+                        <div class="accordion-body">
+                            <div class="row g-4 justify-content-center">
+                                <!-- Render bởi loadExamsFromJSON() -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- END grade12Accordion -->
+        </div><!-- END grade12-content -->
+
+    </div><!-- END MAIN CONTAINER -->
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="text-center py-4 text-muted mt-auto border-top bg-white">
+        <div class="container">
+            <div class="footer-links mb-3">
+                <a href="statistics.html" class="btn btn-sm btn-outline-primary">📊 Thống kê</a>
+                <a href="hdsd.html" class="btn btn-sm btn-outline-primary">📚 Hướng dẫn sử dụng</a>
+                <a href="lienhe.html" class="btn btn-sm btn-outline-primary">✉️ Liên hệ</a>
+                <a href="sitemap.html" class="btn btn-sm btn-outline-secondary">🗺️ Sơ đồ trang</a>
+            </div>
+            
+            <div class="mb-2">
+                <span class="badge rounded-pill bg-light text-dark border px-3 py-2 shadow-sm">
+                    👁️ Lượt truy cập: <span id="visit-count" class="fw-bold" aria-live="polite">0</span>
+                </span>
+            </div>
+            
+            <small>© 2026 Hệ thống Trắc nghiệm Toán - Ver 2.4.1 - hxhung</small>
+<br>
+<small><a href="privacy-policy.html" style="color:#64748b;">Chính sách Bảo mật</a></small>
+        </div>
+        <div class="container text-center mt-3 pb-3">
+            <button onclick="resetSystemData()" class="btn btn-outline-secondary btn-sm" style="font-size: 0.8rem; opacity: 0.7;">
+                <i class="fas fa-tools"></i> Sửa lỗi hệ thống / Xóa lịch sử
+            </button>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // ===== 1. TAB SWITCHING LOGIC =====
+            const tabBtns = document.querySelectorAll('.tab-btn:not(.tab-exam)');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            function switchTab(gradeNumber) {
+                tabBtns.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                const activeBtn = document.querySelector(`[data-grade="${gradeNumber}"]`);
+                const activeContent = document.getElementById(`grade${gradeNumber}-content`);
+
+                if (activeBtn && activeContent) {
+                    activeBtn.classList.add('active');
+                    activeContent.classList.add('active');
+                    localStorage.setItem('activeGrade', gradeNumber);
+                }
+            }
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    switchTab(this.getAttribute('data-grade'));
+                });
+            });
+
+            // ===== 2. LOAD TAB TỪ LOCALSTORAGE =====
+            const savedGrade = localStorage.getItem('activeGrade');
+            switchTab(savedGrade || '12');
+
+            // ===== 3. UPDATE BADGE SỐ ĐỀ =====
+            function updateAccordionCounts() {
+                const badges = document.querySelectorAll('.group-count');
+                const today = new Date();
+
+                badges.forEach(badge => {
+                    const groupId = badge.getAttribute('data-group');
+                    const groupElement = document.getElementById(groupId);
+
+                    if (!groupElement) return;
+
+                    const items = groupElement.querySelectorAll('.test-item');
+                    let visibleCount = 0;
+                    let hasNew = false;
+
+                    items.forEach(item => {
+                        if (item.style.display !== 'none') {
+                            visibleCount++;
+                            const dateAttr = item.getAttribute('data-date');
+                            if (dateAttr) {
+                                const diffDays = (today - new Date(dateAttr)) / (1000 * 60 * 60 * 24);
+                                if (diffDays >= 0 && diffDays <= 7) hasNew = true;
+                            }
+                        }
+                    });
+
+                    badge.innerText = `${visibleCount} đề`;
+
+                    const accordionBtn = groupElement.closest('.accordion-collapse')
+                        .previousElementSibling.querySelector('.accordion-button');
+                    const titleSpan = accordionBtn.querySelector('.flex-grow-1');
+                    let existingNew = titleSpan.querySelector('.badge-new');
+
+                    if (hasNew) {
+                        if (!existingNew) {
+                            const newTag = document.createElement('span');
+                            newTag.className = 'badge-new';
+                            newTag.innerHTML = ' NEW';
+                            newTag.style.cssText = 'background:#ef4444;color:white;font-size:0.7rem;padding:3px 8px;border-radius:6px;margin-left:8px;font-weight:bold;display:inline-block;vertical-align:middle;';
+                            titleSpan.appendChild(newTag);
+                        }
+                    } else if (existingNew) {
+                        existingNew.remove();
+                    }
+
+                    groupElement.closest('.accordion-item').style.opacity = (visibleCount === 0) ? '0.5' : '1';
+                });
+            }
+
+            // ===== 4. LOAD EXAMS TỪ JSON =====
+            async function loadExamsFromJSON() {
+                try {
+                    const res = await fetch('data/exams.json');
+                    if (!res.ok) throw new Error('Không tải được exams.json');
+                    const exams = await res.json();
+
+                    // Nhóm theo group — bỏ qua object _note (dùng làm ghi chú trong JSON)
+                    const grouped = {};
+                    exams.forEach(exam => {
+                        if (exam._note !== undefined || !exam.group) return;
+                        if (!grouped[exam.group]) grouped[exam.group] = [];
+                        grouped[exam.group].push(exam);
+                    });
+
+                    // Render vào từng accordion
+                    Object.entries(grouped).forEach(([groupId, items]) => {
+                        const container = document.querySelector(`#${groupId} .accordion-body .row`);
+                        if (!container) return;
+
+                        // Xóa placeholder
+                        container.innerHTML = '';
+
+                        items.forEach(exam => {
+                            const dateAttr = exam.date ? `data-date="${exam.date}"` : '';
+                            const numCau = exam.questions || 22;
+                            const btnLabel = exam.disabled ? 'Đang cập nhật →' : 'Làm bài →';
+                            const btnDisabled = exam.disabled ? 'style="pointer-events:none;opacity:0.6;"' : '';
+
+                            container.insertAdjacentHTML('beforeend', `
+                                <div class="col-lg-4 col-md-6 col-12 test-item" ${dateAttr}>
+                                    <div class="card test-card p-4 shadow-sm border-0">
+                                        <div class="card-body text-center">
+                                            <div class="icon-box" style="background:${exam.iconBg};color:${exam.iconColor};">${exam.icon}</div>
+                                            <h5 class="card-title fw-bold text-uppercase ${exam.titleColor} mb-2">${exam.title}</h5>
+                                            <p class="card-text fw-bold mb-3 text-secondary">${exam.subject}</p>
+                                            <div class="d-flex justify-content-between meta-info small mb-4">
+                                                <span>❓ ${numCau} Câu</span><span>⏱️ 90 Phút</span>
+                                            </div>
+                                            <a href="${exam.href}" class="btn btn-primary btn-modern w-100" ${btnDisabled}>${btnLabel}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        });
+                    });
+
+                    // Cập nhật badge sau khi render xong
+                    updateAccordionCounts();
+					
+					// --- CODE ẨN LOADER ĐỒNG HỒ CÁT ---
+					const loader = document.getElementById('app-loader');
+					if (loader) {
+						clearTimeout(window._loaderSafetyTimeout); // Hủy safety timeout
+						loader.style.transition = 'opacity 0.4s ease'; // ← transition TRƯỚC
+						loader.style.opacity = '0';                     // ← opacity SAU
+					setTimeout(() => { loader.style.display = 'none'; }, 400);
+					}
+					// -----------------------------------
+					
+                } catch (err) {
+                    console.error('❌ loadExamsFromJSON lỗi:', err);
+                    // Fallback: vẫn cập nhật badge cho các nhóm rỗng
+                    updateAccordionCounts();
+					// --- Tắt ngay loader nếu bị lỗi ---
+					clearTimeout(window._loaderSafetyTimeout);
+					const loader = document.getElementById('app-loader');
+					if (loader) loader.style.display = 'none';
+					// ----------------------------------
+					}
+            }
+
+            // ===== 5. VISIT COUNTER =====
+            async function loadVisitCount(retries = 3) {
+                const counter = document.getElementById('visit-count');
+                if (!counter) return;
+
+                const cachedCount = sessionStorage.getItem('visitCount');
+                const cacheTime = sessionStorage.getItem('visitCountTime');
+                const now = Date.now();
+
+                if (cachedCount && cacheTime && (now - parseInt(cacheTime)) < 300000) {
+                    counter.innerText = parseInt(cachedCount).toLocaleString('vi-VN');
+                }
+
+                try {
+                    const response = await fetch('https://api.counterapi.dev/v1/hxhung-web-trac-nghiem/visits/up');
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const data = await response.json();
+                    counter.innerText = data.count.toLocaleString('vi-VN');
+                    sessionStorage.setItem('visitCount', data.count);
+                    sessionStorage.setItem('visitCountTime', now.toString());
+                } catch (error) {
+                    console.error('Error loading visit count:', error);
+                    if (retries > 0) {
+                        setTimeout(() => loadVisitCount(retries - 1), 2000);
+                    } else if (!cachedCount) {
+                        counter.innerText = 'N/A';
+                    }
+                }
+            }
+
+            // ===== 6. SEARCH FUNCTIONALITY =====
+            function filterTests() {
+                const filter = document.getElementById('searchInput').value.toUpperCase().trim();
+                const allTestItems = document.querySelectorAll('.test-item');
+
+                if (filter === '') {
+                    allTestItems.forEach(item => { item.style.display = ''; });
+                    document.querySelectorAll('.accordion-collapse').forEach(collapse => {
+                        const bsCollapse = bootstrap.Collapse.getInstance(collapse);
+                        if (bsCollapse) bsCollapse.hide();
+                    });
+                    updateAccordionCounts();
+                    return;
+                }
+
+                const accordionsToOpen = new Set();
+                allTestItems.forEach(item => {
+                    const title = item.querySelector('.card-title').innerText.toUpperCase();
+                    const text = item.querySelector('.card-text').innerText.toUpperCase();
+                    if (title.includes(filter) || text.includes(filter)) {
+                        item.style.display = '';
+                        const parentAccordion = item.closest('.accordion-collapse');
+                        if (parentAccordion) accordionsToOpen.add(parentAccordion.id);
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                document.querySelectorAll('.accordion-collapse').forEach(collapse => {
+                    const bsCollapse = bootstrap.Collapse.getInstance(collapse) || new bootstrap.Collapse(collapse, { toggle: false });
+                    if (accordionsToOpen.has(collapse.id)) {
+                        bsCollapse.show();
+                    } else {
+                        bsCollapse.hide();
+                    }
+                });
+
+                updateAccordionCounts();
+            }
+
+            // ===== 7. KHỞI ĐỘNG =====
+            loadVisitCount();
+            // Safety timeout: tắt loader sau 10s dù có lỗi hay không
+			window._loaderSafetyTimeout = setTimeout(() => {
+				const loader = document.getElementById('app-loader');
+				if (loader) loader.style.display = 'none';
+			}, 10000);
+
+			loadExamsFromJSON(); // ← v2.3: thay updateAccordionCounts()
+
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) searchInput.addEventListener('keyup', filterTests);
+
+            // Kiểm tra hiện banner tải APK Android
+            checkAndShowAndroidBanner();
+
+            console.log('✅ Ver 2.4.1 - PWA + JSON-DRIVEN');
+            console.log('- loadExamsFromJSON: OK');
+            console.log('- Tab navigation: OK');
+            console.log('- Badge NEW 7 ngày: OK');
+            console.log('- Search: OK');
+        });
+
+        // ===== 8. RESET SYSTEM =====
+        function resetSystemData() {
+            if (confirm('Chức năng này dùng khi hệ thống bị lỗi hoặc bạn muốn làm lại từ đầu.\n\nToàn bộ lịch sử làm bài trên máy này sẽ bị xóa. Bạn có chắc chắn không?')) {
+                localStorage.clear();
+                sessionStorage.clear();
+                alert('Đã dọn dẹp hệ thống thành công! Trang web sẽ tải lại.');
+                location.reload();
+            }
+        }
+    </script>
+<!-- ===== PWA: DIALOG THI TRỰC TUYẾN ===== -->
+<div id="exam-confirm-modal" style="
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.5); z-index:99999;
+    align-items:center; justify-content:center;">
+    <div style="
+        background:#fff; border-radius:16px;
+        padding:30px; max-width:360px; width:90%;
+        text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
+        <div style="font-size:2.5rem; margin-bottom:12px;">🌐</div>
+        <h5 style="font-weight:700; margin-bottom:10px; color:#1e293b;">
+            Mở Thi Trực Tuyến
+        </h5>
+        <p style="color:#64748b; font-size:0.95rem; margin-bottom:20px;">
+            Phần này kết nối với máy chủ và sẽ mở trong trình duyệt.
+            Vui lòng đảm bảo có kết nối Internet.
+        </p>
+        <div style="display:flex; gap:10px; justify-content:center;">
+            <button onclick="closeExamModal()" style="
+                padding:10px 20px; border-radius:10px;
+                border:1px solid #e2e8f0; background:#f8fafc;
+                color:#475569; font-weight:600; cursor:pointer;">
+                Hủy
+            </button>
+            <button onclick="goToExam()" style="
+                padding:10px 20px; border-radius:10px;
+                border:none; background:linear-gradient(135deg,#ef4444,#dc2626);
+                color:#fff; font-weight:600; cursor:pointer;">
+                Tiếp tục 🔴
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== PWA: ĐĂNG KÝ SERVICE WORKER ===== -->
+<script>
+    // --- Dialog Thi Trực Tuyến ---
+    function confirmOpenExam() {
+        const modal = document.getElementById('exam-confirm-modal');
+        modal.style.display = 'flex';
+    }
+
+    function closeExamModal() {
+        const modal = document.getElementById('exam-confirm-modal');
+        modal.style.display = 'none';
+    }
+
+    function goToExam() {
+        closeExamModal();
+        window.open(
+            'https://hxhung.github.io/thi-truc-tuyen/index.html',
+            '_blank'
+        );
+    }
+
+    // Đóng modal khi bấm ra ngoài
+    document.getElementById('exam-confirm-modal')
+        .addEventListener('click', function(e) {
+            if (e.target === this) closeExamModal();
+        });
+
+    // --- Đăng ký Service Worker ---
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker
+                .register('/web-trac-nghiem/service-worker.js')
+                .then(reg => {
+                    console.log('[PWA] Service Worker đã đăng ký:', reg.scope);
+                })
+                .catch(err => {
+                    console.warn('[PWA] Đăng ký Service Worker thất bại:', err);
+                });
+        });
+    }
+    // ===== LOGIC HIỂN THỊ BANNER TẢI APP & PWA =====
+let deferredPrompt;
+
+// 1. Bắt sự kiện PWA của trình duyệt (chặn cái bảng đen)
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Ngăn trình duyệt hiện cái thanh đen mặc định ở dưới cùng
+    e.preventDefault();
+    // Lưu lại event để gán vào nút của chúng ta
+    deferredPrompt = e;
+
+    // Tìm các thành phần của banner xanh
+    const banner = document.getElementById('android-install-banner');
+    if (banner) {
+        const installBtn = document.getElementById('banner-apk-btn'); // ID ổn định
+        const guideText = banner.querySelector('div[onclick="openInstallGuide()"]');
+        
+        if (installBtn) {
+            // Đổi chức năng nút thành cài đặt PWA (cài mượt, không bị cảnh báo)
+            installBtn.innerText = 'Cài đặt App ⚡';
+            installBtn.href = '#';
+            installBtn.onclick = async (event) => {
+                event.preventDefault();
+                if (deferredPrompt) {
+                    deferredPrompt.prompt(); // Hiện hộp thoại cài đặt an toàn của Google
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        banner.style.display = 'none'; // Người dùng đồng ý cài thì ẩn banner
+                    }
+                    deferredPrompt = null;
+                }
+            };
+        }
+
+        // Ẩn dòng "Xem hướng dẫn" vì cài cách này an toàn 100%, không bị Play Protect chặn
+        if (guideText) {
+            guideText.style.display = 'none';
+        }
+        
+        // Hiện banner xanh lên
+        banner.style.display = 'flex';
+    }
+});
+
+// 2. Hàm dự phòng: Nếu dùng trình duyệt lạ không có PWA (ép tải file APK)
+function checkAndShowAndroidBanner() {
+    const isAndroid = /android/i.test(navigator.userAgent);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+
+    if (isAndroid && !isStandalone) {
+        // Đợi 0.5s để xem event PWA ở trên có kích hoạt không. 
+        // Nếu không (tức là trình duyệt không hỗ trợ) -> Hiện banner Tải APK gốc
+        setTimeout(() => {
+            if (!deferredPrompt) {
+                const banner = document.getElementById('android-install-banner');
+                if (banner) banner.style.display = 'flex';
+            }
+        }, 500);
+    }
+}
+
+// checkAndShowAndroidBanner() đã được gọi trong DOMContentLoaded chính ở trên.
+</script>
+<div id="android-install-banner" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e40af; color: white; padding: 12px 20px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 9998; align-items: center; gap: 12px; width: 90%; max-width: 400px;">
+    <img src="/web-trac-nghiem/icons/web/icon-192.png" alt="App Icon" style="width: 45px; height: 45px; border-radius: 10px; background: white; padding: 2px;">
+    <div style="flex-grow: 1;">
+        <div style="font-weight: bold; font-size: 15px;">TN Toán THPT</div>
+        <div style="font-size: 13px; color: #bfdbfe; cursor: pointer; margin-top: 3px;" onclick="openInstallGuide()">
+            📝 Xem hướng dẫn cài đặt
+        </div>
+    </div>
+    <a id="banner-apk-btn" href="/web-trac-nghiem/Trac-nghiem-Toan-THPT.apk" style="background: white; color: #1e40af; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 13px; text-decoration: none; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Tải APK</a>
+    <button onclick="document.getElementById('android-install-banner').style.display='none'" style="background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 0 0 0 5px; opacity: 0.8;">&times;</button>
+</div>
+<div id="apk-install-guide" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99999; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(3px);">
+    <div style="background: #ffffff; border-radius: 20px; width: 100%; max-width: 380px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: slideUpModal 0.3s ease-out;">
+        
+        <div style="background: #1e40af; color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; font-size: 1.15rem; font-weight: 600;">🛠️ Hướng dẫn cài đặt</h3>
+            <button onclick="closeInstallGuide()" style="background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; line-height: 1;">&times;</button>
+        </div>
+
+        <div style="padding: 24px 20px; max-height: 65vh; overflow-y: auto;">
+            <p style="font-size: 0.9rem; color: #4b5563; margin-top: 0; margin-bottom: 24px; line-height: 1.5;">Vì ứng dụng tải trực tiếp từ Website nên điện thoại sẽ hiện cảnh báo an toàn. Bạn làm theo 3 bước sau nhé:</p>
+            
+            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <div style="background: #eff6ff; color: #1e40af; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">1</div>
+                <div>
+                    <h4 style="margin: 0 0 6px 0; font-size: 1rem; color: #1f2937;">Vẫn tải xuống</h4>
+                    <p style="margin: 0; font-size: 0.85rem; color: #6b7280; line-height: 1.5;">Nếu trình duyệt cảnh báo tệp có thể gây hại, hãy mạnh dạn chọn <b>Vẫn tải xuống (Download anyway)</b>.</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <div style="background: #eff6ff; color: #1e40af; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">2</div>
+                <div>
+                    <h4 style="margin: 0 0 6px 0; font-size: 1rem; color: #1f2937;">Cho phép nguồn này</h4>
+                    <p style="margin: 0; font-size: 0.85rem; color: #6b7280; line-height: 1.5;">Mở file vừa tải để cài đặt. Nếu máy yêu cầu, hãy vào Cài đặt và bật <b>Cho phép từ nguồn này</b>.</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+                <div style="background: #fef2f2; color: #dc2626; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">3</div>
+                <div>
+                    <h4 style="margin: 0 0 6px 0; font-size: 1rem; color: #1f2937;">Bỏ qua Play Protect</h4>
+                    <p style="margin: 0; font-size: 0.85rem; color: #6b7280; line-height: 1.5;">Nếu màn hình đỏ của Google xuất hiện cảnh báo, hãy bấm <b>Chi tiết thêm (More details)</b> &rarr; <b>Vẫn cài đặt (Install anyway)</b>.</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="padding: 16px 20px; border-top: 1px solid #f3f4f6; text-align: center; background: #f9fafb;">
+            <a href="/web-trac-nghiem/Trac-nghiem-Toan-THPT.apk" onclick="closeInstallGuide()" style="display: inline-block; background: #1e40af; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: 600; font-size: 1rem; width: 100%; box-sizing: border-box; box-shadow: 0 4px 6px rgba(30, 64, 175, 0.2); transition: all 0.2s;">✅ Đã hiểu, Tải App ngay</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hàm mở Popup
+    function openInstallGuide() {
+        document.getElementById('apk-install-guide').style.display = 'flex';
+    }
+
+    // Hàm đóng Popup
+    function closeInstallGuide() {
+        document.getElementById('apk-install-guide').style.display = 'none';
+    }
+
+    // Tự động đóng Popup khi bấm ra ngoài khoảng đen
+    document.getElementById('apk-install-guide').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeInstallGuide();
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+{
+  "id": "/web-trac-nghiem/",
+  "name": "Trắc nghiệm Toán - THPT",
+  "short_name": "TN Toán",
+  "description": "Luyện đề trắc nghiệm Toán THPT theo chương trình GDPT 2018. Chấm điểm tự động, hỗ trợ offline.",
+  "start_url": "/web-trac-nghiem/",
+  "scope": "/web-trac-nghiem/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1e40af",
+  "theme_color": "#1e40af",
+  "lang": "vi",
+  "categories": [
+    "education"
+  ],
+  "icons": [
+    {
+      "src": "/web-trac-nghiem/icons/web/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/web-trac-nghiem/icons/web/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/web-trac-nghiem/icons/web/icon-192-maskable.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/web-trac-nghiem/icons/web/icon-512-maskable.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Đề ôn tập",
+      "short_name": "Ôn tập",
+      "description": "Vào các đề tự luyện",
+      "url": "/web-trac-nghiem/",
+      "icons": [
+        {
+          "src": "/web-trac-nghiem/icons/web/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Thống kê",
+      "short_name": "Thống kê",
+      "description": "Xem lịch sử và thống kê điểm",
+      "url": "/web-trac-nghiem/statistics.html",
+      "icons": [
+        {
+          "src": "/web-trac-nghiem/icons/web/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/web-trac-nghiem/icons/web/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Trang chủ"
+    }
+  ]
+}
