@@ -41,17 +41,16 @@ web-trac-nghiem/
 │   ├── web/                          # Icon PWA các kích thước
 │   └── android/                      # Bộ icon cho app Android
 │
-├── de-01.html → de-10.html           # Đề thi Khối 12 (Series cũ)
+├── K12/                              # Đề thi Khối 12
+│   ├── de-01.html → de-10.html       # Đề thi Series cũ
+│   ├── K12.C3.B2.LT_tichphan.html
+│   ├── k12.tn1.html
+│   ├── k12.tn2.html
+│   ├── on_giua_hk2_de_1.html
+│   └── on_giua_hk2_de_2.html
 │
 ├── K11/                              # Đề thi Khối 11
 │   └── k11.c6.b5.1.html
-│
-├── K12/                              # Đề thi Khối 12 (Series mới)
-│   ├── K12.C3.B2.LT_tichphan.html
-│   └── k12.tn1.html
-│
-├── k12/                              # Đề thi ôn tập HK2
-│   └── on_giua_hk2_de_1.html
 │
 ├── statistics.html                   # Dashboard phân tích và thống kê điểm số
 ├── hdsd.html                         # Hướng dẫn sử dụng hệ thống
@@ -70,15 +69,16 @@ web-trac-nghiem/
 ### 🟢 Khối 12
 | Group | Đề thi | Nội dung | Số câu | Tên file đề |
 | :--- | :--- | :--- | :---: | :--- |
-| `grade12-chapter1` | Đề 01 | Ứng dụng đạo hàm — Khảo sát hàm số | 22 | `de-07.html` |
-| `grade12-chapter2` | Đề 02 | Vectơ và toạ độ trong không gian | 22 | `de-02.html` |
-| `grade12-chapter3` | Đề 03 | Mức độ phân tán số liệu | 22 | `de-03.html` |
-| `grade12-chapter4` | Luyện tập | Nguyên hàm và ứng dụng | 22 | `de-10.html` |
+| `grade12-chapter1` | Đề 01 | Ứng dụng đạo hàm — Khảo sát hàm số | 22 | `K12/de-01.html` |
+| `grade12-chapter2` | Đề 02 | Vectơ và toạ độ trong không gian | 22 | `K12/de-02.html` |
+| `grade12-chapter3` | Đề 03 | Mức độ phân tán số liệu | 22 | `K12/de-03.html` |
+| `grade12-chapter4` | Luyện tập | Nguyên hàm và ứng dụng | 22 | `K12/de-10.html` |
 | `grade12-chapter4` | Luyện tập | Tích phân | 40 | `K12/K12.C3.B2.LT_tichphan.html` |
-| `grade12-reviewhk1` | Đề 04 → 08 | Ôn tập tổng hợp Học Kỳ 1 | 22 | `de-04.html` → `de-08.html` |
+| `grade12-reviewhk1` | Đề 04 → 08 | Ôn tập tổng hợp Học Kỳ 1 | 22 | `K12/de-04.html` → `K12/de-08.html` |
 | `grade12-reviewgiuahk2` | Đề 1 | Ôn tập Giữa Học Kỳ 2 | 22 | `K12/on_giua_hk2_de_1.html` |
 | `grade12-reviewgiuahk2` | Đề 2 | Ôn tập Giữa Học Kỳ 2 | 22 | `K12/on_giua_hk2_de_2.html` |
 | `grade12-chapter7` | Đề thi thử 1 | Ôn tập cuối năm & Đề thi thử | 22 | `K12/k12.tn1.html` |
+| `grade12-chapter7` | Đề TN THPT | Đề thi Tốt nghiệp THPT 2026 | 22 | `K12/k12.tn2.html` |
 
 ### 🟡 Khối 11
 | Group | Đề thi | Nội dung | Số câu | Tên file đề |
@@ -171,7 +171,7 @@ Trang luyện thi tự do liên kết trực tiếp với dự án con **[thi-tr
 
 ```text
 web-trac-nghiem (Trang luyện tập tự do)
-  ├── de-XX.html (Ôn tập cục bộ)
+  ├── K12/de-XX.html (Ôn tập cục bộ)
   └── [Tab THI TRỰC TUYẾN]
            └──► thi-truc-tuyen (Phân hệ thi chính thức)
                    ├── index.html (Đăng nhập phòng thi)

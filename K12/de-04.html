@@ -7,7 +7,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-	<script src="js/storage.js"></script>
+	<script src="../../js/storage.js"></script>
     <style>
         :root{--primary:#0d6efd;--sec:#6c757d;--success:#198754;--danger:#dc3545}body{background:#f8f9fa;font-family:sans-serif}
         #welcome-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d6efd,#0a58ca)}
@@ -33,7 +33,7 @@
     <input type="text" id="sName" class="form-control form-control-lg mb-3" placeholder="Nhập họ và tên...">
     <input type="text" id="sClass" class="form-control form-control-lg mb-4" placeholder="Nhập lớp...">
     <button onclick="start()" class="btn btn-primary btn-lg w-100 fw-bold shadow">BẮT ĐẦU LÀM BÀI</button>
-    <div class="mt-3"><a href="index.html" class="text-secondary text-decoration-none small"><i class="fas fa-arrow-left"></i> Về trang chủ</a></div>
+    <div class="mt-3"><a href="../index.html" class="text-secondary text-decoration-none small"><i class="fas fa-arrow-left"></i> Về trang chủ</a></div>
 </div></div>
 
 <div id="exam-screen">
@@ -226,7 +226,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center gap-3">
-                <a href="index.html" class="btn btn-outline-secondary btn-lg px-4">TRANG CHỦ</a>
+                <a href="../index.html" class="btn btn-outline-secondary btn-lg px-4">TRANG CHỦ</a>
                 <button onclick="location.reload()" class="btn btn-outline-primary btn-lg px-4">LÀM LẠI</button>
                 <button onclick="rev()" class="btn btn-primary btn-lg px-4 shadow">XEM LẠI</button>
             </div>
@@ -239,7 +239,7 @@
 const API='https://script.google.com/macros/s/AKfycbwQTV9HhyJ1Dm6vhO46hEXl5oDsEt9LBYNIQOOiIfXq7JAF1kedIs4zdCGQJYUiU7SZ/exec';
 let tRem=5400,tInt,subbed=false;
 
-function goHome(){if(confirm('Quay về trang chủ? Toàn bộ bài làm hiện tại sẽ bị hủy.')) window.location.href='index.html';}
+function goHome(){if(confirm('Quay về trang chủ? Toàn bộ bài làm hiện tại sẽ bị hủy.')) window.location.href='../index.html';}
 
 window.addEventListener('load',()=>{
     function shuf(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}

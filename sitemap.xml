@@ -54,7 +54,7 @@
 
     <!-- Đề thi số 01 -->
     <url>
-        <loc>https://hxhung.github.io/web-trac-nghiem/de-01.html</loc>
+        <loc>https://hxhung.github.io/web-trac-nghiem/K12/de-01.html</loc>
         <lastmod>2026-01-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
@@ -62,7 +62,7 @@
 
     <!-- Đề thi số 02 -->
     <url>
-        <loc>https://hxhung.github.io/web-trac-nghiem/de-02.html</loc>
+        <loc>https://hxhung.github.io/web-trac-nghiem/K12/de-02.html</loc>
         <lastmod>2026-01-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
@@ -70,7 +70,7 @@
 
     <!-- Đề thi số 03 -->
     <url>
-        <loc>https://hxhung.github.io/web-trac-nghiem/de-03.html</loc>
+        <loc>https://hxhung.github.io/web-trac-nghiem/K12/de-03.html</loc>
         <lastmod>2026-01-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
@@ -78,7 +78,7 @@
 
     <!-- Đề thi số 04 -->
     <url>
-        <loc>https://hxhung.github.io/web-trac-nghiem/de-04.html</loc>
+        <loc>https://hxhung.github.io/web-trac-nghiem/K12/de-04.html</loc>
         <lastmod>2026-01-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
@@ -86,7 +86,7 @@
 
     <!-- Đề thi số 05 -->
     <url>
-        <loc>https://hxhung.github.io/web-trac-nghiem/de-05.html</loc>
+        <loc>https://hxhung.github.io/web-trac-nghiem/K12/de-05.html</loc>
         <lastmod>2026-01-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
@@ -94,7 +94,7 @@
   
   <!-- Đề thi số 06 -->
     <url>
-        <loc>https://hxhung.github.io/web-trac-nghiem/de-06.html</loc>
+        <loc>https://hxhung.github.io/web-trac-nghiem/K12/de-06.html</loc>
         <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
@@ -103,7 +103,7 @@
 	<!-- Thêm các đề thi khác khi có -->
     <!-- 
     <url>
-        <loc>https://hxhung.github.io/web-trac-nghiem/de-06.html</loc>
+        <loc>https://hxhung.github.io/web-trac-nghiem/K12/de-06.html</loc>
         <lastmod>2026-01-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
