@@ -13,7 +13,7 @@
 // =====================================================
 // CẤU HÌNH VERSION — ĐỔI SỐ NÀY toan-thpt-vx KHI THÊM ĐỀ MỚI
 // =====================================================
-const CACHE_NAME = 'toan-thpt-v4';
+const CACHE_NAME = 'toan-thpt-v5';
 const BASE = '/web-trac-nghiem';
 
 // =====================================================
@@ -48,6 +48,7 @@ const STATIC_HTML = [
   `${BASE}/K12/k12.tn2.html`,
   // --- Đề K11 subfolder ---
   `${BASE}/K11/k11.c6.b5.1.html`,
+    `${BASE}/K12/k12.tn3.html`,
   // THÊM ĐỀ MỚI TẠI ĐÂY:
   // `${BASE}/de-11.html`,
   // `${BASE}/K12/ten_de_moi.html`,
@@ -124,6 +125,11 @@ const STATIC_IMAGES_K12 = [
   `${BASE}/K12/pic/de-0101_cau_18.png`,
   `${BASE}/K12/pic/de-0101_cau_19.png`,
   `${BASE}/K12/pic/de-0101_cau_20.png`,
+  `${BASE}/K12/pic/k12.tn3.cau01.png`,
+  `${BASE}/K12/pic/k12.tn3.cau02.png`,
+  `${BASE}/K12/pic/k12.tn3.cau11.png`,
+  `${BASE}/K12/pic/k12.tn3.cau17.png`,
+  `${BASE}/K12/pic/k12.tn3.cau22.png`,
 ];
 
 // Ảnh K11/pic/ — chưa có, thêm sau

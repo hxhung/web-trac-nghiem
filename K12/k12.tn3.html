@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hệ thống thi trực tuyến GDPT 2018">
+    <title>ĐỀ THI TỐT NGHIỆP THPT 2025</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        :root { --primary: #0d6efd; --secondary: #6c757d; --success: #198754; --danger: #dc3545; --warning: #ffc107; --bg-p1: #e3f2fd; --border-p1: #1976d2; --bg-p2: #fff9e6; --border-p2: #f9a825; --bg-p3: #e8f5e9; --border-p3: #43a047; --exam-bg: #f5f5f5; }
+        * { box-sizing: border-box; }
+        body { background: var(--exam-bg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; }
+        #welcome-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), #0a58ca); padding: 20px; }
+        .welcome-card { background: #fff; width: 100%; max-width: 500px; padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        #exam-screen, #result-screen { display: none; }
+        .exam-container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .exam-header { background: var(--primary); color: #fff; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .timer { font-size: 1.5rem; font-weight: bold; }
+        .timer.warning { color: var(--warning); animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+        .part-header { background: #343a40; color: #fff; padding: 12px 20px; border-radius: 8px; margin: 25px 0 15px; font-weight: bold; font-size: 1.1rem; }
+        .question-box { background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid var(--primary); }
+        .q-p1 { border-left-color: var(--border-p1); background: var(--bg-p1); }
+        .q-p2 { border-left-color: var(--border-p2); background: var(--bg-p2); }
+        .q-p3 { border-left-color: var(--border-p3); background: var(--bg-p3); }
+        .correct-color { border-left-color: var(--success) !important; }
+        .wrong-color { border-left-color: var(--danger) !important; }
+        .ans-explain { margin-top: 10px; padding: 8px 12px; background: #fff3cd; border-radius: 6px; font-weight: bold; color: #856404; }
+        .option-label { display: block; padding: 8px 12px; margin: 5px 0; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+        .option-label:hover { background: rgba(0,0,0,0.05); }
+        .tf-row { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .tf-row span { flex: 1; }
+        .tf-row label { white-space: nowrap; margin-left: 12px; }
+        .short-ans { width: 100%; max-width: 250px; padding: 8px 12px; border: 2px solid #ced4da; border-radius: 6px; font-size: 1rem; margin-top: 10px; }
+        .result-container { max-width: 700px; margin: 40px auto; padding: 30px; background: #fff; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .score-display { font-size: 4rem; font-weight: bold; color: var(--primary); }
+        @media (max-width: 600px) {
+            .complex-table thead { display: none; }
+            .complex-table td { display: block; text-align: right; padding: 8px 10px; border-bottom: 1px solid #dee2e6; }
+            .complex-table td::before { content: attr(data-label); float: left; font-weight: bold; }
+        }
+        .custom-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
+        .custom-modal.show { display: flex; }
+        .modal-content-custom { background: #fff; padding: 30px; border-radius: 12px; max-width: 400px; width: 90%; }
+    </style>
+</head>
+<body>
+    <div id="welcome-screen">
+        <div class="welcome-card">
+            <h2 class="fw-bold text-primary mb-1" id="examTitle">ĐỀ THI TỐT NGHIỆP THPT 2025 - Mã đề 101</h2>
+            <p class="text-muted mb-4"><span id='examDuration'>90</span> phút | 22 câu | 10 điểm</p>
+            <div class="mb-3 text-start">
+                <label class="form-label fw-bold">Họ và tên</label>
+                <input type="text" id="sName" class="form-control" placeholder="Nhập họ và tên...">
+            </div>
+            <div class="mb-4 text-start">
+                <label class="form-label fw-bold">Lớp</label>
+                <input type="text" id="sClass" class="form-control" placeholder="Nhập lớp...">
+            </div>
+            <button id="startBtn" class="btn btn-primary btn-lg w-100 fw-bold">BẮT ĐẦU THI →</button>
+        </div>
+    </div>
+
+    <div id="exam-screen">
+        <div class="exam-container">
+            <div class="exam-header">
+                <div>
+                    <div class="fw-bold fs-5" id="displayName"></div>
+                    <div class="small opacity-75">Web trắc nghiệm Toán THPT</div>
+                </div>
+                <div class="text-center">
+                    <div class="small opacity-75">Thời gian còn lại</div>
+                    <div class="timer" id="timer">90:00</div>
+                </div>
+                <button id="submitBtnTop" class="btn btn-warning fw-bold">NỘP BÀI</button>
+            </div>
+            <form id="examForm">
+                <div class="part-header">PHẦN I. Trắc nghiệm nhiều phương án lựa chọn (12 câu - 3 điểm)</div>
+                <div id="p1-container">
+                    <div class="question-box q-p1" data-correct="C">
+                        <p><b>Câu 1.</b> Cho hình lăng trụ $ABC.A'B'C'$ (xem hình vẽ). Phát biểu nào sau đây là đúng?</p>
+                        <img src="pic/k12.tn3.cau01.png" alt="Hình câu 1" class="img-fluid my-2">
+                        <label class="option-label"><input type="radio" name="q1" value="A"> A. $\vec{BA}+\vec{A'C'}=\vec{BC'}$</label>
+                        <label class="option-label"><input type="radio" name="q1" value="B"> B. $\vec{BA}+\vec{A'C'}=\vec{C'B'}$</label>
+                        <label class="option-label"><input type="radio" name="q1" value="C"> C. $\vec{BA}+\vec{A'C'}=\vec{BC}$</label>
+                        <label class="option-label"><input type="radio" name="q1" value="D"> D. $\vec{BA}+\vec{A'C'}=\vec{A'A}$</label>
+                    </div>
+                    <div class="question-box q-p1" data-correct="C">
+                        <p><b>Câu 2.</b> Cho hình hộp $ABCD.A'B'C'D'$ (xem hình vẽ). Đường thẳng $AB$ song song với mặt phẳng nào sau đây?</p>
+                        <img src="pic/k12.tn3.cau02.png" alt="Hình câu 2" class="img-fluid my-2">
+                        <label class="option-label"><input type="radio" name="q2" value="A"> A. $(CC'A'A)$</label>
+                        <label class="option-label"><input type="radio" name="q2" value="B"> B. $(BB'C'C)$</label>
+                        <label class="option-label"><input type="radio" name="q2" value="C"> C. $(A'B'C'D')$</label>
+                        <label class="option-label"><input type="radio" name="q2" value="D"> D. $(AA'D'D)$</label>
+                    </div>
+                    <div class="question-box q-p1" data-correct="C">
+                        <p><b>Câu 3.</b> Một người chia thời lượng (đơn vị: giây) thực hiện các cuộc gọi điện thoại... và lập bảng tần số ghép nhóm như sau:</p>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover complex-table">
+                                <thead>
+                                    <tr><th>Nhóm</th><th>$[0;40)$</th><th>$[40;80)$</th><th>$[80;120)$</th><th>$[120;160)$</th><th>$[160;200)$</th><th>$[200;240)$</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td data-label="Nhóm"><b>Tần số</b></td><td data-label="[0;40)">11</td><td data-label="[40;80)">10</td><td data-label="[80;120)">6</td><td data-label="[120;160)">8</td><td data-label="[160;200)">4</td><td data-label="[200;240)">1</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p>Tứ phân vị thứ ba $Q_3$ của mẫu số liệu trên bảng:</p>
+                        <label class="option-label"><input type="radio" name="q3" value="A"> A. 145.</label>
+                        <label class="option-label"><input type="radio" name="q3" value="B"> B. 140.</label>
+                        <label class="option-label"><input type="radio" name="q3" value="C"> C. 135.</label>
+                        <label class="option-label"><input type="radio" name="q3" value="D"> D. 130.</label>
+                    </div>
+                    <div class="question-box q-p1" data-correct="D">
+                        <p><b>Câu 4.</b> Trong không gian $Oxyz$, cho đường thẳng $(d): \frac{x-3}{4}=\frac{y+2}{-5}=\frac{z-1}{2}$. Vectơ nào sau đây là một vectơ chỉ phương của $(d)$?</p>
+                        <label class="option-label"><input type="radio" name="q4" value="A"> A. $\vec{v}=(4;5;2)$</label>
+                        <label class="option-label"><input type="radio" name="q4" value="B"> B. $\vec{v}=(3;-2;1)$</label>
+                        <label class="option-label"><input type="radio" name="q4" value="C"> C. $\vec{v}=(3;2;1)$</label>
+                        <label class="option-label"><input type="radio" name="q4" value="D"> D. $\vec{v}=(4;-5;2)$</label>
+                    </div>
+                    <div class="question-box q-p1" data-correct="A">
+                        <p><b>Câu 5.</b> Họ nguyên hàm của hàm số $f(x)=x^2$ là:</p>
+                        <label class="option-label"><input type="radio" name="q5" value="A"> A. $\frac{1}{3}x^3+C$</label>
+                        <label class="option-label"><input type="radio" name="q5" value="B"> B. $2x^3+C$</label>
+                        <label class="option-label"><input type="radio" name="q5" value="C"> C. $3x^3+C$</label>
+                        <label class="option-label"><input type="radio" name="q5" value="D"> D. $\frac{1}{2}x^3+C$</label>
+                    </div>
+                    <div class="question-box q-p1" data-correct="C">
+                        <p><b>Câu 6.</b> Cho cấp số cộng $(u_n)$ có $u_1=4$ và công sai $d=-3$. Giá trị của $u_5$ bằng:</p>
+                        <label class="option-label"><input type="radio" name="q6" value="A"> A. 16.</label>
+                        <label class="option-label"><input type="radio" name="q6" value="B"> B. 19.</label>
+                        <label class="option-label"><input type="radio" name="q6" value="C"> C. -8.</label>
+                        <label class="option-label"><input type="radio" name="q6" value="D"> D. -11.</label>
+                    </div>
+                    <div class="question-box q-p1" data-correct="D">
+                        <p><b>Câu 7.</b> Tập nghiệm của phương trình $\sin x=0$.</p>
+                        <label class="option-label"><input type="radio" name="q7" value="A"> A. $S=\{\frac{\pi}{2}+k\pi\vert{}k\in\mathbb{Z}\}$</label>
+                        <label class="option-label"><input type="radio" name="q7" value="B"> B. $S=\{k2\pi\vert{}k\in\mathbb{Z}\}$</label>
+                        <label class="option-label"><input type="radio" name="q7" value="C"> C. $S=\{\frac{\pi}{2}+k2\pi\vert{}k\in\mathbb{Z}\}$</label>
+                        <label class="option-label"><input type="radio" name="q7" value="D"> D. $S=\{k\pi\vert{}k\in\mathbb{Z}\}$</label>
+                    </div>
+                    <div class="question-box q-p1" data-correct="B">
+                        <p><b>Câu 8.</b> Trong hệ tọa độ $Oxy$, diện tích $S$ của hình phẳng giới hạn bởi đồ thị $y=2x-3$, trục hoành và hai đường thẳng $x=1, x=2$ là:</p>
+                        <label class="option-label"><input type="radio" name="q8" value="A"> A. $S=\pi\int_{1}^{2}\vert{}2x-3\vert{}dx$</label>
+                        <label class="option-label"><input type="radio" name="q8" value="B"> B. $S=\int_{1}^{2}\vert{}2x-3\vert{}dx$</label>
+                        <label class="option-label"><input type="radio" name="q8" value="C"> C. $S=\pi\int_{1}^{2}(2x-3)^2dx$</label>
+                        <label class="option-label"><input type="radio" name="q8" value="D"> D. $S=\vert{}\int_{1}^{2}(2x-3)dx\vert{}$</label>
+                    </div>
+                    <div class="question-box q-p1" data-correct="A">
+                        <p><b>Câu 9.</b> Trong không gian $Oxyz$, mặt phẳng đi qua $A(2;1;-4)$ nhận $\vec{n}=(3;2;-1)$ làm VTPT có phương trình là:</p>
+                        <label class="option-label"><input type="radio" name="q9" value="A"> A. $3(x-2)+2(y-1)-(z+4)=0$</label>
+                        <label class="option-label"><input type="radio" name="q9" value="B"> B. $2(x+3)+(y+2)-4(z-1)=0$</label>
+                        <label class="option-label"><input type="radio" name="q9" value="C"> C. $3(x+2)+2(y+1)-(z-4)=0$</label>
+                        <label class="option-label"><input type="radio" name="q9" value="D"> D. $2(x-3)+(y-2)-4(z+1)=0$</label>
+                    </div>
+                    <div class="question-box q-p1" data-correct="C">
+                        <p><b>Câu 10.</b> Nghiệm của phương trình $\log_3(2x-1)=2$ là:</p>
+                        <label class="option-label"><input type="radio" name="q10" value="A"> A. $x=\frac{7}{2}$</label>
+                        <label class="option-label"><input type="radio" name="q10" value="B"> B. $x=\frac{5}{2}$</label>
+                        <label class="option-label"><input type="radio" name="q10" value="C"> C. $x=5$</label>
+                        <label class="option-label"><input type="radio" name="q10" value="D"> D. $x=4$</label>
+                    </div>
+                    <div class="question-box q-p1" data-correct="B">
+                        <p><b>Câu 11.</b> Cho hàm số $y=\frac{ax+b}{cx+d}$ có đồ thị như hình dưới. Đường tiệm cận đứng của đồ thị có phương trình là:</p>
+                        <img src="pic/k12.tn3.cau11.png" alt="Hình câu 11" class="img-fluid my-2">
+                        <label class="option-label"><input type="radio" name="q11" value="A"> A. $y=2$</label>
+                        <label class="option-label"><input type="radio" name="q11" value="B"> B. $x=-1$</label>
+                        <label class="option-label"><input type="radio" name="q11" value="C"> C. $y=-1$</label>
+                        <label class="option-label"><input type="radio" name="q11" value="D"> D. $x=2$</label>
+                    </div>
+                    <div class="question-box q-p1" data-correct="D">
+                        <p><b>Câu 12.</b> Cho hình chóp $S.ABC$ có $SA \perp (ABC)$, đáy là tam giác vuông tại $A$ và $SA=3, AB=4, AC=5$. Thể tích $S.ABC$ bằng:</p>
+                        <label class="option-label"><input type="radio" name="q12" value="A"> A. 30.</label>
+                        <label class="option-label"><input type="radio" name="q12" value="B"> B. 20.</label>
+                        <label class="option-label"><input type="radio" name="q12" value="C"> C. 60.</label>
+                        <label class="option-label"><input type="radio" name="q12" value="D"> D. 10.</label>
+                    </div>
+                </div>
+
+                <div class="part-header">PHẦN II. Trắc nghiệm đúng sai (4 câu - 4 điểm)</div>
+                <div id="p2-container">
+                    <div class="question-box q-p2" data-correct="T,F,F,F">
+                        <p><b>Câu 13.</b> Cho hàm số $f(x)=x^3-12x-8$. Khi đó:</p>
+                        <div class="tf-row"><span>a) Đạo hàm $f'(x)=3x^2-12$.</span><label><input type="radio" name="q13-a" value="T"> Đ</label><label><input type="radio" name="q13-a" value="F"> S</label></div>
+                        <div class="tf-row"><span>b) Tập nghiệm của $f'(x)=0$ là $S=\{2\}$.</span><label><input type="radio" name="q13-b" value="T"> Đ</label><label><input type="radio" name="q13-b" value="F"> S</label></div>
+                        <div class="tf-row"><span>c) $f(2)=24$.</span><label><input type="radio" name="q13-c" value="T"> Đ</label><label><input type="radio" name="q13-c" value="F"> S</label></div>
+                        <div class="tf-row"><span>d) Giá trị lớn nhất trên $[-3;3]$ bằng 24.</span><label><input type="radio" name="q13-d" value="T"> Đ</label><label><input type="radio" name="q13-d" value="F"> S</label></div>
+                    </div>
+                    <div class="question-box q-p2" data-correct="T,F,T,F">
+                        <p><b>Câu 14.</b> Đối với ngành nuôi trồng thủy sản, việc kiểm soát lượng thuốc tồn dư trong nước là một nhiệm vụ quan trọng nhằm đáp ứng các tiêu chuẩn an toàn về môi trường. Khi nghiên cứu một loại thuốc trị bệnh trong nuôi trồng thủy sản, người ta sử dụng thuốc đó một lần và theo dõi nồng độ thuốc tồn dư trong nước kể từ lúc sử dụng thuốc. Kết quả cho thấy nồng độ thuốc $y(t)$ (đơn vị: mg/lít) tồn dư trong nước tại thời điểm $t$ ngày ($t\ge0$) kể từ lúc sử dụng thuốc, thỏa mãn $y(t)>0$ và $y'(t)=k.y(t) (t\ge0)$ trong đó $k$ là hằng số khác không. Đo nồng độ thuốc tồn dư trong nước tại thời điểm $t=6$ (ngày); $t=12$ (ngày) nhận được kết quả lần lượt là 2 mg/lít; 1 mg/lít. Cho biết $y(t)=e^{g(t)} (t\ge0)$. Khi đó:</p>
+                        <div class="tf-row"><span>a) $g(t)=k.t+C$ với $C$ là hằng số.</span><label><input type="radio" name="q14-a" value="T"> Đ</label><label><input type="radio" name="q14-a" value="F"> S</label></div>
+                        <div class="tf-row"><span>b) $k=\frac{\ln 2}{6}$.</span><label><input type="radio" name="q14-b" value="T"> Đ</label><label><input type="radio" name="q14-b" value="F"> S</label></div>
+                        <div class="tf-row"><span>c) $C=2\ln 2$.</span><label><input type="radio" name="q14-c" value="T"> Đ</label><label><input type="radio" name="q14-c" value="F"> S</label></div>
+                        <div class="tf-row"><span>d) Tại $t=25$ nồng độ tồn dư lớn hơn 0,25 mg/lít.</span><label><input type="radio" name="q14-d" value="T"> Đ</label><label><input type="radio" name="q14-d" value="F"> S</label></div>
+                    </div>
+                    <div class="question-box q-p2" data-correct="T,F,T,F">
+                        <p><b>Câu 15.</b> Mô hình toán học sau đây được sử dụng trong quan sát chuyển động của một vật. Trong không gian cho hệ trục tọa độ $Oxyz$ có $\vec{i}; \vec{j}; \vec{k}$ lần lượt là các vectơ đơn vị trên các trục $Ox, Oy, Oz$ và độ dài của mỗi vectơ đơn vị đó bằng 1 mét. Cho hai điểm $A$ và $B$, trong đó điểm $A$ có tọa độ là $(5;5;0)$. Một vật (coi như một hạt) chuyển động thẳng với tốc độ phụ thuộc thời gian $t$ (giây) theo công thức $v(t)=\beta t+300 \text{ (m/giây)}$, trong đó $\beta$ là hằng số dương và $0\le t\le6$. Ở thời điểm ban đầu ($t=0$), vật đi qua $A$ với tốc độ 300 m/giây và hướng tới $B$. Sau 2 giây kể từ thời điểm ban đầu, vật đi được quãng đường 604m. Gọi $\vec{u}=(a;b;c)$ là vectơ cùng hướng với vectơ $\vec{AB}$. Biết rằng $\vert{}\vec{u}\vert{}=1$ và góc giữa vectơ $\vec{u}$ lần lượt với các vectơ $\vec{i}; \vec{j}; \vec{k}$ có số đo tương ứng bằng $60^\circ, 60^\circ, 45^\circ$. Khi đó:</p>
+                        <div class="tf-row"><span>a) $a=\cos 60^\circ$.</span><label><input type="radio" name="q15-a" value="T"> Đ</label><label><input type="radio" name="q15-a" value="F"> S</label></div>
+                        <div class="tf-row"><span>b) PT đường thẳng $AB$ là $\frac{x-5}{1}=\frac{y-5}{1}=\frac{z}{2}$.</span><label><input type="radio" name="q15-b" value="T"> Đ</label><label><input type="radio" name="q15-b" value="F"> S</label></div>
+                        <div class="tf-row"><span>c) Hằng số $\beta=2$.</span><label><input type="radio" name="q15-c" value="T"> Đ</label><label><input type="radio" name="q15-c" value="F"> S</label></div>
+                        <div class="tf-row"><span>d) Tọa độ $x_B$ sau 5 giây thỏa mãn $x_B > 768$.</span><label><input type="radio" name="q15-d" value="T"> Đ</label><label><input type="radio" name="q15-d" value="F"> S</label></div>
+                    </div>
+                    <div class="question-box q-p2" data-correct="T,T,F,T">
+                        <p><b>Câu 16.</b> Một phần mềm nhận dạng tin nhắn quảng cáo trên điện thoại bằng cách dựa theo từ khóa để đánh dấu một số tin nhắn được gửi đến. Qua một thời gian dài sử dụng, người ta thấy rằng trong số tất cả các tin nhắn gửi đến, có 15% số tin nhắn bị đánh dấu. Trong số các tin nhắn bị đánh dấu, có 10% số tin nhắn không phải là quảng cáo. Trong số các tin nhắn không bị đánh dấu, có 5% số tin nhắn là quảng cáo. Chọn ngẫu nhiên một tin nhắn được gửi đến điện thoại. Khi đó:</p>
+                        <div class="tf-row"><span>a) Xác suất tin nhắn không bị đánh dấu là 0,85.</span><label><input type="radio" name="q16-a" value="T"> Đ</label><label><input type="radio" name="q16-a" value="F"> S</label></div>
+                        <div class="tf-row"><span>b) XS không quảng cáo khi biết không bị đánh dấu là 0,95.</span><label><input type="radio" name="q16-b" value="T"> Đ</label><label><input type="radio" name="q16-b" value="F"> S</label></div>
+                        <div class="tf-row"><span>c) Xác suất tin nhắn đó không phải quảng cáo là 0,85.</span><label><input type="radio" name="q16-c" value="T"> Đ</label><label><input type="radio" name="q16-c" value="F"> S</label></div>
+                        <div class="tf-row"><span>d) XS không bị đánh dấu khi biết không quảng cáo > 0,95.</span><label><input type="radio" name="q16-d" value="T"> Đ</label><label><input type="radio" name="q16-d" value="F"> S</label></div>
+                    </div>
+                </div>
+
+                <div class="part-header">PHẦN III. Trắc nghiệm trả lời ngắn (6 câu - 3 điểm)</div>
+                <div id="p3-container">
+                    <div class="question-box q-p3" data-correct="1260">
+                        <p><b>Câu 17.</b> Bạn Nam tham gia cuộc thi giải một mật thư. Theo quy tắc của cuộc thi, người chơi cần chọn ra sáu số từ tập hợp $S=\{11;12;13;14;15;16;17;18;19\}$ và xếp mỗi số vào đúng một vị trí trong sáu vị trí $A,B,C,M,N,P$. Mật thư sẽ được giải nếu các bộ ba số xuất hiện ở những bộ ba vị trí $(A,M,B); (B,N,C); (C,P,A)$ tạo thành các cấp số cộng theo thứ tự đó. Bạn Nam chọn ngẫu nhiên sáu số trong tập $S$ và xếp ngẫu nhiên vào các vị trí yêu cầu. Gọi xác suất để bạn Nam giải được mật thư ở lần chọn và xếp đó là $a$. Giá trị của $\frac{1}{a}$ bằng bao nhiêu?</p>
+                        <img src="pic/k12.tn3.cau17.png" alt="Hình" class="img-fluid my-2">
+						<input type="text" class="short-ans" placeholder="Nhập đáp án...">
+                    </div>
+                    <div class="question-box q-p3" data-correct="1536">
+                        <p><b>Câu 18.</b> Nếu một doanh nghiệp sản xuất $x$ sản phẩm trong một tháng ($x\in\mathbb{N}^*; 1\le x\le4500$) thì doanh thu nhận được khi bán hết số sản phẩm đó là $F(x)=-0,01x^2+300x$ (nghìn đồng), trong khi chi phí sản xuất bình quan cho mỗi sản phẩm là $G(x)=\frac{30000}{x}+200$ (nghìn đồng). Giả sử số sản phẩm sản xuất ra luôn được bán hết. Trong một tháng, doanh nghiệp đó cần sản xuất ít nhất bao nhiêu sản phẩm để lợi nhuận thu được lớn hơn 100 triệu đồng?</p>
+                        <input type="text" class="short-ans" placeholder="Nhập đáp án...">
+                    </div>
+                    <div class="question-box q-p3" data-correct="2650">
+                        <p><b>Câu 19.</b> Để gây quỹ từ thiện, câu lạc bộ thiện nguyện của một trường THPT tổ chức hoạt động bán hàng với hai mặt hàng là nước chanh và khoai chiên. Câu lạc bộ thiết kế hai thực đơn. Thực đơn 1 có giá 30 nghìn đồng, bao gồm hai cốc nước chanh và một túi khoai chiên. Thực đơn 2 có giá 50 nghìn đồng, bao gồm ba cốc nước chanh và hai túi khoai chiên. Biết rằng câu lạc bộ chỉ làm được không quá 165 cốc nước chanh và 100 túi khoai chiên. Số tiền lớn nhất mà câu lạc bộ có thể nhận được sau khi bán hết hàng bằng bao nhiêu nghìn đồng? </p>
+                        <input type="text" class="short-ans" placeholder="Nhập đáp án...">
+                    </div>
+                    <div class="question-box q-p3" data-correct="1.04">
+                        <p><b>Câu 20.</b> Cho hình chóp $S.ABCD$ có đáy $ABCD$ là hình thoi với $\widehat{ABC}=60^\circ$ và $AB=2$. Biết rằng hình chiếu vuông góc của $S$ trên mặt phẳng $(ABCD)$ là trọng tâm $H$ của tam giác $ABC$ và $SH=\sqrt{3}$. Khoảng cách giữa hai đường thẳng $AC$ và $SD$ bằng bao nhiêu (không làm tròn kết quả các phép tính trung gian, chỉ làm tròn kết quả cuối cùng đến hàng phần trăm)?</p>
+                        <input type="text" class="short-ans" placeholder="Nhập đáp án...">
+                    </div>
+                    <div class="question-box q-p3" data-correct="1008">
+                        <p><b>Câu 21.</b> Có bốn ngăn (trong một giá để sách) được đánh số thứ tự 1, 2, 3, 4 và bảy quyển sách khác nhau. Bạn An xếp hết bảy quyển sách nói trên vào bốn ngăn đó sao cho mỗi ngăn có ít nhất một quyển sách và các quyển sách được xếp thẳng đứng thành một hàng ngang với gáy sách quay ra ngoài ở mỗi ngăn. Khi đã xếp xong bảy quyển sách, hai cách xếp của bạn An được gọi là giống nhau nếu chúng thoả mãn đồng thời hai điều kiện sau đây: (1). Với từng ngăn, số lượng quyển sách ở ngăn đó là như nhau trong cả hai cách xếp;(2). Với từng ngăn, thứ tự từ trái sang phải của các quyển sách được xếp là như nhau trong cả hai cách xếp. Gọi $T$ là số cách xếp đôi một khác nhau của bạn An. Giá trị của $\frac{T}{100}$ bằng bao nhiêu?</p>
+                        <input type="text" class="short-ans" placeholder="Nhập đáp án...">
+                    </div>
+                    <div class="question-box q-p3" data-correct="96.5">
+                        <p><b>Câu 22.</b> Để đặt được một vật trang trí trên mặt bàn, người ta thiết kế một chân đế như sau: lấy một khối gỗ có dạng khối chóp cụt tứ giác đều với độ dài hai cạnh đáy lần lượt bằng 7,4cm và 10,4cm, bề dày của khối gỗ bằng 1,5cm. Sau đó khoét bỏ đi một phần của khối gỗ sao cho phần đó có dạng vật thể $H$, ở đó $H$ nhận được bằng cách cắt khối cầu bán kính 5,8cm bởi một mặt phẳng cắt mà mặt cắt là hình tròn bán kính 3,5cm. Thể tích của khối chân đế bằng bao nhiêu centimet khối (không làm tròn kết quả các phép tính trung gian, chỉ làm tròn kết quả cuối cùng đến hàng phần mười)?</p>
+                        <img src="pic/k12.tn3.cau22.png" alt="Hình" class="img-fluid my-2">
+						<input type="text" class="short-ans" placeholder="Nhập đáp án...">
+                    </div>
+                </div>
+            </form>
+            <div class="text-center mt-4">
+                <button id="submitBtnBottom" class="btn btn-success btn-lg fw-bold px-5">NỘP BÀI</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <div class="result-container">
+            <h1 class="fw-bold mb-4 text-center">KẾT QUẢ BÀI THI</h1>
+            <div class="row align-items-center mb-4">
+                <div class="col-md-5 text-center">
+                    <div class="score-display" id="finalScore">0.00</div>
+                    <div class="text-muted fw-bold">TỔNG ĐIỂM</div>
+                </div>
+                <div class="col-md-7 border-start ps-4">
+                    <p><i class="fas fa-user me-2"></i> Học sinh: <span id="resultName" class="fw-bold"></span></p>
+                    <p><i class="fas fa-users me-2"></i> Lớp: <span id="resultClass" class="fw-bold"></span></p>
+                    <p><i class="fas fa-check-circle me-2 text-success"></i> Số câu đúng: <span id="resultCorrect" class="fw-bold"></span></p>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="../index.html" class="btn btn-outline-secondary btn-lg px-4"><i class="fas fa-home me-2"></i>TRANG CHỦ</a>
+                <button id="retryBtn" class="btn btn-outline-primary btn-lg px-4"><i class="fas fa-redo me-2"></i>LÀM LẠI</button>
+                <button id="reviewBtn" class="btn btn-primary btn-lg px-4 shadow"><i class="fas fa-eye me-2"></i>XEM LẠI</button>
+            </div>
+            <div id="reviewArea" class="mt-4"></div>
+        </div>
+    </div>
+
+    <div id="customModal" class="custom-modal">
+        <div class="modal-content-custom">
+            <h5 id="modalTitle" class="fw-bold">Thông báo</h5>
+            <p id="modalMessage" class="mb-4"></p>
+            <div class="d-flex gap-2 justify-content-end">
+                <button id="modalCancel" class="btn btn-secondary">Hủy</button>
+                <button id="modalConfirm" class="btn btn-primary">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const SCORE_RATIO = { P1: 3.0, P2: 4.0, P3: 3.0 };
+            const CONFIG = {
+                API: 'https://script.google.com/macros/s/AKfycbwQTV9HhyJ1Dm6vhO46hEXl5oDsEt9LBYNIQOOiIfXq7JAF1kedIs4zdCGQJYUiU7SZ/exec',
+                EXAM_DURATION: 5400,
+                examId: 'k12.tn3'
+            };
+            const state = { timeRemaining: CONFIG.EXAM_DURATION, timerInterval: null, isSubmitted: false };
+            const elements = {
+                welcome: document.getElementById('welcome-screen'), exam: document.getElementById('exam-screen'),
+                result: document.getElementById('result-screen'), examForm: document.getElementById('examForm'),
+                timer: document.getElementById('timer'), sName: document.getElementById('sName'),
+                sClass: document.getElementById('sClass'), submitBtnTop: document.getElementById('submitBtnTop'),
+                submitBtnBottom: document.getElementById('submitBtnBottom'), retryBtn: document.getElementById('retryBtn'),
+                reviewBtn: document.getElementById('reviewBtn'), modal: document.getElementById('customModal')
+            };
+            const utils = {
+                formatTime: (s) => { const m = Math.floor(s / 60), sec = s % 60; return `${m<10?'0':''}${m}:${sec<10?'0':''}${sec}`; },
+                showModal: (title, msg, onConfirm) => {
+                    document.getElementById('modalTitle').textContent = title;
+                    document.getElementById('modalMessage').textContent = msg;
+                    elements.modal.classList.add('show');
+                    document.getElementById('modalConfirm').onclick = () => { elements.modal.classList.remove('show'); if(onConfirm) onConfirm(); };
+                    document.getElementById('modalCancel').onclick = () => elements.modal.classList.remove('show');
+                }
+            };
+            const grading = {
+                addExplain: (q, ans) => {
+                    const oldExpl = q.querySelector('.ans-explain'); if (oldExpl) oldExpl.remove();
+                    const div = document.createElement('div'); div.className = 'ans-explain';
+                    let displayAns = ans;
+                    if (q.classList.contains('q-p2')) {
+                        const map = { 'T': 'Đ', 'F': 'S' };
+                        displayAns = ans.split(',').map((val, idx) => `${String.fromCharCode(97 + idx)}-${map[val.trim()]}`).join(', ');
+                    }
+                    div.textContent = 'Đáp án đúng: ' + displayAns; q.appendChild(div);
+                },
+                calculate: () => {
+                    const q1List = document.querySelectorAll('.q-p1'), q2List = document.querySelectorAll('.q-p2'), q3List = document.querySelectorAll('.q-p3');
+                    const scorePerQ1 = 3.0 / 12, scorePerQ3 = 3.0 / 6, matrixP2 = [0.1, 0.25, 0.5, 1.0].map(s => s * (4.0/4));
+                    let total = 0, correctCount = 0;
+                    q1List.forEach(q => {
+                        const ans = q.dataset.correct, sel = q.querySelector('input:checked');
+                        if (sel && sel.value === ans) { total += scorePerQ1; correctCount++; q.classList.add('correct-color'); }
+                        else { q.classList.add('wrong-color'); grading.addExplain(q, ans); }
+                    });
+                    q2List.forEach(q => {
+                        const ansArr = q.dataset.correct.split(','); let subCorrect = 0;
+                        q.querySelectorAll('.tf-row').forEach((row, idx) => {
+                            const sel = row.querySelector('input:checked');
+                            if (sel && sel.value === ansArr[idx].trim()) { subCorrect++; row.style.backgroundColor = '#d1e7dd'; }
+                            else { row.style.backgroundColor = '#f8d7da'; }
+                        });
+                        if (subCorrect > 0) total += matrixP2[subCorrect - 1];
+                        if (subCorrect === 4) { correctCount++; q.classList.add('correct-color'); }
+                        else grading.addExplain(q, q.dataset.correct);
+                    });
+                    q3List.forEach(q => {
+                        const ans = q.dataset.correct.trim().toUpperCase(), inp = q.querySelector('input'), val = inp ? inp.value.trim().toUpperCase().replace(',', '.') : '';
+                        if (val === ans) { total += scorePerQ3; correctCount++; q.classList.add('correct-color'); }
+                        else { q.classList.add('wrong-color'); grading.addExplain(q, ans); }
+                    });
+                    return { total: Math.min(total, 10), correct: correctCount };
+                },
+                submit: (auto = false) => {
+                    if (state.isSubmitted) return;
+                    const processSubmit = () => {
+                        clearInterval(state.timerInterval); state.isSubmitted = true;
+                        const res = grading.calculate();
+                        const sName = elements.sName.value.trim(), sClass = elements.sClass.value.trim(), examTitle = document.getElementById('examTitle').innerText, scoreStr = res.total.toFixed(2);
+                        const form = new FormData(); form.append('name', sName); form.append('class', sClass); form.append('test', examTitle); form.append('score', scoreStr);
+                        fetch(CONFIG.API, { method: 'POST', body: form, mode: 'no-cors' });
+                        let history = JSON.parse(localStorage.getItem('exam_results') || '[]');
+                        history.unshift({ timestamp: new Date().toISOString(), testName: examTitle, studentName: sName, score: scoreStr, correctAnswers: res.correct });
+                        localStorage.setItem('exam_results', JSON.stringify(history.slice(0, 20)));
+                        document.getElementById('finalScore').textContent = scoreStr; document.getElementById('resultName').textContent = sName;
+                        document.getElementById('resultClass').textContent = sClass; document.getElementById('resultCorrect').textContent = res.correct;
+                        elements.exam.style.display = 'none'; elements.result.style.display = 'block'; window.scrollTo(0, 0);
+                    };
+                    if (auto) processSubmit(); else utils.showModal('Nộp bài', 'Xác nhận nộp bài thi?', processSubmit);
+                }
+            };
+            const shuffleSystem = {
+                shuffleArray: (array) => { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } },
+                execute: () => {
+                    ['#p1-container', '#p2-container', '#p3-container'].forEach(id => {
+                        const container = document.querySelector(id); if (!container) return;
+                        const qs = Array.from(container.children).filter(el => el.classList.contains('question-box'));
+                        shuffleSystem.shuffleArray(qs); qs.forEach(q => container.appendChild(q));
+                    });
+                    let count = 1; document.querySelectorAll('.question-box').forEach(q => {
+                        const label = q.querySelector('b'); if (label) label.textContent = `Câu ${count}:`; count++;
+                    });
+                }
+            };
+            document.getElementById('startBtn').onclick = () => {
+                const n = elements.sName.value.trim(), c = elements.sClass.value.trim();
+                if (!n || !c) return utils.showModal('Thiếu thông tin', 'Vui lòng nhập tên và lớp!');
+                shuffleSystem.execute(); document.getElementById('displayName').textContent = `${n} - ${c}`;
+                elements.welcome.style.display = 'none'; elements.exam.style.display = 'block';
+                state.timerInterval = setInterval(() => {
+                    state.timeRemaining--; elements.timer.textContent = utils.formatTime(state.timeRemaining);
+                    if (state.timeRemaining <= 0) grading.submit(true);
+                    if (state.timeRemaining < 300) elements.timer.classList.add('warning');
+                }, 1000);
+            };
+            elements.submitBtnTop.onclick = elements.submitBtnBottom.onclick = () => grading.submit();
+            elements.retryBtn.onclick = () => location.reload();
+            elements.reviewBtn.onclick = () => {
+                const clone = elements.examForm.cloneNode(true); clone.querySelectorAll('input').forEach(i => i.disabled = true);
+                const area = document.getElementById('reviewArea'); area.innerHTML = '<hr><h4 class="mb-3 text-primary">CHI TIẾT BÀI LÀM</h4>';
+                area.appendChild(clone); MathJax.typeset(); elements.reviewBtn.style.display = 'none';
+            };
+            window.onbeforeunload = () => state.isSubmitted ? null : "Đang làm bài...";
+        })();
+    </script>
+</body>
+</html>

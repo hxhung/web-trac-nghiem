@@ -1,239 +1,304 @@
 [
-
-  { "_note": "================================================================" },
-  { "_note": "  FILE: data/exams.json" },
-  { "_note": "  MỤC ĐÍCH: Quản lý toàn bộ card đề thi hiển thị trên index.html" },
-  { "_note": "  CÁCH THÊM ĐỀ MỚI: Copy template ở cuối file, dán vào đúng nhóm" },
-  { "_note": "  THỨ TỰ: Đề nào đứng trước trong file → hiển thị trước trên web" },
-  { "_note": "================================================================" },
-
-
-  { "_note": "------- KHỐI 12 — CHƯƠNG 1: Ứng dụng đạo hàm -------" },
-
-  {
-    "group":      "grade12-chapter1",
-    "title":      "ĐỀ SỐ 01",
-    "subject":    "Ứng dụng đạo hàm để khảo sát hàm số",
-    "href":       "K12/de-01.html",
-    "icon":       "📈",
-    "iconBg":     "#eff6ff",
-    "iconColor":  "#2563eb",
-    "titleColor": "text-primary"
-  },
-
-
-  { "_note": "------- KHỐI 12 — CHƯƠNG 2: Vectơ và Toạ độ không gian -------" },
-
-  {
-    "group":      "grade12-chapter2",
-    "title":      "ĐỀ SỐ 02",
-    "subject":    "Vectơ và hệ toạ độ trong không gian Oxyz",
-    "href":       "K12/de-02.html",
-    "icon":       "📐",
-    "iconBg":     "#eff6ff",
-    "iconColor":  "#2563eb",
-    "titleColor": "text-primary"
-  },
-
-
-  { "_note": "------- KHỐI 12 — CHƯƠNG 3: Mức độ phân tán số liệu -------" },
-
-  {
-    "group":      "grade12-chapter3",
-    "title":      "ĐỀ SỐ 03",
-    "subject":    "Các số đặc trưng đo mức độ phân tán",
-    "href":       "K12/de-03.html",
-    "icon":       "📊",
-    "iconBg":     "#f0fdf4",
-    "iconColor":  "#16a34a",
-    "titleColor": "text-primary"
-  },
-
-
-  { "_note": "------- KHỐI 12 — CHƯƠNG 4: Nguyên hàm - Tích phân -------" },
-
-  {
-    "group":      "grade12-chapter4",
-    "title":      "LUYỆN TẬP",
-    "subject":    "Nguyên hàm và ứng dụng",
-    "href":       "K12/de-10.html",
-    "date":       "2026-01-22",
-    "icon":       "∫",
-    "iconBg":     "#f0fdf4",
-    "iconColor":  "#16a34a",
-    "titleColor": "text-primary"
-  },
-  {
-    "group":      "grade12-chapter4",
-    "title":      "LUYỆN TẬP",
-    "subject":    "Tích phân",
-    "href":       "K12/K12.C3.B2.LT_tichphan.html",
-    "date":       "2026-02-05",
-    "questions":  40,
-    "icon":       "∫",
-    "iconBg":     "#f0fdf4",
-    "iconColor":  "#16a34a",
-    "titleColor": "text-primary"
-  },
-
-
-  { "_note": "------- KHỐI 12 — ÔN TẬP TỔNG HỢP HỌC KỲ 1 -------" },
-
-  {
-    "group":      "grade12-reviewhk1",
-    "title":      "ĐỀ SỐ 04",
-    "subject":    "Ôn tập tổng hợp Học Kỳ 1",
-    "href":       "K12/de-04.html",
-    "icon":       "📝",
-    "iconBg":     "#fffbeb",
-    "iconColor":  "#d97706",
-    "titleColor": "text-warning"
-  },
-  {
-    "group":      "grade12-reviewhk1",
-    "title":      "ĐỀ SỐ 05",
-    "subject":    "Ôn tập tổng hợp Học Kỳ 1",
-    "href":       "K12/de-05.html",
-    "icon":       "📝",
-    "iconBg":     "#fffbeb",
-    "iconColor":  "#d97706",
-    "titleColor": "text-warning"
-  },
-  {
-    "group":      "grade12-reviewhk1",
-    "title":      "ĐỀ SỐ 06",
-    "subject":    "Ôn tập tổng hợp Học Kỳ 1",
-    "href":       "K12/de-06.html",
-    "icon":       "📝",
-    "iconBg":     "#fffbeb",
-    "iconColor":  "#d97706",
-    "titleColor": "text-warning"
-  },
-  {
-    "group":      "grade12-reviewhk1",
-    "title":      "ĐỀ SỐ 07",
-    "subject":    "Ôn tập tổng hợp Học Kỳ 1",
-    "href":       "K12/de-07.html",
-    "icon":       "📝",
-    "iconBg":     "#fffbeb",
-    "iconColor":  "#d97706",
-    "titleColor": "text-warning"
-  },
-  {
-    "group":      "grade12-reviewhk1",
-    "title":      "ĐỀ SỐ 08",
-    "subject":    "Ôn tập tổng hợp Học Kỳ 1",
-    "href":       "K12/de-08.html",
-    "date":       "2026-01-19",
-    "icon":       "📝",
-    "iconBg":     "#fffbeb",
-    "iconColor":  "#d97706",
-    "titleColor": "text-warning"
-  },
-  {
-    "group":      "grade12-reviewhk1",
-    "title":      "ĐỀ SỐ 09",
-    "subject":    "Ôn tập tổng hợp Học Kỳ 1",
-    "href":       "404.html",
-    "disabled":   true,
-    "icon":       "📝",
-    "iconBg":     "#fffbeb",
-    "iconColor":  "#d97706",
-    "titleColor": "text-warning"
-  },
-
-
-  { "_note": "------- KHỐI 12 — ÔN TẬP GIỮA HỌC KỲ 2 -------" },
-
-  {
-    "group":      "grade12-reviewgiuahk2",
-    "title":      "ĐỀ SỐ 1",
-    "subject":    "Ôn tập giữa Học Kỳ 2",
-    "href":       "K12/on_giua_hk2_de_1.html",
-    "date":       "2026-03-12",
-    "icon":       "📘",
-    "iconBg":     "#eff6ff",
-    "iconColor":  "#2563eb",
-    "titleColor": "text-primary"
-  },
-{
-  "group": "grade12-reviewgiuahk2",
-  "title": "ĐỀ SỐ 02",
-  "subject": "Ôn tập Giữa Học Kỳ 2",
-  "href": "K12/on_giua_hk2_de_2.html",
-  "date": "2026-03-16",
-  "icon": "📝",
-  "iconBg": "#fffbeb",
-  "iconColor": "#d97706",
-  "titleColor": "text-warning"
-},
-
-  { "_note": "------- KHỐI 12 — ÔN TẬP CUỐI NĂM & ĐỀ THI THỬ -------" },
-
-  {
-    "group":      "grade12-chapter7",
-    "title":      "ĐỀ THI THỬ",
-    "subject":    "Lần 1 - 2025-2026",
-    "href":       "K12/k12.tn1.html",
-    "date":       "2026-02-03",
-    "icon":       "📝",
-    "iconBg":     "#f0fdf4",
-    "iconColor":  "#16a34a",
-    "titleColor": "text-primary"
-  },
-  {
-    "group":      "grade12-chapter7",
-    "title":      "ĐỀ THI TỐT NGHIỆP THPT 2026",
-    "subject":    "Mã đề 0101",
-    "href":       "K12/k12.tn2.html",
-    "date":       "2026-07-10",
-    "icon":       "📝",
-    "iconBg":     "#f0fdf4",
-    "iconColor":  "#16a34a",
-    "titleColor": "text-primary"
-  },
-
-
-  { "_note": "------- KHỐI 11 — CHƯƠNG 6: Hàm số mũ và Lôgarit -------" },
-
-  {
-    "group":      "grade11-chapter6",
-    "title":      "ĐỀ ÔN CHƯƠNG SỐ 1",
-    "subject":    "Hàm Số Mũ Và Logarit",
-    "href":       "K11/k11.c6.b5.1.html",
-    "date":       "2026-02-26",
-    "icon":       "📘",
-    "iconBg":     "#eff6ff",
-    "iconColor":  "#2563eb",
-    "titleColor": "text-primary"
-  },
-
-
-  { "_note": "================================================================" },
-  { "_note": "  TEMPLATE — Copy đoạn dưới để thêm đề mới" },
-  { "_note": "  Xóa dòng disabled nếu đề đã sẵn sàng" },
-  { "_note": "  Xóa dòng date nếu không cần badge NEW" },
-  { "_note": "  Xóa dòng questions nếu đề có đúng 22 câu" },
-  { "_note": "================================================================" },
-  { "_note": "  {" },
-  { "_note": "    group:      grade12-chapter1  (xem danh sách group trong README)" },
-  { "_note": "    title:      ĐỀ SỐ XX" },
-  { "_note": "    subject:    Tên chủ đề / nội dung đề thi" },
-  { "_note": "    href:       ten-file.html" },
-  { "_note": "    date:       YYYY-MM-DD        (hiện badge NEW trong 7 ngày)" },
-  { "_note": "    questions:  40                (bỏ qua nếu đúng 22 câu)" },
-  { "_note": "    disabled:   true              (bỏ qua nếu đề đã sẵn sàng)" },
-  { "_note": "    icon:       📘" },
-  { "_note": "    iconBg:     #eff6ff  (xanh dương nhạt)" },
-  { "_note": "    iconColor:  #2563eb  (xanh dương đậm)" },
-  { "_note": "    titleColor: text-primary" },
-  { "_note": "  }" },
-  { "_note": "----------------------------------------------------------------" },
-  { "_note": "  MÀU SẮC GỢI Ý:" },
-  { "_note": "  Xanh dương : iconBg=#eff6ff  iconColor=#2563eb  titleColor=text-primary" },
-  { "_note": "  Xanh lá    : iconBg=#f0fdf4  iconColor=#16a34a  titleColor=text-primary" },
-  { "_note": "  Vàng cam   : iconBg=#fffbeb  iconColor=#d97706  titleColor=text-warning" },
-  { "_note": "  Tím        : iconBg=#f5f3ff  iconColor=#7c3aed  titleColor=text-purple" },
-  { "_note": "================================================================" }
-
+    {
+        "_note":  "================================================================"
+    },
+    {
+        "_note":  "  FILE: data/exams.json"
+    },
+    {
+        "_note":  "  MỤC ĐÍCH: Quản lý toàn bộ card đề thi hiển thị trên index.html"
+    },
+    {
+        "_note":  "  CÁCH THÊM ĐỀ MỚI: Copy template ở cuối file, dán vào đúng nhóm"
+    },
+    {
+        "_note":  "  THỨ TỰ: Đề nào đứng trước trong file → hiển thị trước trên web"
+    },
+    {
+        "_note":  "================================================================"
+    },
+    {
+        "_note":  "------- KHỐI 12 — CHƯƠNG 1: Ứng dụng đạo hàm -------"
+    },
+    {
+        "group":  "grade12-chapter1",
+        "title":  "ĐỀ SỐ 01",
+        "subject":  "Ứng dụng đạo hàm để khảo sát hàm số",
+        "href":  "K12/de-01.html",
+        "icon":  "📈",
+        "iconBg":  "#eff6ff",
+        "iconColor":  "#2563eb",
+        "titleColor":  "text-primary"
+    },
+    {
+        "_note":  "------- KHỐI 12 — CHƯƠNG 2: Vectơ và Toạ độ không gian -------"
+    },
+    {
+        "group":  "grade12-chapter2",
+        "title":  "ĐỀ SỐ 02",
+        "subject":  "Vectơ và hệ toạ độ trong không gian Oxyz",
+        "href":  "K12/de-02.html",
+        "icon":  "📐",
+        "iconBg":  "#eff6ff",
+        "iconColor":  "#2563eb",
+        "titleColor":  "text-primary"
+    },
+    {
+        "_note":  "------- KHỐI 12 — CHƯƠNG 3: Mức độ phân tán số liệu -------"
+    },
+    {
+        "group":  "grade12-chapter3",
+        "title":  "ĐỀ SỐ 03",
+        "subject":  "Các số đặc trưng đo mức độ phân tán",
+        "href":  "K12/de-03.html",
+        "icon":  "📊",
+        "iconBg":  "#f0fdf4",
+        "iconColor":  "#16a34a",
+        "titleColor":  "text-primary"
+    },
+    {
+        "_note":  "------- KHỐI 12 — CHƯƠNG 4: Nguyên hàm - Tích phân -------"
+    },
+    {
+        "group":  "grade12-chapter4",
+        "title":  "LUYỆN TẬP",
+        "subject":  "Nguyên hàm và ứng dụng",
+        "href":  "K12/de-10.html",
+        "date":  "2026-01-22",
+        "icon":  "∫",
+        "iconBg":  "#f0fdf4",
+        "iconColor":  "#16a34a",
+        "titleColor":  "text-primary"
+    },
+    {
+        "group":  "grade12-chapter4",
+        "title":  "LUYỆN TẬP",
+        "subject":  "Tích phân",
+        "href":  "K12/K12.C3.B2.LT_tichphan.html",
+        "date":  "2026-02-05",
+        "questions":  40,
+        "icon":  "∫",
+        "iconBg":  "#f0fdf4",
+        "iconColor":  "#16a34a",
+        "titleColor":  "text-primary"
+    },
+    {
+        "_note":  "------- KHỐI 12 — ÔN TẬP TỔNG HỢP HỌC KỲ 1 -------"
+    },
+    {
+        "group":  "grade12-reviewhk1",
+        "title":  "ĐỀ SỐ 04",
+        "subject":  "Ôn tập tổng hợp Học Kỳ 1",
+        "href":  "K12/de-04.html",
+        "icon":  "📝",
+        "iconBg":  "#fffbeb",
+        "iconColor":  "#d97706",
+        "titleColor":  "text-warning"
+    },
+    {
+        "group":  "grade12-reviewhk1",
+        "title":  "ĐỀ SỐ 05",
+        "subject":  "Ôn tập tổng hợp Học Kỳ 1",
+        "href":  "K12/de-05.html",
+        "icon":  "📝",
+        "iconBg":  "#fffbeb",
+        "iconColor":  "#d97706",
+        "titleColor":  "text-warning"
+    },
+    {
+        "group":  "grade12-reviewhk1",
+        "title":  "ĐỀ SỐ 06",
+        "subject":  "Ôn tập tổng hợp Học Kỳ 1",
+        "href":  "K12/de-06.html",
+        "icon":  "📝",
+        "iconBg":  "#fffbeb",
+        "iconColor":  "#d97706",
+        "titleColor":  "text-warning"
+    },
+    {
+        "group":  "grade12-reviewhk1",
+        "title":  "ĐỀ SỐ 07",
+        "subject":  "Ôn tập tổng hợp Học Kỳ 1",
+        "href":  "K12/de-07.html",
+        "icon":  "📝",
+        "iconBg":  "#fffbeb",
+        "iconColor":  "#d97706",
+        "titleColor":  "text-warning"
+    },
+    {
+        "group":  "grade12-reviewhk1",
+        "title":  "ĐỀ SỐ 08",
+        "subject":  "Ôn tập tổng hợp Học Kỳ 1",
+        "href":  "K12/de-08.html",
+        "date":  "2026-01-19",
+        "icon":  "📝",
+        "iconBg":  "#fffbeb",
+        "iconColor":  "#d97706",
+        "titleColor":  "text-warning"
+    },
+    {
+        "group":  "grade12-reviewhk1",
+        "title":  "ĐỀ SỐ 09",
+        "subject":  "Ôn tập tổng hợp Học Kỳ 1",
+        "href":  "404.html",
+        "disabled":  true,
+        "icon":  "📝",
+        "iconBg":  "#fffbeb",
+        "iconColor":  "#d97706",
+        "titleColor":  "text-warning"
+    },
+    {
+        "_note":  "------- KHỐI 12 — ÔN TẬP GIỮA HỌC KỲ 2 -------"
+    },
+    {
+        "group":  "grade12-reviewgiuahk2",
+        "title":  "ĐỀ SỐ 1",
+        "subject":  "Ôn tập giữa Học Kỳ 2",
+        "href":  "K12/on_giua_hk2_de_1.html",
+        "date":  "2026-03-12",
+        "icon":  "📘",
+        "iconBg":  "#eff6ff",
+        "iconColor":  "#2563eb",
+        "titleColor":  "text-primary"
+    },
+    {
+        "group":  "grade12-reviewgiuahk2",
+        "title":  "ĐỀ SỐ 02",
+        "subject":  "Ôn tập Giữa Học Kỳ 2",
+        "href":  "K12/on_giua_hk2_de_2.html",
+        "date":  "2026-03-16",
+        "icon":  "📝",
+        "iconBg":  "#fffbeb",
+        "iconColor":  "#d97706",
+        "titleColor":  "text-warning"
+    },
+    {
+        "_note":  "------- KHỐI 12 — ÔN TẬP CUỐI NĂM \u0026 ĐỀ THI THỬ -------"
+    },
+    {
+        "group":  "grade12-chapter7",
+        "title":  "ĐỀ THI THỬ",
+        "subject":  "Lần 1 - 2025-2026",
+        "href":  "K12/k12.tn1.html",
+        "date":  "2026-02-03",
+        "icon":  "📝",
+        "iconBg":  "#f0fdf4",
+        "iconColor":  "#16a34a",
+        "titleColor":  "text-primary"
+    },
+    {
+        "group":  "grade12-chapter7",
+        "title":  "ĐỀ THI TỐT NGHIỆP THPT 2026",
+        "subject":  "Mã đề 0101",
+        "href":  "K12/k12.tn2.html",
+        "date":  "2026-07-10",
+        "icon":  "📝",
+        "iconBg":  "#f0fdf4",
+        "iconColor":  "#16a34a",
+        "titleColor":  "text-primary"
+    },
+    {
+        "group":  "grade12-chapter7",
+        "title":  "ĐỀ THI TỐT NGHIỆP 2025",
+        "subject":  "Mã đề 101",
+        "href":  "K12/k12.tn3.html",
+        "date":  "2026-07-14",
+        "questions":  22,
+        "icon":  "📝",
+        "iconBg":  "#f0fdf4",
+        "iconColor":  "#16a34a",
+        "titleColor":  "text-primary"
+    },
+    {
+        "_note":  "------- KHỐI 11 — CHƯƠNG 6: Hàm số mũ và Lôgarit -------"
+    },
+    {
+        "group":  "grade11-chapter6",
+        "title":  "ĐỀ ÔN CHƯƠNG SỐ 1",
+        "subject":  "Hàm Số Mũ Và Logarit",
+        "href":  "K11/k11.c6.b5.1.html",
+        "date":  "2026-02-26",
+        "icon":  "📘",
+        "iconBg":  "#eff6ff",
+        "iconColor":  "#2563eb",
+        "titleColor":  "text-primary"
+    },
+    {
+        "_note":  "================================================================"
+    },
+    {
+        "_note":  "  TEMPLATE — Copy đoạn dưới để thêm đề mới"
+    },
+    {
+        "_note":  "  Xóa dòng disabled nếu đề đã sẵn sàng"
+    },
+    {
+        "_note":  "  Xóa dòng date nếu không cần badge NEW"
+    },
+    {
+        "_note":  "  Xóa dòng questions nếu đề có đúng 22 câu"
+    },
+    {
+        "_note":  "================================================================"
+    },
+    {
+        "_note":  "  {"
+    },
+    {
+        "_note":  "    group:      grade12-chapter1  (xem danh sách group trong README)"
+    },
+    {
+        "_note":  "    title:      ĐỀ SỐ XX"
+    },
+    {
+        "_note":  "    subject:    Tên chủ đề / nội dung đề thi"
+    },
+    {
+        "_note":  "    href:       ten-file.html"
+    },
+    {
+        "_note":  "    date:       YYYY-MM-DD        (hiện badge NEW trong 7 ngày)"
+    },
+    {
+        "_note":  "    questions:  40                (bỏ qua nếu đúng 22 câu)"
+    },
+    {
+        "_note":  "    disabled:   true              (bỏ qua nếu đề đã sẵn sàng)"
+    },
+    {
+        "_note":  "    icon:       📘"
+    },
+    {
+        "_note":  "    iconBg:     #eff6ff  (xanh dương nhạt)"
+    },
+    {
+        "_note":  "    iconColor:  #2563eb  (xanh dương đậm)"
+    },
+    {
+        "_note":  "    titleColor: text-primary"
+    },
+    {
+        "_note":  "  }"
+    },
+    {
+        "_note":  "----------------------------------------------------------------"
+    },
+    {
+        "_note":  "  MÀU SẮC GỢI Ý:"
+    },
+    {
+        "_note":  "  Xanh dương : iconBg=#eff6ff  iconColor=#2563eb  titleColor=text-primary"
+    },
+    {
+        "_note":  "  Xanh lá    : iconBg=#f0fdf4  iconColor=#16a34a  titleColor=text-primary"
+    },
+    {
+        "_note":  "  Vàng cam   : iconBg=#fffbeb  iconColor=#d97706  titleColor=text-warning"
+    },
+    {
+        "_note":  "  Tím        : iconBg=#f5f3ff  iconColor=#7c3aed  titleColor=text-purple"
+    },
+    {
+        "_note":  "================================================================"
+    }
 ]
