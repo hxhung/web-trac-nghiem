@@ -178,8 +178,8 @@ set "MSG="
 set /p MSG=Commit message (Enter = tự động cập nhật): 
 
 if "%MSG%"=="" (
-    for /f "tokens=2 delims==" %%i in ('wmic os get localdatetime /value') do set "dt=%%i"
-    set "MSG=Cập nhật !dt:~0,4!-!dt:~4,2!-!dt:~6,2! !dt:~8,2!:!dt:~10,2!"
+    for /f "usebackq delims=" %%i in (`powershell -NoProfile -Command "Get-Date -Format 'yyyy-MM-dd HH:mm'"`) do set "dt=%%i"
+    set "MSG=Cập nhật !dt!"
 )
 
 echo.
@@ -214,9 +214,30 @@ echo ========================================
 echo        UPLOAD THÀNH CÔNG!
 echo ========================================
 call :WRITE_LOG "%MSG%"
-timeout /t 2 >nul
-if not "%GITHUB_USER%"=="" start "" "https://%GITHUB_HOST%/%GITHUB_USER%/%REPO_NAME%"
-pause
+timeout /t 1 >nul
+echo.
+echo Bạn muốn mở trang nào trên trình duyệt?
+echo  1. Mở Kho mã nguồn GitHub (Repository)
+echo  2. Mở Trang web ôn luyện trực tuyến (GitHub Pages)
+echo  3. Mở cả hai trang
+echo  4. Bỏ qua
+echo.
+set "OPEN_CHOICE="
+set /p OPEN_CHOICE="Chọn (1-4, Enter = Mở Kho mã nguồn): "
+if "!OPEN_CHOICE!"=="" set "OPEN_CHOICE=1"
+
+if "!OPEN_CHOICE!"=="1" (
+    if not "%GITHUB_USER%"=="" start "" "https://%GITHUB_HOST%/%GITHUB_USER%/%REPO_NAME%"
+)
+if "!OPEN_CHOICE!"=="2" (
+    if not "%GITHUB_USER%"=="" start "" "https://%GITHUB_USER%.github.io/%REPO_NAME%/"
+)
+if "!OPEN_CHOICE!"=="3" (
+    if not "%GITHUB_USER%"=="" (
+        start "" "https://%GITHUB_HOST%/%GITHUB_USER%/%REPO_NAME%"
+        start "" "https://%GITHUB_USER%.github.io/%REPO_NAME%/"
+    )
+)
 goto BOOT
 
 :: ========================================================
